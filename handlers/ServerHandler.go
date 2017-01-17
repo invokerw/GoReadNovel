@@ -1,15 +1,17 @@
 package handlers
 
 import (
+	"GoReadNote/helpers"
+	"GoReadNote/logger"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"logger"
 	"net/http"
 )
 
-func Middleware(c *gin.Context) {
-	logger.ALogger().Debug("this is a middleware!")
+func HomeHandler(c *gin.Context) {
+	logger.ALogger().Debug("Index.")
+	helpers.Render(c, gin.H{"Title": "首页"}, "index.tmpl")
 }
-
 func GetHandler(c *gin.Context) {
 	value, exist := c.GetQuery("key")
 	if !exist {

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"GoReadNote/handlers"
+	"GoReadNote/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -11,12 +13,13 @@ func main() {
 	router := gin.Default()      //获得路由实例
 
 	//添加中间件
-	router.Use(Middleware)
+	router.Use(middleware.Middleware)
 	//注册接口
-	router.GET("/simple/server/get", handlers.GetHandler)
-	router.POST("/simple/server/post", handlers.PostHandler)
-	router.PUT("/simple/server/put", handlers.PutHandler)
-	router.DELETE("/simple/server/delete", handlers.DeleteHandler)
+	router.GET("/", handlers.HomeHandler)
+	router.GET("/server/get", handlers.GetHandler)
+	router.POST("/server/post", handlers.PostHandler)
+	router.PUT("/server/put", handlers.PutHandler)
+	router.DELETE("/server/delete", handlers.DeleteHandler)
 	//监听端口
 	http.ListenAndServe(":8005", router)
 }
