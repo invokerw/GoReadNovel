@@ -3,21 +3,28 @@ package handlers
 import (
 	"GoReadNote/helpers"
 	"GoReadNote/logger"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func HomeHandler(c *gin.Context) {
-	logger.ALogger().Debug("Index.")
+	logger.ALogger().Debug("Try to HomeHandler")
 	helpers.Render(c, gin.H{"Title": "首页"}, "index.tmpl")
 }
-func GetHandler(c *gin.Context) {
-	value, exist := c.GetQuery("key")
+func GetNoteChapterListByNoteNameHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetNoteChapterListByNoteNameHandler")
+	h := gin.H{}
+
+	noteName, exist := c.GetQuery("notename")
 	if !exist {
-		value = "the key is not exist!"
+		c.JSON(500, h)
 	}
-	c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("get success! %s\n", value)))
+	h["Title"] = "搜索结果"
+	h["retname"] = noteName
+
+	logger.ALogger().Debugf("noteName : %s", noteName)
+	helpers.Render(c, h, "searchret.tmpl")
+	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("get success! %s\n", value)))
 	return
 }
 func PostHandler(c *gin.Context) {

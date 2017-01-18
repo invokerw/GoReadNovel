@@ -6,5 +6,5 @@ import (
 )
 
 func Middleware(c *gin.Context) {
-	logger.ALogger().Debug("this is a middleware!")
+	logger.ALogger().Debug("   ")
 }

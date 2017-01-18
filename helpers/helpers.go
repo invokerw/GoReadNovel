@@ -1,7 +1,6 @@
 package helpers
 
 import (
-	"GoReadNote/logger"
 	"bytes"
 	"github.com/gin-gonic/gin"
 	"html/template"
@@ -27,7 +26,7 @@ func getTemplate(templates ...string) *template.Template {
 	layout := template.New(layoutFile)
 	layout.Delims("<%", "%/>")
 	template.Must(layout.Funcs(funcMap).ParseFiles(files...))
-	logger.ALogger().Debugf("8888:%v", layout)
+	//logger.ALogger().Debugf("8888:%v", layout)
 
 	return layout
 }
