@@ -18,6 +18,8 @@ func main() {
 	//注册接口
 	router.GET("/", handlers.HomeHandler)
 	router.GET("/GetNoteList", handlers.GetNoteChapterListByNoteNameHandler)
+	router.GET("/GetBookContent", handlers.GetNoteContentHandler)
+
 	router.POST("/server/post", handlers.PostHandler)
 	router.PUT("/server/put", handlers.PutHandler)
 	router.DELETE("/server/delete", handlers.DeleteHandler)

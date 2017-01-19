@@ -14,6 +14,10 @@ type ChapterInfo struct {
 	Url         string //地址
 }
 
+const (
+	URL = "http://www.huanyue123.com"
+)
+
 func GetNoteChapterList(noteName string) (map[int]ChapterInfo, bool) {
 	logger.ALogger().Debug("Try to GetNoteChapterList noteName:", noteName)
 	cmd := exec.Command("python", "./sprider/getNoteChapters.py", noteName)
@@ -41,7 +45,7 @@ func GetNoteChapterList(noteName string) (map[int]ChapterInfo, bool) {
 
 		cp := ChapterInfo{}
 		cp.Index = id
-		cp.Url = idUrlName[1]
+		cp.Url = "/GetBookContent?go=" + idUrlName[1][len(URL):len(idUrlName[1])]
 		cp.ChapterName = idUrlName[2]
 		//fmt.Println(idUrlName[2])
 		chpMap[id] = cp

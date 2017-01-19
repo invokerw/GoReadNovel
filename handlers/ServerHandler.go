@@ -4,6 +4,7 @@ import (
 	"GoReadNote/helpers"
 	"GoReadNote/logger"
 	"GoReadNote/sprider"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -35,6 +36,24 @@ func GetNoteChapterListByNoteNameHandler(c *gin.Context) {
 	logger.ALogger().Debugf("noteName : %s", noteName)
 	helpers.Render(c, h, "searchret.tmpl")
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("get success! %s\n", value)))
+	return
+}
+func GetNoteContentHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetNoteContentHandler")
+	h := gin.H{}
+	url, exist := c.GetQuery("go")
+	if !exist {
+		c.JSON(500, h)
+	}
+	url = sprider.URL + url
+	logger.ALogger().Debug("url = ", url)
+	chp := sprider.GetNoteContent(url)
+	if chp == nil {
+		h["Title"] = "未知错误"
+		helpers.Render(c, h, "err.tmpl")
+		return
+	}
+	c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n\n%s\n", chp.ChapterName, chp.Content)))
 	return
 }
 func PostHandler(c *gin.Context) {
