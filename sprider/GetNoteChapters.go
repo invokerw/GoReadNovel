@@ -1,6 +1,7 @@
 package sprider
 
 import (
+	"GoReadNote/logger"
 	"fmt"
 	"os/exec"
 	"strconv"
@@ -13,16 +14,17 @@ type ChapterInfo struct {
 	Url         string //地址
 }
 
-func GetNoteChapterList(noteName string) map[int]ChapterInfo {
-	cmd := exec.Command("python", "getNoteChapters.py", noteName)
+func GetNoteChapterList(noteName string) (map[int]ChapterInfo, bool) {
+	logger.ALogger().Debug("Try to GetNoteChapterList noteName:", noteName)
+	cmd := exec.Command("python", "./sprider/getNoteChapters.py", noteName)
 	buf, err := cmd.Output()
 	if err != nil {
 		fmt.Println("%v", err)
-		return nil
+		return nil, false
 	}
 	str := string(buf)
-	var chpMap map[int]Chapter
-	chpMap = make(map[int]Chapter)
+	var chpMap map[int]ChapterInfo
+	chpMap = make(map[int]ChapterInfo)
 
 	datas := strings.Split(strings.TrimSpace(str), ",")
 	for _, data := range datas {
@@ -46,7 +48,7 @@ func GetNoteChapterList(noteName string) map[int]ChapterInfo {
 
 	}
 	//fmt.Println("小说的章数:", len(chpMap))
-	return chpMap
+	return chpMap, true
 }
 
 /*

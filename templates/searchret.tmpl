@@ -1,9 +1,13 @@
 <% define "content"%/>
-<p>search</p>
+
+<p>这个界面有点简单</p>
  
  <div >
- <p>name:<% .Retname %/></p>
-  <p>url:</p>
-	
+ <p><% .Retname %/> &nbsp;&nbsp;&nbsp;搜索结果</p>	
 </div>
+	<div>
+		<% range $i,$v := .ChptList%/>
+		<p><a href="<% $v.Url %/>"><% $v.ChapterName %/></a></p>
+		<% end %/>
+	</div>
 <% end %/>

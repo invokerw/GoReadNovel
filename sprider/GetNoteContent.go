@@ -13,7 +13,7 @@ type ChapterContent struct {
 }
 
 func GetNoteContent(url string) *ChapterContent {
-	cmd := exec.Command("python", "getNoteContent.py", url)
+	cmd := exec.Command("python", "./sprider/getNoteContent.py", url)
 	buf, err := cmd.Output()
 	if err != nil {
 		fmt.Println("%v", err)

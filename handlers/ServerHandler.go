@@ -3,6 +3,7 @@ package handlers
 import (
 	"GoReadNote/helpers"
 	"GoReadNote/logger"
+	"GoReadNote/sprider"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -19,8 +20,17 @@ func GetNoteChapterListByNoteNameHandler(c *gin.Context) {
 	if !exist {
 		c.JSON(500, h)
 	}
+	chptMap, ok := sprider.GetNoteChapterList(noteName)
+
+	if !ok {
+		h["Title"] = "未知错误"
+		helpers.Render(c, h, "err.tmpl")
+		return
+	}
+
 	h["Title"] = "搜索结果"
 	h["Retname"] = noteName
+	h["ChptList"] = chptMap
 
 	logger.ALogger().Debugf("noteName : %s", noteName)
 	helpers.Render(c, h, "searchret.tmpl")
