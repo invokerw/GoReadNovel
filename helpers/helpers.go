@@ -24,7 +24,8 @@ func getTemplate(templates ...string) *template.Template {
 	}
 
 	layout := template.New(layoutFile)
-	layout.Delims("<%", "%/>")
+	layout.Delims("<%", "%/>") //模板边界
+	//Must函数，用于方便处理错误
 	template.Must(layout.Funcs(funcMap).ParseFiles(files...))
 	//logger.ALogger().Debugf("8888:%v", layout)
 

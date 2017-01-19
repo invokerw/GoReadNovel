@@ -20,7 +20,7 @@ func GetNoteChapterListByNoteNameHandler(c *gin.Context) {
 		c.JSON(500, h)
 	}
 	h["Title"] = "搜索结果"
-	h["retname"] = noteName
+	h["Retname"] = noteName
 
 	logger.ALogger().Debugf("noteName : %s", noteName)
 	helpers.Render(c, h, "searchret.tmpl")

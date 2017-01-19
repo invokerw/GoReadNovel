@@ -1,16 +1,9 @@
 <% define "content"%/>
-<p>test</p>
-  <script type="text/javascript">
-  	var txt = '{ "sites" : [' +
-'{ "name":"菜鸟教程" , "url":"www.runoob.com" },' +
-'{ "name":"google" , "url":"www.google.com" },' +
-'{ "name":"微博" , "url":"www.weibo.com" } ]}';
+<p>search</p>
  
-var obj = eval ("(" + txt + ")");
- 
-document.getElementById("name").innerHTML=obj.sites[0].name 
-document.getElementById("url").innerHTML=obj.sites[0].url
-  </script>
-  name:<p id = "name"></p>
-  url:<p id = "url"></p>
+ <div >
+ <p>name:<% .Retname %/></p>
+  <p>url:</p>
+	
+</div>
 <% end %/>
