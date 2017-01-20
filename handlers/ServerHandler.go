@@ -14,31 +14,6 @@ func HomeHandler(c *gin.Context) {
 	helpers.Render(c, gin.H{"Title": "首页"}, "index.tmpl")
 }
 
-func GetNoteChapterListByNoteNameHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetNoteChapterListByNoteNameHandler")
-	h := gin.H{}
-
-	noteName, exist := c.GetQuery("notename")
-	if !exist {
-		c.JSON(500, h)
-	}
-	chptMap, ok := sprider.GetNoteChapterList(noteName)
-
-	if !ok {
-		h["Title"] = "未知错误"
-		helpers.Render(c, h, "err.tmpl")
-		return
-	}
-
-	h["Title"] = "搜索结果"
-	h["Retname"] = noteName
-	h["ChptList"] = chptMap
-
-	logger.ALogger().Debugf("noteName : %s", noteName)
-	helpers.Render(c, h, "searchret.tmpl")
-	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("get success! %s\n", value)))
-	return
-}
 func GetNoteContentHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetNoteContentHandler")
 	h := gin.H{}
@@ -57,6 +32,8 @@ func GetNoteContentHandler(c *gin.Context) {
 	h["Title"] = chp.ChapterName
 	//chp.Content = strings.Replace(chp.Content, "\n", "<br/>", -1) //字符串替换 指定起始位置为小于0,则全部替换
 	h["Chapter"] = chp
+	//logger.ALogger().Notice("chp.Content:", chp.Content)
+
 	h["ContentArry"] = strings.Split(strings.TrimSpace(chp.Content), "\n")
 	helpers.Render(c, h, "note.tmpl")
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n\n%s\n", chp.ChapterName, chp.Content)))

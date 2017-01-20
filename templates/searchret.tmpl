@@ -3,11 +3,24 @@
 <p>这个界面有点简单</p>
  
  <div >
- <p><% .Retname %/> &nbsp;&nbsp;&nbsp;搜索结果</p>	
+ <p>返回Code: &nbsp;&nbsp;&nbsp;<% .Code %/></p>	
 </div>
 	<div>
-		<% range $i,$v := .ChptList%/>
-		<p><a href="<% $v.Url %/>"><% $v.ChapterName %/></a></p>
+	<table  width="100%" align="center" style="border: solid 1px #ff0000;">
+	<caption>搜索结果</caption>
+ 	 <tr align="center">
+    <th width="30%">文章名称</th>
+    <th width="40%">最新章节</th>
+    <th width="15%">作者</th>
+	<th width="15%">状态</th>
+  </tr>
+		<% range $i,$v := .NoteMap%/>
+		 	 <tr align="center">
+				<th width="30%"><a href="<% $v.NoteUrl %/>&name=<% $v.NoteName %/>"><% $v.NoteName %/></a></th>
+				<th width="40%"><% $v.LatestChpName %/></th>
+				<th width="15%"><% $v.Author %/></th>
+				<th width="15%"><% $v.Status %/></th>
+				</tr>	
 		<% end %/>
 	</div>
 <% end %/>

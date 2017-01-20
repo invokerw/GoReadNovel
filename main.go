@@ -17,8 +17,8 @@ func main() {
 	router.Use(middleware.Middleware)
 	//注册接口
 	router.GET("/", handlers.HomeHandler)
-
-	router.GET("/GetNoteList", handlers.GetNoteChapterListByNoteNameHandler)
+	router.GET("/SearchNote", handlers.SearchNoteHandler)
+	router.GET("GetBookInfo", handlers.GetBookInfoHandler)
 	router.GET("/GetBookContent", handlers.GetNoteContentHandler)
 
 	router.GET("/GetJson", handlers.GetJsonHandler)

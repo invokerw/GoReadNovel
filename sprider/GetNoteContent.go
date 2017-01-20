@@ -1,7 +1,7 @@
 package sprider
 
 import (
-	"fmt"
+	"GoReadNote/logger"
 	"os/exec"
 	"strings"
 )
@@ -13,10 +13,12 @@ type ChapterContent struct {
 }
 
 func GetNoteContent(url string) *ChapterContent {
-	cmd := exec.Command("python", "./sprider/getNoteContent.py", url)
+	logger.ALogger().Debug("Try to GetNoteContent url:", url)
+
+	cmd := exec.Command("python", "./sprider/python/getNoteContent.py", url)
 	buf, err := cmd.Output()
 	if err != nil {
-		fmt.Println("%v", err)
+		logger.ALogger().Error("%v", err)
 		return nil
 	}
 	str := string(buf)
