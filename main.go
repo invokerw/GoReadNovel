@@ -17,12 +17,11 @@ func main() {
 	router.Use(middleware.Middleware)
 	//注册接口
 	router.GET("/", handlers.HomeHandler)
+
 	router.GET("/GetNoteList", handlers.GetNoteChapterListByNoteNameHandler)
 	router.GET("/GetBookContent", handlers.GetNoteContentHandler)
 
-	router.POST("/server/post", handlers.PostHandler)
-	router.PUT("/server/put", handlers.PutHandler)
-	router.DELETE("/server/delete", handlers.DeleteHandler)
+	router.GET("/GetJson", handlers.GetJsonHandler)
 
 	logger.ALogger().Notice("Listen start.")
 	//监听端口

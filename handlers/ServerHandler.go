@@ -5,7 +5,7 @@ import (
 	"GoReadNote/logger"
 	"GoReadNote/sprider"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	//"net/http"
 	"strings"
 )
 
@@ -13,6 +13,7 @@ func HomeHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to HomeHandler")
 	helpers.Render(c, gin.H{"Title": "首页"}, "index.tmpl")
 }
+
 func GetNoteChapterListByNoteNameHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetNoteChapterListByNoteNameHandler")
 	h := gin.H{}
@@ -54,28 +55,26 @@ func GetNoteContentHandler(c *gin.Context) {
 		return
 	}
 	h["Title"] = chp.ChapterName
-	//chp.Content = strings.Replace(chp.Content, "\n", "<br/>", -1) //字符串替换 指定起始位置为小于0,则全部替换 f00
+	//chp.Content = strings.Replace(chp.Content, "\n", "<br/>", -1) //字符串替换 指定起始位置为小于0,则全部替换
 	h["Chapter"] = chp
 	h["ContentArry"] = strings.Split(strings.TrimSpace(chp.Content), "\n")
 	helpers.Render(c, h, "note.tmpl")
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n\n%s\n", chp.ChapterName, chp.Content)))
 	return
 }
-func PostHandler(c *gin.Context) {
+
+func GetJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetJsonHandler")
 	type JsonHolder struct {
 		Id   int    `json:"id"`
 		Name string `json:"name"`
 	}
+
 	holder := JsonHolder{Id: 1, Name: "123"}
 	//若返回json数据，可以直接使用gin封装好的JSON方法
-	c.JSON(http.StatusOK, holder)
-	return
-}
-func PutHandler(c *gin.Context) {
-	c.Data(http.StatusOK, "text/plain", []byte("put success!\n"))
-	return
-}
-func DeleteHandler(c *gin.Context) {
-	c.Data(http.StatusOK, "text/plain", []byte("delete success!\n"))
+
+	logger.ALogger().Debug("This")
+	c.JSON(200, holder)
+
 	return
 }
