@@ -15,10 +15,11 @@ func main() {
 
 	//添加中间件
 	router.Use(middleware.Middleware)
-	//注册接口
+	//搜索小说
 	router.GET("/", handlers.HomeHandler)
 	router.GET("/SearchNote", handlers.SearchNoteHandler)
 	router.GET("GetBookInfo", handlers.GetBookInfoHandler)
+	//获取章节内容
 	router.GET("/GetBookContent", handlers.GetNoteContentHandler)
 
 	router.GET("/GetJson", handlers.GetJsonHandler)
