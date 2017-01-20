@@ -38,7 +38,7 @@ func GetNoteContent(url string) *ChapterContent {
 	cc.NoteName = datas[4]
 	cc.ChapterName = datas[0]
 	if datas[2][len(datas[2])-1] == '/' {
-		cc.ChpPre = "/GetBookInfo?go=" + datas[2] + "&name=" + cc.ChapterName
+		cc.ChpPre = "/GetBookInfo?go=" + datas[2] + "&name=" + cc.NoteName
 	} else {
 		cc.ChpPre = "/GetBookContent?go=" + datas[2]
 	}
