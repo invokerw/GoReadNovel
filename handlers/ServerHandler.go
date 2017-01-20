@@ -4,9 +4,9 @@ import (
 	"GoReadNote/helpers"
 	"GoReadNote/logger"
 	"GoReadNote/sprider"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 func HomeHandler(c *gin.Context) {
@@ -53,7 +53,12 @@ func GetNoteContentHandler(c *gin.Context) {
 		helpers.Render(c, h, "err.tmpl")
 		return
 	}
-	c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n\n%s\n", chp.ChapterName, chp.Content)))
+	h["Title"] = chp.ChapterName
+	//chp.Content = strings.Replace(chp.Content, "\n", "<br/>", -1) //字符串替换 指定起始位置为小于0,则全部替换 f00
+	h["Chapter"] = chp
+	h["ContentArry"] = strings.Split(strings.TrimSpace(chp.Content), "\n")
+	helpers.Render(c, h, "note.tmpl")
+	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n\n%s\n", chp.ChapterName, chp.Content)))
 	return
 }
 func PostHandler(c *gin.Context) {
@@ -61,7 +66,7 @@ func PostHandler(c *gin.Context) {
 		Id   int    `json:"id"`
 		Name string `json:"name"`
 	}
-	holder := JsonHolder{Id: 1, Name: "my name"}
+	holder := JsonHolder{Id: 1, Name: "123"}
 	//若返回json数据，可以直接使用gin封装好的JSON方法
 	c.JSON(http.StatusOK, holder)
 	return

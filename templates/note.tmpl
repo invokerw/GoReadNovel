@@ -1,0 +1,12 @@
+<% define "content"%/>
+
+ 
+ <div >
+ <p><% .Chapter.ChapterName %/></p>	
+</div>
+	<div>
+		<% range $i,$v := .ContentArry%/>
+		<p><% $v %/></p>
+		<% end %/>
+	</div> 
+<% end %/>

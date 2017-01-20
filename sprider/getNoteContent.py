@@ -24,7 +24,7 @@ try:
                        '.*?</div>', re.S)
     article = re.compile('<div.*?id="htmlContent".*?>(.*?)</div>', re.S)
 
-    # 将<br />替换为\t
+    # 将<br />替换为\t  这里不做替换 因为是要在网页显示
     replaceBr = re.compile('<br.*?\n.*?<br.*?>')
     replaceSpace = re.compile('&nbsp;')
 
