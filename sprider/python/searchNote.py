@@ -44,7 +44,8 @@ try:
         chapterQty = chapterQty + 1
         retStr = retStr + str(chapterQty) + "--" + item[0]
         retStr = retStr + "--" + item[1] + "--" + item[3]
-        retStr = retStr + "--" + item[4] + "--" + item[6] + ","
+        retStr = retStr + "--" + item[4] + "--" + item[5]
+        retStr = retStr + "--" + item[2] + ","
         # print item[0], item[1], item[2], item[3], item[4], item[5]
     print retStr
 

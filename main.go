@@ -26,6 +26,7 @@ func main() {
 	router.GET("/GetJson", handlers.GetJsonHandler)
 	router.GET("/GetSearchNoteJson", handlers.GetSearchNoteJsonHandler)
 	router.GET("/GetBookContentJson", handlers.GetBookContentJsonHandler)
+	router.GET("/GetTopNoteListjson", handlers.GetTopNoteListJsonHandler)
 
 	logger.ALogger().Notice("Listen start.")
 	//监听端口

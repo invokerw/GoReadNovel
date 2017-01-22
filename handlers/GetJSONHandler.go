@@ -6,6 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//返回Json的一个模板  Code在不同情况下有不同作用
+type JsonRet struct {
+	Code int         `json:"code"`
+	List interface{} `json:"list"`
+}
+
 //下面是个基本的例子
 func GetJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetJsonHandler")
@@ -25,10 +31,7 @@ func GetSearchNoteJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSearchNoteJsonHandler")
 
 	h := gin.H{}
-	type JsonRet struct {
-		Code int         `json:"code"` //code = 0 为一个结果  code = 1为小说列表
-		List interface{} `json:"list"`
-	}
+
 	noteName, exist := c.GetQuery("notename")
 	if !exist {
 		c.JSON(500, h)
@@ -47,7 +50,7 @@ func GetSearchNoteJsonHandler(c *gin.Context) {
 		for i := 1; i <= len(chptMap); i++ {
 			cpInfo = append(cpInfo, chptMap[i])
 		}
-
+		//code = 0 为一个结果  code = 1为小说列表
 		retJson := JsonRet{Code: 0, List: cpInfo}
 		c.JSON(200, retJson)
 		return
@@ -57,6 +60,7 @@ func GetSearchNoteJsonHandler(c *gin.Context) {
 	for i := 1; i <= len(noteListMap); i++ {
 		noteInfo = append(noteInfo, noteListMap[i])
 	}
+	//code = 0 为一个结果  code = 1为小说列表
 	retJson := JsonRet{Code: 1, List: noteInfo}
 	c.JSON(200, retJson)
 	return
@@ -80,6 +84,30 @@ func GetBookContentJsonHandler(c *gin.Context) {
 	}
 
 	c.JSON(200, chp)
+	return
+
+}
+
+func GetTopNoteListJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetTopNoteListJsonHandler")
+	h := gin.H{}
+	type JsonRet struct {
+		Code int         `json:"code"` //code = 0 为一个结果  code = 1为小说列表
+		List interface{} `json:"list"`
+	}
+	noteListMap, ok := sprider.GetTopNoteList()
+	if !ok {
+		c.JSON(500, h)
+		return
+	}
+	var noteInfo []sprider.TopNote
+
+	for i := 1; i <= len(noteListMap); i++ {
+		noteInfo = append(noteInfo, noteListMap[i])
+	}
+	//code = 0 为一个结果  code = 1为小说列表
+	retJson := JsonRet{Code: 1, List: noteInfo}
+	c.JSON(200, retJson)
 	return
 
 }

@@ -22,6 +22,8 @@ func SearchNoteHandler(c *gin.Context) {
 		c.JSON(500, h)
 	}
 	noteListMap, find := sprider.SearchNoteByName(noteName)
+
+	//logger.ALogger().Notice("Try to noteListMap:", noteListMap)
 	if !find {
 		//没有找到 再试试直接Get
 		getNoteChapterList(c, noteName, "", BYNOTENAME)

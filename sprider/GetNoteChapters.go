@@ -14,10 +14,6 @@ type ChapterInfo struct {
 	Url         string `json:"churl"`  //地址
 }
 
-const (
-	URL = "http://www.huanyue123.com"
-)
-
 /*
 	//是否加携程会好一些
 func GoroutineGetNoteChapterListByNoteName(ch chan map[int]ChapterInfo, noteName string) {
