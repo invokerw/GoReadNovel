@@ -15,3 +15,9 @@ id 是最后一位  和文件名字
 /modules/article/txtarticle.php?id=11&fname=圣墟
 
 # 添加json
+
+
+GetTopNoteListjson  
+GetBookContentJson 
+GetSearchNoteJson
+
