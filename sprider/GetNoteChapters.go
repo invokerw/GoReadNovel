@@ -9,9 +9,9 @@ import (
 )
 
 type ChapterInfo struct {
-	Index       int    //第几章索引
-	ChapterName string //章节名称
-	Url         string //地址
+	Index       int    `json:"index"`  //第几章索引
+	ChapterName string `json:"chname"` //章节名称
+	Url         string `json:"churl"`  //地址
 }
 
 const (

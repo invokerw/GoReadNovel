@@ -20,6 +20,7 @@ func GetNoteContentHandler(c *gin.Context) {
 	url, exist := c.GetQuery("go")
 	if !exist {
 		c.JSON(500, h)
+		return
 	}
 	url = sprider.URL + url
 	logger.ALogger().Debug("url = ", url)
@@ -37,21 +38,5 @@ func GetNoteContentHandler(c *gin.Context) {
 	h["ContentArry"] = strings.Split(strings.TrimSpace(chp.Content), "\n")
 	helpers.Render(c, h, "note.tmpl")
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n\n%s\n", chp.ChapterName, chp.Content)))
-	return
-}
-
-func GetJsonHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetJsonHandler")
-	type JsonHolder struct {
-		Id   int    `json:"id"`
-		Name string `json:"name"`
-	}
-
-	holder := JsonHolder{Id: 1, Name: "123"}
-	//若返回json数据，可以直接使用gin封装好的JSON方法
-
-	logger.ALogger().Debug("This")
-	c.JSON(200, holder)
-
 	return
 }

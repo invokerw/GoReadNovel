@@ -37,6 +37,7 @@ func GetBookInfoHandler(c *gin.Context) {
 	url, exist := c.GetQuery("go")
 	if !exist {
 		c.JSON(500, h)
+		return
 	}
 	name, exist := c.GetQuery("name")
 	if !exist {
@@ -46,6 +47,7 @@ func GetBookInfoHandler(c *gin.Context) {
 	logger.ALogger().Debug("url = ", url)
 
 	getNoteChapterList(c, name, url, BYURL)
+	return
 
 }
 func getNoteChapterList(c *gin.Context, name string, url string, getType int) {

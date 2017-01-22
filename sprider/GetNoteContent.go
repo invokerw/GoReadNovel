@@ -7,12 +7,12 @@ import (
 )
 
 type ChapterContent struct {
-	Content     string //章节内容
-	ChapterName string //章节名称
-	Url         string //地址
-	ChpNext     string //上一章
-	ChpPre      string //下一章
-	NoteName    string //小说名字
+	Content     string `json:"content"`  //章节内容
+	ChapterName string `json:"chpname"`  //章节名称
+	Url         string `json:"churl"`    //地址
+	ChpNext     string `json:"nexturl"`  //上一章
+	ChpPre      string `json:"preurl"`   //下一章
+	NoteName    string `json:"notename"` //小说名字
 }
 
 func GetNoteContent(url string) *ChapterContent {

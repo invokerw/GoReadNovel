@@ -8,12 +8,12 @@ import (
 )
 
 type SearchNote struct {
-	Index         int    //索引
-	NoteName      string //章节名称
-	NoteUrl       string //地址
-	LatestChpName string //最新章节名字
-	Author        string //作者
-	Status        string //状态连载还是完结
+	Index         int    `json:"index"`    //索引
+	NoteName      string `json:"notename"` //章节名称
+	NoteUrl       string `json:"url"`      //地址
+	LatestChpName string `json:"newchp"`   //最新章节名字
+	Author        string `json:"author"`   //作者
+	Status        string `json:"status"`   //状态连载还是完结
 }
 
 func SearchNoteByName(noteName string) (map[int]SearchNote, bool) {
