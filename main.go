@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	gin.SetMode(gin.ReleaseMode) //全局设置环境，此为开发环境，线上环境为gin.ReleaseMode  gin.DebugMode
+	gin.SetMode(gin.ReleaseMode) //全局设置环境，此为开发环境，线上环境为 gin.ReleaseMode  gin.DebugMode
 	router := gin.Default()      //获得路由实例
 	//网页请求----------------------
 	//添加中间件
@@ -29,6 +29,8 @@ func main() {
 	router.GET("/GetTopNoteListjson", handlers.GetTopNoteListJsonHandler)
 
 	logger.ALogger().Notice("Listen start.")
+	logger.ALogger().Notice("Listen 80 https")
 	//监听端口
-	http.ListenAndServe(":8005", router)
+	//http.ListenAndServe(":8005", router)
+	http.ListenAndServeTLS(":80", "server.crt", "server.key", router)
 }

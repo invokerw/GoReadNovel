@@ -21,3 +21,12 @@ GetTopNoteListjson
 GetBookContentJson 
 GetSearchNoteJson
 
+
+#修改为https模式
+
+添加server.crt,server.key
+
+生成命令
+
+openssl genrsa -out server.key 2048
+openssl req -new -x509 -key server.key -out server.crt -days 365
