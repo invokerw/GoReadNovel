@@ -32,5 +32,6 @@ func main() {
 	logger.ALogger().Notice("Listen 80 https")
 	//监听端口
 	//http.ListenAndServe(":8005", router)
-	http.ListenAndServeTLS(":443", "server.crt", "server.key", router)
+	//http.ListenAndServeTLS(":443", "server.crt", "server.key", router)
+	http.ListenAndServeTLS(":443", "2_fsnsaber.cn.crt", "3_fsnsaber.cn.key", router)
 }
