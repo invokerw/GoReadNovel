@@ -33,5 +33,7 @@ func main() {
 	//监听端口
 	//http.ListenAndServe(":8005", router)
 	//http.ListenAndServeTLS(":443", "server.crt", "server.key", router)
-	http.ListenAndServeTLS(":443", "2_fsnsaber.cn.crt", "3_fsnsaber.cn.key", router)
+	http.ListenAndServeTLS(":443", "1_fsnsaber.cn_bundle.crt", "2_fsnsaber.cn.key", router)
+	//http.ListenAndServeTLS(":443","2_fsnsaber.cn.crt","3_fsnsaber.cn.key",router)
+
 }
