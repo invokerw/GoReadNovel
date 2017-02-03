@@ -111,3 +111,29 @@ func GetTopNoteListJsonHandler(c *gin.Context) {
 	return
 
 }
+
+func GetNoteInfoJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetNoteInfoJsonHandler")
+	h := gin.H{}
+	url, exist := c.GetQuery("go")
+	if !exist {
+		c.JSON(500, h)
+		return
+	}
+	url = sprider.URL + url
+	logger.ALogger().Debug("url = ", url)
+	chptMap, ok := sprider.GetNoteChapterListByUrl(url)
+	if !ok {
+		c.JSON(500, h)
+		return
+	}
+	var noteInfo []sprider.ChapterInfo
+
+	for i := 1; i <= len(chptMap); i++ {
+		noteInfo = append(noteInfo, chptMap[i])
+	}
+	retJson := JsonRet{Code: 1, List: noteInfo}
+	c.JSON(200, retJson)
+	return
+
+}

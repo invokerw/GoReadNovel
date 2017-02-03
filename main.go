@@ -26,10 +26,11 @@ func main() {
 	router.GET("/GetJson", handlers.GetJsonHandler)
 	router.GET("/GetSearchNoteJson", handlers.GetSearchNoteJsonHandler)
 	router.GET("/GetBookContentJson", handlers.GetBookContentJsonHandler)
-	router.GET("/GetTopNoteListjson", handlers.GetTopNoteListJsonHandler)
+	router.GET("/GetTopNoteListJson", handlers.GetTopNoteListJsonHandler)
+	router.GET("/GetNoteInfoJson", handlers.GetNoteInfoJsonHandler)
 
 	logger.ALogger().Notice("Listen start.")
-	logger.ALogger().Notice("Listen 80 https")
+	logger.ALogger().Notice("Listen 443 https")
 	//监听端口
 	//http.ListenAndServe(":8005", router)
 	//http.ListenAndServeTLS(":443", "server.crt", "server.key", router)
