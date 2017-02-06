@@ -47,7 +47,7 @@ func SearchNoteByName(noteName string) (map[int]SearchNote, bool) {
 		sn.LatestChpName = idUrlName[3]
 		sn.Author = idUrlName[4]
 		sn.Status = idUrlName[5]
-		sn.NoteUrl = "/GetBookInfo?go=" + idUrlName[6]
+		sn.LatestChpUrl = "/GetBookInfo?go=" + idUrlName[6]
 		noteFindMap[id] = sn
 
 	}
