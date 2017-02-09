@@ -28,6 +28,10 @@ func main() {
 	router.GET("/GetBookContentJson", handlers.GetBookContentJsonHandler)
 	router.GET("/GetTopNoteListJson", handlers.GetTopNoteListJsonHandler)
 	router.GET("/GetNoteInfoJson", handlers.GetNoteInfoJsonHandler)
+	
+	//文件上传
+	router.GET("/UploadFile", handlers.GetUpLoadPageHandler)
+	router.POST("/UploadFile", handlers.UploadFileHandler)
 
 	logger.ALogger().Notice("Listen start.")
 	logger.ALogger().Notice("Listen 443 https")
