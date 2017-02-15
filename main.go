@@ -32,6 +32,7 @@ func main() {
 	//文件上传
 	router.GET("/UploadFile", handlers.GetUpLoadPageHandler)
 	router.POST("/UploadFile", handlers.UploadFileHandler)
+	router.StaticFS("/GetFileList",http.Dir("./savefile"))	
 
 	logger.ALogger().Notice("Listen start.")
 	logger.ALogger().Notice("Listen 443 https")
