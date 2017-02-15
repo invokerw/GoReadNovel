@@ -33,6 +33,7 @@ func main() {
 	router.GET("/UploadFile", handlers.GetUpLoadPageHandler)
 	router.POST("/UploadFile", handlers.UploadFileHandler)
 	router.StaticFS("/GetFileList",http.Dir("./savefile"))	
+	router.Static("/favicon.ico","./favicon.ico")
 
 	logger.ALogger().Notice("Listen start.")
 	logger.ALogger().Notice("Listen 443 https")
