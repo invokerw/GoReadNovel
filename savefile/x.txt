@@ -1,0 +1,11 @@
+104.194.95.170
+centos-6-x86_64
+fKmr85va6AaF
+28285
+
+
+aes-256-cfb
+7848
+NDNmMDVjOT
+
+https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt

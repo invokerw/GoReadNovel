@@ -47,6 +47,8 @@ func UploadFileHandler(c *gin.Context) {
 	filedir, _ := filepath.Abs(Upload_Dir + fileName)
 	fmt.Printf(fileName+"上传完成,服务器地址:"+filedir)	
 	//helpers.Render(c, h, "note.tmpl")
-	c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n","OK <a href='/GetFileList'>查看内容</a>")))
+	
+	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n","OK")))
+	c.Redirect(http.StatusMovedPermanently, "/GetFileList")
 	return
 }
