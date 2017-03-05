@@ -1,7 +1,16 @@
 <% define "content"%/>
 <p>文件上传</p>
   <form enctype="multipart/form-data" action="/UploadFile" method="post">
-  选择文件: <input type="file" name="uploadfile" />
+  <div>
+  	选择文件: <input type="file" name="uploadfile" />
+
+  <select name="ftype"> 
+	<option value="main">Main</option> 
+	<option value="wei">WeiFei</option> 
+	</select>
+
+
   <input type="submit" value="上传" />
+ </div>
 </form>
 <% end %/>

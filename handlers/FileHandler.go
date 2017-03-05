@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	//"strings"
-	"fmt"
+	_ "fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -24,8 +24,15 @@ func GetUpLoadPageHandler(c *gin.Context) {
 
 func UploadFileHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to UploadFileHandler")
-	//h := gin.H{}
-
+	h := gin.H{}
+	//ftype = 0 ./savafile  1
+	ftype, exist := c.GetPostForm("ftype")
+	logger.ALogger().Debugf(ftype)
+	if !exist {
+		c.JSON(500, h)
+		logger.ALogger().Error("没有发现ftype")
+		return
+	}
 	//在使用r.MultipartForm前必须先调用ParseMultipartForm方法，参数为最大缓存
 	//Max 16MB
 	c.Request.ParseMultipartForm(2 << 24)
@@ -34,7 +41,8 @@ func UploadFileHandler(c *gin.Context) {
 
 	if err != nil {
 		//上传错误
-		fmt.Printf("上传错误")
+		logger.ALogger().Error("上传错误")
+		c.JSON(500, h)
 		return
 	}
 	//check file type
@@ -43,14 +51,20 @@ func UploadFileHandler(c *gin.Context) {
 	f, _ := os.OpenFile(Upload_Dir+fileName, os.O_CREATE|os.O_WRONLY, 0660)
 	_, err = io.Copy(f, file)
 	if err != nil {
-		fmt.Printf("上传失败")
+		logger.ALogger().Error("上传失败")
+		c.JSON(500, h)
 		return
 	}
-	filedir, _ := filepath.Abs(Upload_Dir + fileName)
-	fmt.Printf(fileName + "上传完成,服务器地址:" + filedir)
-	//helpers.Render(c, h, "note.tmpl")
+	if ftype == "main" {
 
-	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n","OK")))
-	c.Redirect(http.StatusMovedPermanently, "/GetFileList")
+		filedir, _ := filepath.Abs(Upload_Dir + "/main/" + fileName)
+		logger.ALogger().Debug(fileName + "上传完成,服务器地址:" + filedir)
+		c.Redirect(http.StatusMovedPermanently, "/GetFileList")
+	} else if ftype == "wei" {
+
+		filedir, _ := filepath.Abs(Upload_Dir + "/wei/" + fileName)
+		logger.ALogger().Debug(fileName + "上传完成,服务器地址:" + filedir)
+		c.Redirect(http.StatusMovedPermanently, "/weifei")
+	}
 	return
 }

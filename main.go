@@ -32,7 +32,8 @@ func main() {
 	//文件上传
 	router.GET("/UploadFile", handlers.GetUpLoadPageHandler)
 	router.POST("/UploadFile", handlers.UploadFileHandler)
-	router.StaticFS("/GetFileList", http.Dir("./savefile"))
+	router.StaticFS("/GetFileList", http.Dir("./savefile/main"))
+	router.StaticFS("/Weifei", http.Dir("./savefile/wei"))
 	//icon
 	router.StaticFile("/favicon.ico", "./statics/favicon.ico")
 
@@ -42,7 +43,7 @@ func main() {
 	//http.ListenAndServe(":8005", router)
 	//http.ListenAndServeTLS(":443", "server.crt", "server.key", router)
 	//8000端口是测试之用 实际端口为443
-	err := http.ListenAndServeTLS(":443", "1_fsnsaber.cn_bundle.crt", "2_fsnsaber.cn.key", router)
+	err := http.ListenAndServeTLS(":443", "./ca/1_fsnsaber.cn_bundle.crt", "./ca/2_fsnsaber.cn.key", router)
 	//http.ListenAndServeTLS(":443","2_fsnsaber.cn.crt","3_fsnsaber.cn.key",router)
 	logger.ALogger().Error(err)
 
