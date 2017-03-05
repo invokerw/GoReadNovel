@@ -3,7 +3,7 @@ package handlers
 import (
 	"GoReadNote/helpers"
 	"GoReadNote/logger"
-	"GoReadNote/sprider"
+	"GoReadNote/spider"
 	"github.com/gin-gonic/gin"
 	//"net/http"
 	//"strings"
@@ -21,7 +21,7 @@ func SearchNoteHandler(c *gin.Context) {
 	if !exist {
 		c.JSON(500, h)
 	}
-	noteListMap, find := sprider.SearchNoteByName(noteName)
+	noteListMap, find := spider.SearchNoteByName(noteName)
 
 	//logger.ALogger().Notice("Try to noteListMap:", noteListMap)
 	if !find {
@@ -45,7 +45,7 @@ func GetBookInfoHandler(c *gin.Context) {
 	if !exist {
 		c.JSON(500, h)
 	}
-	url = sprider.URL + url
+	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
 
 	getNoteChapterList(c, name, url, BYURL)
@@ -57,13 +57,13 @@ func getNoteChapterList(c *gin.Context, name string, url string, getType int) {
 
 	h := gin.H{}
 
-	var chptMap map[int]sprider.ChapterInfo
+	var chptMap map[int]spider.ChapterInfo
 	var ok bool
 
 	if getType == BYNOTENAME {
-		chptMap, ok = sprider.GetNoteChapterListByNoteName(name)
+		chptMap, ok = spider.GetNoteChapterListByNoteName(name)
 	} else if getType == BYURL {
-		chptMap, ok = sprider.GetNoteChapterListByUrl(url)
+		chptMap, ok = spider.GetNoteChapterListByUrl(url)
 	}
 
 	if !ok {
@@ -80,7 +80,7 @@ func getNoteChapterList(c *gin.Context, name string, url string, getType int) {
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("get success! %s\n", value)))
 	return
 }
-func showSearchResult(c *gin.Context, noteListMap map[int]sprider.SearchNote) {
+func showSearchResult(c *gin.Context, noteListMap map[int]spider.SearchNote) {
 	logger.ALogger().Debug("Try to showSearchResult")
 
 	h := gin.H{}

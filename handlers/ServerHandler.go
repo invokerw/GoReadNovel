@@ -3,7 +3,7 @@ package handlers
 import (
 	"GoReadNote/helpers"
 	"GoReadNote/logger"
-	"GoReadNote/sprider"
+	"GoReadNote/spider"
 	"github.com/gin-gonic/gin"
 	//"net/http"
 	"strings"
@@ -22,9 +22,9 @@ func GetNoteContentHandler(c *gin.Context) {
 		c.JSON(500, h)
 		return
 	}
-	url = sprider.URL + url
+	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
-	chp := sprider.GetNoteContent(url)
+	chp := spider.GetNoteContent(url)
 	if chp == nil {
 		h["Title"] = "未知错误"
 		helpers.Render(c, h, "err.tmpl")

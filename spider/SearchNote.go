@@ -1,22 +1,21 @@
-package sprider
+package spider
 
 import (
 	"GoReadNote/logger"
-	//"fmt"
 	"os/exec"
 	"strconv"
 	"strings"
 )
 
-type TopNote struct {
+type SearchNote struct {
 	Note
 }
 
-func GetTopNoteList() (map[int]TopNote, bool) {
-	logger.ALogger().Debug("Try to GetTopNoteList ")
+func SearchNoteByName(noteName string) (map[int]SearchNote, bool) {
+	logger.ALogger().Debug("Try to SearchNoteByName noteName:", noteName)
 
-	cmd := exec.Command("python", "./sprider/python/getTopNoteList.py")
-	//cmd := exec.Command("python", "getTopNoteList.py")
+	cmd := exec.Command("python", "./spider/python/searchNote.py", noteName)
+	//cmd := exec.Command("python", "searchNote.py", noteName)
 	buf, err := cmd.Output()
 	if err != nil {
 		logger.ALogger().Error("%v", err)
@@ -24,15 +23,15 @@ func GetTopNoteList() (map[int]TopNote, bool) {
 	}
 	str := string(buf)
 	//fmt.Println("输出:", str)
-	var noteFindMap map[int]TopNote
-	noteFindMap = make(map[int]TopNote)
+	var noteFindMap map[int]SearchNote
+	noteFindMap = make(map[int]SearchNote)
 
 	datas := strings.Split(strings.TrimSpace(str), ",")
 
 	for _, data := range datas {
 		idUrlName := strings.Split(strings.TrimSpace(data), "--")
 		if len(idUrlName) != 7 {
-			//fmt.Println("这个数据不为7:", idUrlName)
+			//fmt.Println("这个数据不为3:", idUrlName)
 			continue
 		}
 		id, err := strconv.Atoi(idUrlName[0])
@@ -41,7 +40,7 @@ func GetTopNoteList() (map[int]TopNote, bool) {
 			continue
 		}
 
-		sn := TopNote{}
+		sn := SearchNote{}
 		sn.Index = id
 		sn.NoteUrl = "/GetBookInfo?go=" + idUrlName[1][len(URL):len(idUrlName[1])]
 		sn.NoteName = idUrlName[2]
@@ -49,11 +48,10 @@ func GetTopNoteList() (map[int]TopNote, bool) {
 		sn.Author = idUrlName[4]
 		sn.Status = idUrlName[5]
 		sn.LatestChpUrl = "/GetBookInfo?go=" + idUrlName[6]
-
 		noteFindMap[id] = sn
 
 	}
-	//fmt.Println("找到小说的数量:", len(noteFindMap))
+	//logger.ALogger().Debug("找到小说的数量:", len(noteFindMap))
 	if len(noteFindMap) == 0 {
 		return nil, false
 	}
@@ -63,7 +61,7 @@ func GetTopNoteList() (map[int]TopNote, bool) {
 /*
 func main() {
 
-	noteFindMap, _ := GetTopNoteList()
+	noteFindMap, _ := SearchNoteByName("遮天")
 	for i := 1; i <= len(noteFindMap); i++ {
 		fmt.Printf("%d : %v\n", i, noteFindMap[i])
 	}

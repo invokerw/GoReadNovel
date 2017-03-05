@@ -1,4 +1,4 @@
-package sprider
+package spider
 
 import (
 	"GoReadNote/logger"
@@ -18,7 +18,7 @@ type ChapterContent struct {
 func GetNoteContent(url string) *ChapterContent {
 	logger.ALogger().Debug("Try to GetNoteContent url:", url)
 
-	cmd := exec.Command("python", "./sprider/python/getNoteContent.py", url)
+	cmd := exec.Command("python", "./spider/python/getNoteContent.py", url)
 	buf, err := cmd.Output()
 	if err != nil {
 		logger.ALogger().Error("%v", err)

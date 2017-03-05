@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"GoReadNote/logger"
-	"GoReadNote/sprider"
+	"GoReadNote/spider"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,15 +37,15 @@ func GetSearchNoteJsonHandler(c *gin.Context) {
 		c.JSON(500, h)
 		return
 	}
-	noteListMap, find := sprider.SearchNoteByName(noteName)
+	noteListMap, find := spider.SearchNoteByName(noteName)
 	if !find {
 		//没有找到 再试试直接Get
-		chptMap, ok := sprider.GetNoteChapterListByNoteName(noteName)
+		chptMap, ok := spider.GetNoteChapterListByNoteName(noteName)
 		if !ok {
 			c.JSON(500, h)
 			return
 		}
-		var cpInfo []sprider.ChapterInfo
+		var cpInfo []spider.ChapterInfo
 
 		for i := 1; i <= len(chptMap); i++ {
 			cpInfo = append(cpInfo, chptMap[i])
@@ -55,7 +55,7 @@ func GetSearchNoteJsonHandler(c *gin.Context) {
 		c.JSON(200, retJson)
 		return
 	}
-	var noteInfo []sprider.SearchNote
+	var noteInfo []spider.SearchNote
 
 	for i := 1; i <= len(noteListMap); i++ {
 		noteInfo = append(noteInfo, noteListMap[i])
@@ -75,9 +75,9 @@ func GetBookContentJsonHandler(c *gin.Context) {
 		c.JSON(500, h)
 		return
 	}
-	url = sprider.URL + url
+	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
-	chp := sprider.GetNoteContent(url)
+	chp := spider.GetNoteContent(url)
 	if chp == nil {
 		c.JSON(500, h)
 		return
@@ -95,12 +95,12 @@ func GetTopNoteListJsonHandler(c *gin.Context) {
 		Code int         `json:"code"` //code = 0 为一个结果  code = 1为小说列表
 		List interface{} `json:"list"`
 	}
-	noteListMap, ok := sprider.GetTopNoteList()
+	noteListMap, ok := spider.GetTopNoteList()
 	if !ok {
 		c.JSON(500, h)
 		return
 	}
-	var noteInfo []sprider.TopNote
+	var noteInfo []spider.TopNote
 
 	for i := 1; i <= len(noteListMap); i++ {
 		noteInfo = append(noteInfo, noteListMap[i])
@@ -120,14 +120,14 @@ func GetNoteInfoJsonHandler(c *gin.Context) {
 		c.JSON(500, h)
 		return
 	}
-	url = sprider.URL + url
+	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
-	chptMap, ok := sprider.GetNoteChapterListByUrl(url)
+	chptMap, ok := spider.GetNoteChapterListByUrl(url)
 	if !ok {
 		c.JSON(500, h)
 		return
 	}
-	var noteInfo []sprider.ChapterInfo
+	var noteInfo []spider.ChapterInfo
 
 	for i := 1; i <= len(chptMap); i++ {
 		noteInfo = append(noteInfo, chptMap[i])

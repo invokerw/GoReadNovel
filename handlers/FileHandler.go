@@ -3,18 +3,20 @@ package handlers
 import (
 	"GoReadNote/helpers"
 	"GoReadNote/logger"
-	//"GoReadNote/sprider"
+	//"GoReadNote/spider"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	//"strings"
-	"path/filepath"
-	"os"
 	"fmt"
 	"io"
+	"os"
+	"path/filepath"
 )
-const(
+
+const (
 	Upload_Dir = "./savefile/"
 )
+
 func GetUpLoadPageHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to HomeHandler")
 	helpers.Render(c, gin.H{"Title": "文件上传"}, "uploadfile.tmpl")
@@ -26,11 +28,11 @@ func UploadFileHandler(c *gin.Context) {
 
 	//在使用r.MultipartForm前必须先调用ParseMultipartForm方法，参数为最大缓存
 	//Max 16MB
-	c.Request.ParseMultipartForm(2 << 24) 
+	c.Request.ParseMultipartForm(2 << 24)
 
 	file, handler, err := c.Request.FormFile("uploadfile")
 
-	if err != nil{
+	if err != nil {
 		//上传错误
 		fmt.Printf("上传错误")
 		return
@@ -45,9 +47,9 @@ func UploadFileHandler(c *gin.Context) {
 		return
 	}
 	filedir, _ := filepath.Abs(Upload_Dir + fileName)
-	fmt.Printf(fileName+"上传完成,服务器地址:"+filedir)	
+	fmt.Printf(fileName + "上传完成,服务器地址:" + filedir)
 	//helpers.Render(c, h, "note.tmpl")
-	
+
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n","OK")))
 	c.Redirect(http.StatusMovedPermanently, "/GetFileList")
 	return

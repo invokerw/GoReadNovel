@@ -1,4 +1,4 @@
-package sprider
+package spider
 
 import (
 	"GoReadNote/logger"
@@ -23,7 +23,7 @@ func GoroutineGetNoteChapterListByNoteName(ch chan map[int]ChapterInfo, noteName
 
 func GetNoteChapterListByNoteName(noteName string) (map[int]ChapterInfo, bool) {
 	logger.ALogger().Debug("Try to GetNoteChapterListByNoteName noteName:", noteName)
-	cmd := exec.Command("python", "./sprider/python/getNoteChaptersBySearch.py", noteName)
+	cmd := exec.Command("python", "./spider/python/getNoteChaptersBySearch.py", noteName)
 	buf, err := cmd.Output()
 	if err != nil {
 		fmt.Println("%v", err)
@@ -60,7 +60,7 @@ func GetNoteChapterListByNoteName(noteName string) (map[int]ChapterInfo, bool) {
 
 func GetNoteChapterListByUrl(url string) (map[int]ChapterInfo, bool) {
 	logger.ALogger().Debug("Try to GetNoteChapterListByUrl url:", url)
-	cmd := exec.Command("python", "./sprider/python/getNoteChaptersByUrl.py", url)
+	cmd := exec.Command("python", "./spider/python/getNoteChaptersByUrl.py", url)
 	buf, err := cmd.Output()
 	if err != nil {
 		fmt.Println("%v", err)
