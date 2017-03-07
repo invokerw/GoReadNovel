@@ -48,23 +48,31 @@ func UploadFileHandler(c *gin.Context) {
 	//check file type
 
 	fileName := handler.Filename
-	f, _ := os.OpenFile(Upload_Dir+fileName, os.O_CREATE|os.O_WRONLY, 0660)
-	_, err = io.Copy(f, file)
-	if err != nil {
-		logger.ALogger().Error("上传失败")
-		c.JSON(500, h)
-		return
-	}
+
 	if ftype == "main" {
 
 		filedir, _ := filepath.Abs(Upload_Dir + "/main/" + fileName)
+		f, _ := os.OpenFile(filedir, os.O_CREATE|os.O_WRONLY, 0660)
+		_, err = io.Copy(f, file)
+		if err != nil {
+			logger.ALogger().Error("上传失败")
+			c.JSON(500, h)
+			return
+		}
 		logger.ALogger().Debug(fileName + "上传完成,服务器地址:" + filedir)
 		c.Redirect(http.StatusMovedPermanently, "/GetFileList")
 	} else if ftype == "wei" {
 
 		filedir, _ := filepath.Abs(Upload_Dir + "/wei/" + fileName)
+		f, _ := os.OpenFile(filedir, os.O_CREATE|os.O_WRONLY, 0660)
+		_, err = io.Copy(f, file)
+		if err != nil {
+			logger.ALogger().Error("上传失败")
+			c.JSON(500, h)
+			return
+		}
 		logger.ALogger().Debug(fileName + "上传完成,服务器地址:" + filedir)
-		c.Redirect(http.StatusMovedPermanently, "/weifei")
+		c.Redirect(http.StatusMovedPermanently, "/Weifei")
 	}
 	return
 }
