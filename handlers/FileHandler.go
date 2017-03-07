@@ -51,7 +51,7 @@ func UploadFileHandler(c *gin.Context) {
 
 	if ftype == "main" {
 
-		filedir, _ := filepath.Abs(Upload_Dir + "/main/" + fileName)
+		filedir, _ := filepath.Abs(Upload_Dir + "main/" + fileName)
 		f, _ := os.OpenFile(filedir, os.O_CREATE|os.O_WRONLY, 0660)
 		_, err = io.Copy(f, file)
 		if err != nil {
@@ -63,7 +63,7 @@ func UploadFileHandler(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/GetFileList")
 	} else if ftype == "wei" {
 
-		filedir, _ := filepath.Abs(Upload_Dir + "/wei/" + fileName)
+		filedir, _ := filepath.Abs(Upload_Dir + "wei/" + fileName)
 		f, _ := os.OpenFile(filedir, os.O_CREATE|os.O_WRONLY, 0660)
 		_, err = io.Copy(f, file)
 		if err != nil {
