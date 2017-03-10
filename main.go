@@ -32,7 +32,8 @@ func main() {
 	//文件上传
 	router.GET("/UploadFile", handlers.GetUpLoadPageHandler)
 	router.POST("/UploadFile", handlers.UploadFileHandler)
-	router.StaticFS("/GetFileList", http.Dir("./savefile/main"))
+	router.GET("/GetFileList",handlers.GetFileListHandler)
+	router.StaticFS("/Main", http.Dir("./savefile/main"))
 	router.StaticFS("/Weifei", http.Dir("./savefile/wei"))
 	//icon
 	router.StaticFile("/favicon.ico", "./statics/favicon.ico")
