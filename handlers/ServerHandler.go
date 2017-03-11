@@ -13,6 +13,11 @@ func HomeHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to HomeHandler")
 	helpers.Render(c, gin.H{"Title": "首页"}, "index.tmpl")
 }
+func NewHomeHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to NewHomeHandler")
+	c.HTML(200, "index.html", gin.H{})
+	//helpers.Render(c, gin.H{}, "index.html")
+}
 
 func GetNoteContentHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetNoteContentHandler")

@@ -12,6 +12,8 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode) //全局设置环境，此为开发环境，线上环境为 gin.ReleaseMode  gin.DebugMode
 	router := gin.Default()      //获得路由实例
+
+	router.LoadHTMLGlob("templates/*")
 	//网页请求----------------------
 	//添加中间件
 	router.Use(middleware.Middleware)
@@ -37,6 +39,10 @@ func main() {
 	router.StaticFS("/Weifei", http.Dir("./savefile/wei"))
 	//icon
 	router.StaticFile("/favicon.ico", "./statics/favicon.ico")
+
+	//测试
+	router.GET("/1", handlers.NewHomeHandler)
+	router.StaticFS("/statics", http.Dir("./statics"))
 
 	logger.ALogger().Notice("Listen start.")
 	logger.ALogger().Notice("Listen 443 https")
