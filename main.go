@@ -50,7 +50,7 @@ func main() {
 	//http.ListenAndServe(":8005", router)
 	//http.ListenAndServeTLS(":443", "server.crt", "server.key", router)
 	//8000端口是测试之用 实际端口为443
-	err := http.ListenAndServeTLS(":4433", "./ca/1_fsnsaber.cn_bundle.crt", "./ca/2_fsnsaber.cn.key", router)
+	err := http.ListenAndServeTLS(":443", "./ca/1_fsnsaber.cn_bundle.crt", "./ca/2_fsnsaber.cn.key", router)
 	//http.ListenAndServeTLS(":443","2_fsnsaber.cn.crt","3_fsnsaber.cn.key",router)
 	logger.ALogger().Error(err)
 
