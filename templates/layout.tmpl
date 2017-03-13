@@ -4,17 +4,81 @@
 
 <head>
     <title><% .Title %/></title>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--[if lte IE 8]><script src="../statics/assets/js/ie/html5shiv.js"></script><![endif]-->
+	<link rel="stylesheet" href="../statics/assets/css/main.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="../statics/assets/css/ie8.css" /><![endif]-->
 </head>
-<body >
-	<div style="margin:0 auto;width: 80%" > 
-	<p><a href="/"><% .Title %/> &nbsp;&nbsp;&nbsp;境界的彼方</a></p>
-	<p><a href="/GetJson" >json请求	</a> </p>
-	</div>
+<body class="homepage">
+	<div id="page-wrapper">
+
+		<!--<div style="margin:0 auto;width: 80%" > 
+			<p><a href="/"><% .Title %/></a> &nbsp;&nbsp;&nbsp;境界的彼方</p>
+			<p><a href="/GetJson" >json请求	</a> </p>
+		</div> -->
+
+		<!-- Header -->
+		<div id="header">
+			<!-- Inner -->
+				<div class="inner">
+					<header>
+						<hr />
+						<h1><a href="/" id="logo">山有木兮木有枝,春江水暖鸭先知.</a></h1>
+						<hr />
+						<p>好きだ</p>
+						
+					</header>
+
+					<footer>
+						<a href="#banner" class="button circled scrolly">Start</a>
+					</footer>
+				</div>
+
+			<!-- Nav -->
+				<nav id="nav">
+					<ul>
+						<li><a href="/">Home</a></li>
+						<li>
+							<a href="#">Dropdown</a>
+							<ul>
+								<li><a href="#">Lorem ipsum dolor</a></li>
+								<li><a href="#">Magna phasellus</a></li>
+								<li><a href="#">Etiam dolore nisl</a></li>
+								<li>
+									<a href="#">And a submenu &hellip;</a>
+									<ul>
+										<li><a href="#">Lorem ipsum dolor</a></li>
+										<li><a href="#">Phasellus consequat</a></li>
+										<li><a href="#">Magna phasellus</a></li>
+										<li><a href="#">Etiam dolore nisl</a></li>
+									</ul>
+								</li>
+								<li><a href="#">Veroeros feugiat</a></li>
+							</ul>
+						</li>
+						<li><a href="/UploadFile">Upload File</a></li>
+						<li><a href="/Main">Download File</a></li>
+						<li><a href="/Weifei">Important</a></li>
+					</ul>
+				</nav>
+
+		</div>
 	
-	<div style="margin:0 auto;width: 80%">
-		<% template "content" . %/>		
 	</div>
-	
+	<div id="banner" style="margin:0 auto;width: 80%">
+		<% template "content" . %/>	
+	</div>
+
+	<!-- Scripts -->
+	<script src="../statics/assets/js/jquery.min.js"></script>
+	<script src="../statics/assets/js/jquery.dropotron.min.js"></script>
+	<script src="../statics/assets/js/jquery.scrolly.min.js"></script>
+	<script src="../statics/assets/js/jquery.onvisible.min.js"></script>
+	<script src="../statics/assets/js/skel.min.js"></script>
+	<script src="../statics/assets/js/util.js"></script>
+	<!--[if lte IE 8]><script src="../statics/assets/js/ie/respond.min.js"></script><![endif]-->
+	<script src="../statics/assets/js/main.js"></script>
 	 
 </body>
 </html>
