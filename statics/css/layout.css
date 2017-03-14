@@ -1,0 +1,18 @@
+#bottom_div{
+		background-image: url(../images/header.jpg) ;
+		background-repeat:no-repeat;
+		background-size:100% 100%;
+		margin:0 auto;
+		width:100%
+	}
+	
+#banner p {
+			color: #fff;
+			font-size: 1em;
+			line-height: 1em;
+		}
+
+	#banner p a {
+				color: inherit;
+	    } 
+			
