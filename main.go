@@ -19,6 +19,7 @@ func main() {
 	router.Use(middleware.Middleware)
 	//搜索小说
 	router.GET("/", handlers.HomeHandler)
+	router.GET("/SearchIndex", handlers.GetSearchIndexHandler)
 	router.GET("/SearchNote", handlers.SearchNoteHandler)
 	router.GET("/GetBookInfo", handlers.GetBookInfoHandler)
 	//获取章节内容
