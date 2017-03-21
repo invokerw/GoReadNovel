@@ -27,8 +27,8 @@ try:
     response = urllib2.urlopen(request)
     content = response.read().decode('gbk')
     head = response.info()
-
-    # page = re.compile('<li>.*?<a.*?href="(.*?)">(.*?)</a>*?</li>', re.S)
+	# print content
+	# page = re.compile('<li>.*?<a.*?href="(.*?)">(.*?)</a>*?</li>', re.S)
     page = re.compile(
         '<tr>.*?<td.*?href="(.*?)">(.*?)<.*?href="(.*?)".*?>'
         '(.*?)</a.*?<td.*?>(.*?)</.*?<td.*?</td>.*?<td.*?>(.*?)</td>'
