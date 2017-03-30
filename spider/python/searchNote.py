@@ -19,11 +19,14 @@ url = 'http://www.huanyue123.com/modules/article/search.php'
 
 values = {'searchkey': strs}
 
+user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'# 将user_agent写入头信息
+
+headers = { 'User-Agent' : user_agent }
+
 data = urllib.urlencode(values)
 
-
 try:
-    request = urllib2.Request(url, data=data)
+    request = urllib2.Request(url, data, headers)
     response = urllib2.urlopen(request)
     content = response.read().decode('gbk')
     head = response.info()

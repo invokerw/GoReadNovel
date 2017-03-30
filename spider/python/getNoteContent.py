@@ -15,8 +15,10 @@ if len(sys.argv) != 2:
 url = unicode(sys.argv[1], "UTF-8")
 # url = 'http://www.huanyue123.com/book/0/11/925296.html'  # 文章的地址
 # print url
+user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'# 将user_agent写入头信息
+headers = { 'User-Agent' : user_agent }
 try:
-    request = urllib2.Request(url)
+    request = urllib2.Request(url,headers=headers)
     response = urllib2.urlopen(request)
     content = response.read().decode('gbk')
     # head = response.info()
