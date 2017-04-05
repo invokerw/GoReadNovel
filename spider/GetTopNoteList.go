@@ -53,7 +53,7 @@ func GetTopNoteList() (map[int]TopNote, bool) {
 		noteFindMap[id] = sn
 
 	}
-	//fmt.Println("找到小说的数量:", len(noteFindMap))
+	logger.ALogger().Debug("找到小说的数量:", len(noteFindMap))
 	if len(noteFindMap) == 0 {
 		return nil, false
 	}
