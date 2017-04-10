@@ -21,7 +21,7 @@ GetTopNoteListJson
 GetBookContentJson 
 GetSearchNoteJson
 GetNoteInfoJson   ?go=/book/0/11/
-
+GetTopByTypeNoteListJson  ntype stype page
 
 #修改为https模式
 

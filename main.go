@@ -31,6 +31,7 @@ func main() {
 	router.GET("/GetBookContentJson", handlers.GetBookContentJsonHandler)
 	router.GET("/GetTopNoteListJson", handlers.GetTopNoteListJsonHandler)
 	router.GET("/GetNoteInfoJson", handlers.GetNoteInfoJsonHandler)
+	router.GET("/GetTopByTypeNoteListJson", handlers.GetTopByTypeNoteListJsonHandler)
 
 	//文件上传
 	router.GET("/UploadFile", handlers.GetUpLoadPageHandler)

@@ -115,6 +115,43 @@ func GetTopNoteListJsonHandler(c *gin.Context) {
 
 }
 
+func GetTopByTypeNoteListJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetTopByTypeNoteListJsonHandler")
+	h := gin.H{}
+	type JsonRet struct {
+		Code int         `json:"code"` //code = 0 为一个结果  code = 1为小说列表
+		List interface{} `json:"list"`
+	}
+	//获取
+	noteType, exist := c.GetQuery("ntype")
+	if !exist {
+		noteType = "quanbu"
+	}
+	sortType, exist := c.GetQuery("stype")
+	if !exist {
+		sortType = "default"
+	}
+	page, exist := c.GetQuery("page")
+	if !exist {
+		page = "1"
+	}
+
+	noteListMap, ok := spider.GetTopByTypeNoteList(noteType, sortType, page)
+	if !ok {
+		c.JSON(500, h)
+		return
+	}
+	var noteInfo []spider.TopTypeNote
+
+	for i := 1; i <= len(noteListMap); i++ {
+		noteInfo = append(noteInfo, noteListMap[i])
+	}
+	//code = 0 为一个结果  code = 1为小说列表
+	retJson := JsonRet{Code: 1, List: noteInfo}
+	c.JSON(200, retJson)
+	return
+}
+
 func GetNoteInfoJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetNoteInfoJsonHandler")
 	h := gin.H{}
