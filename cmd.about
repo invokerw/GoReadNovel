@@ -1,0 +1,7 @@
+
+Centos 7:
+
+docker pull centos:7
+docker run -i -t centos:7 /bin/bash
+
+docker run -it --rm --name notea -p 8080:443 -v /root/gopro/src/GoReadNote/:/go/src/GoReadNote -w /go/src/GoReadNote note
