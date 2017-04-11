@@ -4,7 +4,17 @@ Centos 7:
 docker pull centos:7
 docker run -i -t centos:7 /bin/bash
 
+centos server
+
 docker run -it --rm --name notea -p 8080:443 -v /root/gopro/src/GoReadNote/:/go/src/GoReadNote -w /go/src/GoReadNote note
+
+ubuntu server
+
+
+docker run -it --rm --name notea -p 8080:443 -v /home/saber/goPro/src/GoReadNote:/go/src/GoReadNote -w /go/src/GoReadNote note
+
+
+
 
 docker run  -p 3306:3306 -v /var/lib/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=weifei mysql
 
