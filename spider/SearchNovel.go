@@ -7,15 +7,15 @@ import (
 	"strings"
 )
 
-type SearchNote struct {
-	Note
+type SearchNovel struct {
+	Novel
 }
 
-func SearchNoteByName(noteName string) (map[int]SearchNote, bool) {
-	logger.ALogger().Debug("Try to SearchNoteByName noteName:", noteName)
+func SearchNovelByName(novelName string) (map[int]SearchNovel, bool) {
+	logger.ALogger().Debugf("Try to SearchNovelByName novelName:%s", novelName)
 
-	cmd := exec.Command("python", "./spider/python/searchNote.py", noteName)
-	//cmd := exec.Command("python", "searchNote.py", noteName)
+	cmd := exec.Command("python", "./spider/python/searchNovel.py", novelName)
+	//cmd := exec.Command("python", "searchNovel.py", novelName)
 	buf, err := cmd.Output()
 	if err != nil {
 		logger.ALogger().Error("%v", err)
@@ -23,8 +23,8 @@ func SearchNoteByName(noteName string) (map[int]SearchNote, bool) {
 	}
 	str := string(buf)
 	//fmt.Println("输出:", str)
-	var noteFindMap map[int]SearchNote
-	noteFindMap = make(map[int]SearchNote)
+	var novelFindMap map[int]SearchNovel
+	novelFindMap = make(map[int]SearchNovel)
 
 	datas := strings.Split(strings.TrimSpace(str), ",")
 
@@ -40,30 +40,30 @@ func SearchNoteByName(noteName string) (map[int]SearchNote, bool) {
 			continue
 		}
 
-		sn := SearchNote{}
+		sn := SearchNovel{}
 		sn.Index = id
-		sn.NoteUrl = "/GetBookInfo?go=" + idUrlName[1][len(URL):len(idUrlName[1])]
-		sn.NoteName = idUrlName[2]
+		sn.NovelUrl = "/GetBookInfo?go=" + idUrlName[1][len(URL):len(idUrlName[1])]
+		sn.NovelName = idUrlName[2]
 		sn.LatestChpName = idUrlName[3]
 		sn.Author = idUrlName[4]
 		sn.Status = idUrlName[5]
 		sn.LatestChpUrl = "/GetBookInfo?go=" + idUrlName[6]
-		noteFindMap[id] = sn
+		novelFindMap[id] = sn
 
 	}
-	//logger.ALogger().Debug("找到小说的数量:", len(noteFindMap))
-	if len(noteFindMap) == 0 {
+	//logger.ALogger().Debug("找到小说的数量:", len(NovelFindMap))
+	if len(novelFindMap) == 0 {
 		return nil, false
 	}
-	return noteFindMap, true
+	return novelFindMap, true
 }
 
 /*
 func main() {
 
-	noteFindMap, _ := SearchNoteByName("遮天")
-	for i := 1; i <= len(noteFindMap); i++ {
-		fmt.Printf("%d : %v\n", i, noteFindMap[i])
+	novelFindMap, _ := SeNovelByName("遮天")
+	for i := 1; i <= len(novelFindMap); i++ {
+		fmt.Printf("%d : %v\n", i, novelFindMap[i])
 	}
 
 }

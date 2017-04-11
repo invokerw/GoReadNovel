@@ -8,15 +8,15 @@ import (
 	"strings"
 )
 
-type TopNote struct {
-	Note
+type TopNovel struct {
+	Novel
 }
 
-func GetTopNoteList() (map[int]TopNote, bool) {
-	logger.ALogger().Debug("Try to GetTopNoteList ")
+func GetTopNovelList() (map[int]TopNovel, bool) {
+	logger.ALogger().Debug("Try to GetTopNovelList ")
 
-	cmd := exec.Command("python", "./spider/python/getTopNoteList.py")
-	//cmd := exec.Command("python", "getTopNoteList.py")
+	cmd := exec.Command("python", "./spider/python/getTopNovelList.py")
+	//cmd := exec.Command("python", "getTopNovelList.py")
 	buf, err := cmd.Output()
 	if err != nil {
 		logger.ALogger().Error("%v", err)
@@ -24,8 +24,8 @@ func GetTopNoteList() (map[int]TopNote, bool) {
 	}
 	str := string(buf)
 	//fmt.Println("输出:", str)
-	var noteFindMap map[int]TopNote
-	noteFindMap = make(map[int]TopNote)
+	var novelFindMap map[int]TopNovel
+	novelFindMap = make(map[int]TopNovel)
 
 	datas := strings.Split(strings.TrimSpace(str), ",")
 
@@ -41,31 +41,31 @@ func GetTopNoteList() (map[int]TopNote, bool) {
 			continue
 		}
 
-		sn := TopNote{}
+		sn := TopNovel{}
 		sn.Index = id
-		sn.NoteUrl = "/GetBookInfo?go=" + idUrlName[1][len(URL):len(idUrlName[1])]
-		sn.NoteName = idUrlName[2]
+		sn.NovelUrl = "/GetBookInfo?go=" + idUrlName[1][len(URL):len(idUrlName[1])]
+		sn.NovelName = idUrlName[2]
 		sn.LatestChpName = idUrlName[3]
 		sn.Author = idUrlName[4]
 		sn.Status = idUrlName[5]
 		sn.LatestChpUrl = "/GetBookInfo?go=" + idUrlName[6]
 
-		noteFindMap[id] = sn
+		novelFindMap[id] = sn
 
 	}
-	logger.ALogger().Debug("找到小说的数量:", len(noteFindMap))
-	if len(noteFindMap) == 0 {
+	logger.ALogger().Debug("找到小说的数量:", len(novelFindMap))
+	if len(novelFindMap) == 0 {
 		return nil, false
 	}
-	return noteFindMap, true
+	return novelFindMap, true
 }
 
 /*
 func main() {
 
-	noteFindMap, _ := GetTopNoteList()
-	for i := 1; i <= len(noteFindMap); i++ {
-		fmt.Printf("%d : %v\n", i, noteFindMap[i])
+	novelFindMap, _ := GetTopNovelList()
+	for i := 1; i <= len(novelFindMap); i++ {
+		fmt.Printf("%d : %v\n", i, novelFindMap[i])
 	}
 
 }

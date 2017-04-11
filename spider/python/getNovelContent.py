@@ -10,7 +10,7 @@ sys.setdefaultencoding('gbk')
 # 输入IP地址转换为文章文件保存至当前目录下  后面可能需要改一下输入保存地址
 
 if len(sys.argv) != 2:
-    print 'Err : GetNoteContent参数不够'
+    print 'Err : GetNovelContent参数不够'
     exit()
 url = unicode(sys.argv[1], "UTF-8")
 # url = 'http://www.huanyue123.com/book/0/11/925296.html'  # 文章的地址

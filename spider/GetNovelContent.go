@@ -7,18 +7,18 @@ import (
 )
 
 type ChapterContent struct {
-	Content     string `json:"content"`  //章节内容
-	ChapterName string `json:"chpname"`  //章节名称
-	Url         string `json:"churl"`    //地址
-	ChpNext     string `json:"nexturl"`  //上一章
-	ChpPre      string `json:"preurl"`   //下一章
-	NoteName    string `json:"notename"` //小说名字
+	Content     string `json:"content"`   //章节内容
+	ChapterName string `json:"chpname"`   //章节名称
+	Url         string `json:"churl"`     //地址
+	ChpNext     string `json:"nexturl"`   //上一章
+	ChpPre      string `json:"preurl"`    //下一章
+	NovelName   string `json:"novelname"` //小说名字
 }
 
-func GetNoteContent(url string) *ChapterContent {
-	logger.ALogger().Debug("Try to GetNoteContent url:", url)
+func GetNovelContent(url string) *ChapterContent {
+	logger.ALogger().Debug("Try to GetNovelContent url:", url)
 
-	cmd := exec.Command("python", "./spider/python/getNoteContent.py", url)
+	cmd := exec.Command("python", "./spider/python/getNovelContent.py", url)
 	buf, err := cmd.Output()
 	if err != nil {
 		logger.ALogger().Error("%v", err)
@@ -35,10 +35,10 @@ func GetNoteContent(url string) *ChapterContent {
 	cc := ChapterContent{}
 	cc.Content = datas[1]
 	cc.Url = url
-	cc.NoteName = datas[4]
+	cc.NovelName = datas[4]
 	cc.ChapterName = datas[0]
 	if datas[2][len(datas[2])-1] == '/' {
-		cc.ChpPre = "/GetBookInfo?go=" + datas[2] + "&name=" + cc.NoteName
+		cc.ChpPre = "/GetBookInfo?go=" + datas[2] + "&name=" + cc.NovelName
 	} else {
 		cc.ChpPre = "/GetBookContent?go=" + datas[2]
 	}
@@ -51,7 +51,7 @@ func GetNoteContent(url string) *ChapterContent {
 /*
 func main() {
 	url := "http://www.huanyue123.com/book/0/11/2925296.html"
-	chc := GetNoteContent(url)
+	chc := GetNovelContent(url)
 	fmt.Println(chc.ChapterName)
 	fmt.Println(chc.Content)
 

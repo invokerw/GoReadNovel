@@ -16,14 +16,14 @@ type ChapterInfo struct {
 
 /*
 	//是否加携程会好一些
-func GoroutineGetNoteChapterListByNoteName(ch chan map[int]ChapterInfo, noteName string) {
-	ch <- GetNoteChapterListByNoteName(noteName)
+func GoroutineGetNovelChapterListByNovelName(ch chan map[int]ChapterInfo, novelName string) {
+	ch <- GetNovelChapterListByNovelName(novelName)
 }
 */
 
-func GetNoteChapterListByNoteName(noteName string) (map[int]ChapterInfo, bool) {
-	logger.ALogger().Debug("Try to GetNoteChapterListByNoteName noteName:", noteName)
-	cmd := exec.Command("python", "./spider/python/getNoteChaptersBySearch.py", noteName)
+func GetNovelChapterListByNovelName(novelName string) (map[int]ChapterInfo, bool) {
+	logger.ALogger().Debug("Try to GetNovelChapterListByNovelName NovelName:", novelName)
+	cmd := exec.Command("python", "./spider/python/getNovelChaptersBySearch.py", novelName)
 	buf, err := cmd.Output()
 	if err != nil {
 		fmt.Println("%v", err)
@@ -58,9 +58,9 @@ func GetNoteChapterListByNoteName(noteName string) (map[int]ChapterInfo, bool) {
 	return chpMap, true
 }
 
-func GetNoteChapterListByUrl(url string) (map[int]ChapterInfo, bool) {
-	logger.ALogger().Debug("Try to GetNoteChapterListByUrl url:", url)
-	cmd := exec.Command("python", "./spider/python/getNoteChaptersByUrl.py", url)
+func GetNovelChapterListByUrl(url string) (map[int]ChapterInfo, bool) {
+	logger.ALogger().Debug("Try to GetNovelChapterListByUrl url:", url)
+	cmd := exec.Command("python", "./spider/python/getNovelChaptersByUrl.py", url)
 	buf, err := cmd.Output()
 	if err != nil {
 		fmt.Println("%v", err)
@@ -98,7 +98,7 @@ func GetNoteChapterListByUrl(url string) (map[int]ChapterInfo, bool) {
 /*
 func main() {
 
-	chpMap = GetNoteChapterList("圣墟")
+	chpMap = GetNovelChapterList("圣墟")
 	for i := 1; i <= len(chpMap); i++ {
 		fmt.Printf("第%d章:%s\n", i, chpMap[i].ChapterName)
 	}

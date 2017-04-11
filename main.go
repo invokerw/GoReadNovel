@@ -20,18 +20,18 @@ func main() {
 	//搜索小说
 	router.GET("/", handlers.HomeHandler)
 	router.GET("/SearchIndex", handlers.GetSearchIndexHandler)
-	router.GET("/SearchNote", handlers.SearchNoteHandler)
+	router.GET("/SearchNovel", handlers.SearchNovelHandler)
 	router.GET("/GetBookInfo", handlers.GetBookInfoHandler)
 	//获取章节内容
-	router.GET("/GetBookContent", handlers.GetNoteContentHandler)
+	router.GET("/GetBookContent", handlers.GetNovelContentHandler)
 
 	//JSON请求----------------------
 	router.GET("/GetJson", handlers.GetJsonHandler)
-	router.GET("/GetSearchNoteJson", handlers.GetSearchNoteJsonHandler)
+	router.GET("/GetSearchNovelJson", handlers.GetSearchNovelJsonHandler)
 	router.GET("/GetBookContentJson", handlers.GetBookContentJsonHandler)
-	router.GET("/GetTopNoteListJson", handlers.GetTopNoteListJsonHandler)
-	router.GET("/GetNoteInfoJson", handlers.GetNoteInfoJsonHandler)
-	router.GET("/GetTopByTypeNoteListJson", handlers.GetTopByTypeNoteListJsonHandler)
+	router.GET("/GetTopNovelListJson", handlers.GetTopNovelListJsonHandler)
+	router.GET("/GetNovelInfoJson", handlers.GetNovelInfoJsonHandler)
+	router.GET("/GetTopByTypeNovelListJson", handlers.GetTopByTypeNovelListJsonHandler)
 
 	//文件上传
 	router.GET("/UploadFile", handlers.GetUpLoadPageHandler)
@@ -49,10 +49,10 @@ func main() {
 	logger.ALogger().Notice("Listen start.")
 	logger.ALogger().Notice("Listen 443 https")
 	//监听端口
-	//err := http.ListenAndServe(":8000", router)
+	err := http.ListenAndServe(":8000", router)
 	//http.ListenAndServeTLS(":443", "server.crt", "server.key", router)
 	//8000端口是测试之用 实际端口为443
-	err := http.ListenAndServeTLS(":443", "./ca/1_fsnsaber.cn_bundle.crt", "./ca/2_fsnsaber.cn.key", router)
+	//err := http.ListenAndServeTLS(":443", "./ca/1_fsnsaber.cn_bundle.crt", "./ca/2_fsnsaber.cn.key", router)
 	//http.ListenAndServeTLS(":443","2_fsnsaber.cn.crt","3_fsnsaber.cn.key",router)
 	logger.ALogger().Error(err)
 

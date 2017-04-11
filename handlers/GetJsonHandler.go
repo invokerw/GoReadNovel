@@ -30,20 +30,20 @@ func GetJsonHandler(c *gin.Context) {
 	return
 }
 
-func GetSearchNoteJsonHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetSearchNoteJsonHandler")
+func GetSearchNovelJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetSearchNovelJsonHandler")
 
 	h := gin.H{}
 
-	noteName, exist := c.GetQuery("notename")
+	novelName, exist := c.GetQuery("novelname")
 	if !exist {
 		c.JSON(500, h)
 		return
 	}
-	noteListMap, find := spider.SearchNoteByName(noteName)
+	novelListMap, find := spider.SearchNovelByName(novelName)
 	if !find {
 		//没有找到 再试试直接Get
-		chptMap, ok := spider.GetNoteChapterListByNoteName(noteName)
+		chptMap, ok := spider.GetNovelChapterListByNovelName(novelName)
 		if !ok {
 			c.JSON(500, h)
 			return
@@ -58,19 +58,19 @@ func GetSearchNoteJsonHandler(c *gin.Context) {
 		c.JSON(200, retJson)
 		return
 	}
-	var noteInfo []spider.SearchNote
+	var novelInfo []spider.SearchNovel
 
-	for i := 1; i <= len(noteListMap); i++ {
-		noteInfo = append(noteInfo, noteListMap[i])
+	for i := 1; i <= len(novelListMap); i++ {
+		novelInfo = append(novelInfo, novelListMap[i])
 	}
 	//code = 0 为一个结果  code = 1为小说列表
-	retJson := JsonRet{Code: 1, List: noteInfo}
+	retJson := JsonRet{Code: 1, List: novelInfo}
 	c.JSON(200, retJson)
 	return
 }
 
 func GetBookContentJsonHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetSearchNoteJsonHandler")
+	logger.ALogger().Debug("Try to GetSearchNovelJsonHandler")
 	h := gin.H{}
 
 	url, exist := c.GetQuery("go")
@@ -80,7 +80,7 @@ func GetBookContentJsonHandler(c *gin.Context) {
 	}
 	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
-	chp := spider.GetNoteContent(url)
+	chp := spider.GetNovelContent(url)
 	if chp == nil {
 		c.JSON(500, h)
 		return
@@ -91,41 +91,41 @@ func GetBookContentJsonHandler(c *gin.Context) {
 
 }
 
-func GetTopNoteListJsonHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetTopNoteListJsonHandler")
+func GetTopNovelListJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetTopNovelListJsonHandler")
 	h := gin.H{}
 	type JsonRet struct {
 		Code int         `json:"code"` //code = 0 为一个结果  code = 1为小说列表
 		List interface{} `json:"list"`
 	}
-	noteListMap, ok := spider.GetTopNoteList()
+	novelListMap, ok := spider.GetTopNovelList()
 	if !ok {
 		c.JSON(500, h)
 		return
 	}
-	var noteInfo []spider.TopNote
+	var novelInfo []spider.TopNovel
 
-	for i := 1; i <= len(noteListMap); i++ {
-		noteInfo = append(noteInfo, noteListMap[i])
+	for i := 1; i <= len(novelListMap); i++ {
+		novelInfo = append(novelInfo, novelListMap[i])
 	}
 	//code = 0 为一个结果  code = 1为小说列表
-	retJson := JsonRet{Code: 1, List: noteInfo}
+	retJson := JsonRet{Code: 1, List: novelInfo}
 	c.JSON(200, retJson)
 	return
 
 }
 
-func GetTopByTypeNoteListJsonHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetTopByTypeNoteListJsonHandler")
+func GetTopByTypeNovelListJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetTopByTypeNovelListJsonHandler")
 	h := gin.H{}
 	type JsonRet struct {
 		Code int         `json:"code"` //code = 0 为一个结果  code = 1为小说列表
 		List interface{} `json:"list"`
 	}
 	//获取
-	noteType, exist := c.GetQuery("ntype")
+	novelType, exist := c.GetQuery("ntype")
 	if !exist {
-		noteType = "quanbu"
+		novelType = "quanbu"
 	}
 	sortType, exist := c.GetQuery("stype")
 	if !exist {
@@ -136,24 +136,24 @@ func GetTopByTypeNoteListJsonHandler(c *gin.Context) {
 		page = "1"
 	}
 
-	noteListMap, ok := spider.GetTopByTypeNoteList(noteType, sortType, page)
+	novelListMap, ok := spider.GetTopByTypeNovelList(novelType, sortType, page)
 	if !ok {
 		c.JSON(500, h)
 		return
 	}
-	var noteInfo []spider.TopTypeNote
+	var novelInfo []spider.TopTypeNovel
 
-	for i := 1; i <= len(noteListMap); i++ {
-		noteInfo = append(noteInfo, noteListMap[i])
+	for i := 1; i <= len(novelListMap); i++ {
+		novelInfo = append(novelInfo, novelListMap[i])
 	}
 	//code = 0 为一个结果  code = 1为小说列表
-	retJson := JsonRet{Code: 1, List: noteInfo}
+	retJson := JsonRet{Code: 1, List: novelInfo}
 	c.JSON(200, retJson)
 	return
 }
 
-func GetNoteInfoJsonHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetNoteInfoJsonHandler")
+func GetNovelInfoJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetNovelInfoJsonHandler")
 	h := gin.H{}
 	url, exist := c.GetQuery("go")
 	if !exist {
@@ -162,17 +162,17 @@ func GetNoteInfoJsonHandler(c *gin.Context) {
 	}
 	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
-	chptMap, ok := spider.GetNoteChapterListByUrl(url)
+	chptMap, ok := spider.GetNovelChapterListByUrl(url)
 	if !ok {
 		c.JSON(500, h)
 		return
 	}
-	var noteInfo []spider.ChapterInfo
+	var novelInfo []spider.ChapterInfo
 
 	for i := 1; i <= len(chptMap); i++ {
-		noteInfo = append(noteInfo, chptMap[i])
+		novelInfo = append(novelInfo, chptMap[i])
 	}
-	retJson := JsonRet{Code: 1, List: noteInfo}
+	retJson := JsonRet{Code: 1, List: novelInfo}
 	c.JSON(200, retJson)
 	return
 

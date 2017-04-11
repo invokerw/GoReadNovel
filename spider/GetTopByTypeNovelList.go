@@ -8,14 +8,14 @@ import (
 	"strings"
 )
 
-type TopTypeNote struct {
-	Note
+type TopTypeNovel struct {
+	Novel
 }
 
-func GetTopByTypeNoteList(noteType string, sortType string, page string) (map[int]TopTypeNote, bool) {
-	logger.ALogger().Debug("Try to GetTopTypeNoteList ")
+func GetTopByTypeNovelList(novelType string, sortType string, page string) (map[int]TopTypeNovel, bool) {
+	logger.ALogger().Debug("Try to GetTopTypeNovelList ")
 
-	cmd := exec.Command("python", "./spider/python/getTopByTypeNoteList.py", noteType, sortType, page)
+	cmd := exec.Command("python", "./spider/python/getTopByTypeNovelList.py", novelType, sortType, page)
 
 	buf, err := cmd.Output()
 	if err != nil {
@@ -24,8 +24,8 @@ func GetTopByTypeNoteList(noteType string, sortType string, page string) (map[in
 	}
 	str := string(buf)
 	//fmt.Println("输出:", str)
-	var noteFindMap map[int]TopTypeNote
-	noteFindMap = make(map[int]TopTypeNote)
+	var novelFindMap map[int]TopTypeNovel
+	novelFindMap = make(map[int]TopTypeNovel)
 
 	datas := strings.Split(strings.TrimSpace(str), ",")
 
@@ -41,31 +41,31 @@ func GetTopByTypeNoteList(noteType string, sortType string, page string) (map[in
 			continue
 		}
 
-		sn := TopTypeNote{}
+		sn := TopTypeNovel{}
 		sn.Index = id
-		sn.NoteUrl = "/GetBookInfo?go=" + idUrlName[2][len(URL):len(idUrlName[2])]
-		sn.NoteName = idUrlName[3]
+		sn.NovelUrl = "/GetBookInfo?go=" + idUrlName[2][len(URL):len(idUrlName[2])]
+		sn.NovelName = idUrlName[3]
 		sn.LatestChpName = idUrlName[7]
 		sn.Author = idUrlName[4]
 		sn.Desc = idUrlName[5]
 		sn.LatestChpUrl = "/GetBookInfo?go=" + idUrlName[6]
 
-		noteFindMap[id] = sn
+		novelFindMap[id] = sn
 
 	}
-	logger.ALogger().Debug("找到小说的数量:", len(noteFindMap))
-	if len(noteFindMap) == 0 {
+	logger.ALogger().Debug("找到小说的数量:", len(novelFindMap))
+	if len(novelFindMap) == 0 {
 		return nil, false
 	}
-	return noteFindMap, true
+	return novelFindMap, true
 }
 
 /*
 func main() {
 
-	noteFindMap, _ := GetTopByTypeNoteList()
-	for i := 1; i <= len(noteFindMap); i++ {
-		logger.ALogger().Debug("%d : %v\n", i, noteFindMap[i])
+	novelFindMap, _ := GetTopByTypeNovelList()
+	for i := 1; i <= len(novelFindMap); i++ {
+		logger.ALogger().Debug("%d : %v\n", i, novelFindMap[i])
 	}
 
 }

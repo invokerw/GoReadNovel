@@ -23,8 +23,8 @@ func GetSearchIndexHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSearchIndexHandler")
 	helpers.Render(c, gin.H{"Title": "搜索"}, "index.tmpl")
 }
-func GetNoteContentHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetNoteContentHandler")
+func GetNovelContentHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetNovelContentHandler")
 	h := gin.H{}
 	url, exist := c.GetQuery("go")
 	if !exist {
@@ -33,7 +33,7 @@ func GetNoteContentHandler(c *gin.Context) {
 	}
 	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
-	chp := spider.GetNoteContent(url)
+	chp := spider.GetNovelContent(url)
 	if chp == nil {
 		h["Title"] = "未知错误"
 		helpers.Render(c, h, "err.tmpl")
@@ -45,7 +45,7 @@ func GetNoteContentHandler(c *gin.Context) {
 	//logger.ALogger().Notice("chp.Content:", chp.Content)
 
 	h["ContentArry"] = strings.Split(strings.TrimSpace(chp.Content), "\n")
-	helpers.Render(c, h, "note.tmpl")
+	helpers.Render(c, h, "novel.tmpl")
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n\n%s\n", chp.ChapterName, chp.Content)))
 	return
 }

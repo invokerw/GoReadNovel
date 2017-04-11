@@ -10,25 +10,26 @@ import (
 )
 
 const (
-	BYNOTENAME = 0
-	BYURL      = 1
+	BYNOVELNAME = 0
+	BYURL       = 1
 )
 
-func SearchNoteHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to SearchNoteHandler")
+func SearchNovelHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to SearchNovelHandler")
 	h := gin.H{}
-	noteName, exist := c.GetQuery("notename")
+	novelName, exist := c.GetQuery("novelname")
 	if !exist {
 		c.JSON(500, h)
 	}
-	noteListMap, find := spider.SearchNoteByName(noteName)
+	logger.ALogger().Notice(" novelname:", novelName)
+	novelListMap, find := spider.SearchNovelByName(novelName)
 
-	//logger.ALogger().Notice("Try to noteListMap:", noteListMap)
+	//logger.ALogger().Notice("Try to novelListMap:", novelListMap)
 	if !find {
 		//没有找到 再试试直接Get
-		getNoteChapterList(c, noteName, "", BYNOTENAME)
+		getNovelChapterList(c, novelName, "", BYNOVELNAME)
 	} else {
-		showSearchResult(c, noteListMap)
+		showSearchResult(c, novelListMap)
 	}
 	return
 }
@@ -48,22 +49,22 @@ func GetBookInfoHandler(c *gin.Context) {
 	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
 
-	getNoteChapterList(c, name, url, BYURL)
+	getNovelChapterList(c, name, url, BYURL)
 	return
 
 }
-func getNoteChapterList(c *gin.Context, name string, url string, getType int) {
-	logger.ALogger().Debugf("Try to getNoteChapterList type = %d,name = %s,url = %s", getType, name, url)
+func getNovelChapterList(c *gin.Context, name string, url string, getType int) {
+	logger.ALogger().Debugf("Try to getNovelChapterList type = %d,name = %s,url = %s", getType, name, url)
 
 	h := gin.H{}
 
 	var chptMap map[int]spider.ChapterInfo
 	var ok bool
 
-	if getType == BYNOTENAME {
-		chptMap, ok = spider.GetNoteChapterListByNoteName(name)
+	if getType == BYNOVELNAME {
+		chptMap, ok = spider.GetNovelChapterListByNovelName(name)
 	} else if getType == BYURL {
-		chptMap, ok = spider.GetNoteChapterListByUrl(url)
+		chptMap, ok = spider.GetNovelChapterListByUrl(url)
 	}
 
 	if !ok {
@@ -76,15 +77,15 @@ func getNoteChapterList(c *gin.Context, name string, url string, getType int) {
 	h["Retname"] = name
 	h["ChptList"] = chptMap
 
-	helpers.Render(c, h, "notechplist.tmpl")
+	helpers.Render(c, h, "novelchplist.tmpl")
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("get success! %s\n", value)))
 	return
 }
-func showSearchResult(c *gin.Context, noteListMap map[int]spider.SearchNote) {
+func showSearchResult(c *gin.Context, novelListMap map[int]spider.SearchNovel) {
 	logger.ALogger().Debug("Try to showSearchResult")
 
 	h := gin.H{}
-	if len(noteListMap) == 0 {
+	if len(novelListMap) == 0 {
 		h["Title"] = "没有找到"
 		h["Code"] = 0
 
@@ -92,7 +93,7 @@ func showSearchResult(c *gin.Context, noteListMap map[int]spider.SearchNote) {
 		h["Title"] = "搜索结果"
 		h["Code"] = 1
 	}
-	h["NoteMap"] = noteListMap
+	h["NovelMap"] = novelListMap
 	helpers.Render(c, h, "searchret.tmpl")
 	return
 }
