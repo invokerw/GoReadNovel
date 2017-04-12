@@ -15,7 +15,7 @@ type TopNovel struct {
 func GetTopNovelList() (map[int]TopNovel, bool) {
 	logger.ALogger().Debug("Try to GetTopNovelList ")
 
-	cmd := exec.Command("python", "./spider/python/getTopNovelList.py")
+	cmd := exec.Command("python", "./python/getTopNovelList.py")
 	//cmd := exec.Command("python", "getTopNovelList.py")
 	buf, err := cmd.Output()
 	if err != nil {

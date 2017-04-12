@@ -15,7 +15,7 @@ type TopTypeNovel struct {
 func GetTopByTypeNovelList(novelType string, sortType string, page string) (map[int]TopTypeNovel, bool) {
 	logger.ALogger().Debug("Try to GetTopTypeNovelList ")
 
-	cmd := exec.Command("python", "./spider/python/getTopByTypeNovelList.py", novelType, sortType, page)
+	cmd := exec.Command("python", "./python/getTopByTypeNovelList.py", novelType, sortType, page)
 
 	buf, err := cmd.Output()
 	if err != nil {

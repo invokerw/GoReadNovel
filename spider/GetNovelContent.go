@@ -18,7 +18,7 @@ type ChapterContent struct {
 func GetNovelContent(url string) *ChapterContent {
 	logger.ALogger().Debug("Try to GetNovelContent url:", url)
 
-	cmd := exec.Command("python", "./spider/python/getNovelContent.py", url)
+	cmd := exec.Command("python", "./python/getNovelContent.py", url)
 	buf, err := cmd.Output()
 	if err != nil {
 		logger.ALogger().Error("%v", err)

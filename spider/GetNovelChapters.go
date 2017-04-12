@@ -23,7 +23,7 @@ func GoroutineGetNovelChapterListByNovelName(ch chan map[int]ChapterInfo, novelN
 
 func GetNovelChapterListByNovelName(novelName string) (map[int]ChapterInfo, bool) {
 	logger.ALogger().Debug("Try to GetNovelChapterListByNovelName NovelName:", novelName)
-	cmd := exec.Command("python", "./spider/python/getNovelChaptersBySearch.py", novelName)
+	cmd := exec.Command("python", "./python/getNovelChaptersBySearch.py", novelName)
 	buf, err := cmd.Output()
 	if err != nil {
 		fmt.Println("%v", err)

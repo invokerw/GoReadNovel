@@ -14,7 +14,7 @@ type SearchNovel struct {
 func SearchNovelByName(novelName string) (map[int]SearchNovel, bool) {
 	logger.ALogger().Debugf("Try to SearchNovelByName novelName:%s", novelName)
 
-	cmd := exec.Command("python", "./spider/python/searchNovel.py", novelName)
+	cmd := exec.Command("python", "./python/searchNovel.py", novelName)
 	//cmd := exec.Command("python", "searchNovel.py", novelName)
 	buf, err := cmd.Output()
 	if err != nil {
