@@ -30,7 +30,7 @@ try:
     response = urllib2.urlopen(request)
     content = response.read().decode('gbk')
     head = response.info()
-    print content
+    # print content
 	# page = re.compile('<li>.*?<a.*?href="(.*?)">(.*?)</a>*?</li>', re.S)
     page = re.compile(
         '<tr>.*?<td.*?href="(.*?)">(.*?)<.*?href="(.*?)".*?>'

@@ -17,11 +17,11 @@ id 是最后一位  和文件名字
 # 添加json
 
 
-GetTopNoteListJson  
+GetTopNovelListJson  
 GetBookContentJson 
-GetSearchNoteJson
-GetNoteInfoJson   ?go=/book/0/11/
-GetTopByTypeNoteListJson  ntype stype page
+GetSearchNovelJson
+GetNovelInfoJson   ?go=/book/0/11/
+GetTopByTypeNovelListJson  ntype stype page
 
 #修改为https模式
 

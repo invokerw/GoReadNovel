@@ -14,7 +14,7 @@
     <th width="15%">作者</th>
 	<th width="15%">状态</th>
   </tr>
-		<% range $i,$v := .NoteMap %/>
+		<% range $i,$v := .NovelMap %/>
 		 	 <tr align="center">
 				<th width="30%"><a href="<% $v.NovelUrl %/>&name=<% $v.NovelName %/>"><% $v.NovelName %/></a></th>
 				<th width="40%"><% $v.LatestChpName %/></th>
