@@ -1,7 +1,7 @@
 package spider
 
 import (
-	"GoReadNote/logger"
+	"GoReadNovel/logger"
 	//"fmt"
 	"os/exec"
 	"strconv"

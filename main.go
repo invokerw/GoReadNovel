@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GoReadNote/handlers"
-	"GoReadNote/logger"
-	"GoReadNote/middleware"
+	"GoReadNovel/handlers"
+	"GoReadNovel/logger"
+	"GoReadNovel/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

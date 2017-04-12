@@ -1,4 +1,4 @@
-# GoReadNote
+# GoReadNovel
 
 #2017年01月16日
 构建框架

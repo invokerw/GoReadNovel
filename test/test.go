@@ -1,7 +1,7 @@
 package test
 
 import (
-	"GoReadNote/config"
+	"GoReadNovel/config"
 	_ "errors"
 	"fmt"
 )

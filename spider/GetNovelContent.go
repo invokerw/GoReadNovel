@@ -1,7 +1,7 @@
 package spider
 
 import (
-	"GoReadNote/logger"
+	"GoReadNovel/logger"
 	"os/exec"
 	"strings"
 )

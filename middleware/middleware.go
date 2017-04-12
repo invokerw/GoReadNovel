@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"GoReadNote/logger"
+	"GoReadNovel/logger"
 	"github.com/gin-gonic/gin"
 )
 

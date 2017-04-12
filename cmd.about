@@ -6,12 +6,17 @@ docker run -i -t centos:7 /bin/bash
 
 centos server
 
-docker run -it --rm --name notea -p 8080:443 -v /root/gopro/src/GoReadNote/:/go/src/GoReadNote -w /go/src/GoReadNote note
+docker run -it --rm --name notea -p 8080:443 -v /root/gopro/src/GoReadNovel/:/go/src/GoReadNovel -w /go/src/GoReadNovel note
 
 ubuntu server
 
 
-docker run -it --rm --name notea -p 8080:443 -v /home/saber/goPro/src/GoReadNote:/go/src/GoReadNote -w /go/src/GoReadNote note
+docker run -it --rm --name notea -p 8080:443 -v /home/saber/goPro/src/GoReadNovel:/go/src/GoReadNovel -w /go/src/GoReadNovel note
+
+
+docker windows
+
+docker run -it --rm --name notea -p 8080:443 -v /c/Users/Administrator/github/GoReadNovel:/go/src/GoReadNovel  -w /go/src/GoReadNovel note
 
 
 

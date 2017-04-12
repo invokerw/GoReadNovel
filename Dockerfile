@@ -17,8 +17,8 @@ RUN mkdir pkg
 
 # COPY ./github.com/ /root/gopro/src/
 # COPY ./golang.org/ /root/gopro/src/
-# COPY ./GoReadNote/ /root/gopro/src/ 
-# WORKDIR /root/gopro/src/GoReadNote
+# COPY ./GoReadNovel/ /root/gopro/src/ 
+# WORKDIR /root/gopro/src/GoReadNovel
 
 # COPY ./github.com/ /go/src/ useless
 # COPY ./golang.org/ /go/src/ useless

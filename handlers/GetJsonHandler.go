@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"GoReadNote/logger"
-	"GoReadNote/spider"
+	"GoReadNovel/logger"
+	"GoReadNovel/spider"
 	"github.com/gin-gonic/gin"
 	"os"
 	"path/filepath"

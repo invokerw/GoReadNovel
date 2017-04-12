@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"GoReadNote/helpers"
-	"GoReadNote/logger"
-	"GoReadNote/spider"
+	"GoReadNovel/helpers"
+	"GoReadNovel/logger"
+	"GoReadNovel/spider"
 	"github.com/gin-gonic/gin"
 	//"net/http"
 	//"strings"
