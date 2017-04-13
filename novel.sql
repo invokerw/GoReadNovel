@@ -27,18 +27,17 @@ CREATE TABLE `novel` (
   `name` varchar(40) NOT NULL COMMENT '//小说名称',
   `author` varchar(30) DEFAULT '未知' COMMENT '//作者',
   `noveldesc` varchar(200) DEFAULT '暂无' COMMENT '//小说描述',
-  `noveltype` varchar(20) DEFAULT NULL COMMENT '//小说类型',
+  `noveltype` varchar(20) DEFAULT '其他' COMMENT '//小说类型',
   `addr` varchar(40) NOT NULL COMMENT '//小说地址',
   `imageaddr` varchar(40) DEFAULT NULL COMMENT '//图片地址',
   `lchaptername` varchar(50) DEFAULT NULL COMMENT '//最新章节名称',
   `lchapteraddr` varchar(40) DEFAULT NULL COMMENT '//最新章节地址',
-  `other1` varchar(20) DEFAULT NULL,
-  `other2` varchar(20) DEFAULT NULL,
+  `status` varchar(20) DEFAULT '连载中' COMMENT '//连载还是完结',
   PRIMARY KEY (`novelid`),
-  KEY `name` (`name`),
+  UNIQUE KEY `name` (`name`) USING BTREE,
   KEY `author` (`author`),
   KEY `noveltype` (`noveltype`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -59,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-12 18:19:29
+-- Dump completed on 2017-04-13 18:37:55
