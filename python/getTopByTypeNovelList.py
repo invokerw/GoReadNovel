@@ -32,12 +32,13 @@ try:
 
     # page = re.compile('<li>.*?<a.*?href="(.*?)">(.*?)</a>*?</li>', re.S)
     page = re.compile(
-        '<dl>.*?<dt>.*?</dt>.*?<dd>.*?<h3>.*?<span.*?"uptime">(.*?)</span>.*?'
+        '<dl>.*?<dt>.*?<img.*?src="(.*?)".*?>.*?</dt>.*?<dd>.*?<h3>.*?<span.*?"uptime">(.*?)</span>.*?'
         '<a.*?href="(.*?)".*?>(.*?)</a>.*?</h3>.*?</dd>.*?<span>(.*?)</span>.*?'
         '<dd.*?>(.*?)</dd>.*?<dd.*?<a.*?href="(.*?)".*?>(.*?)</a>.*?</dd>.*?'
         '</dl>', re.S)
-    # item[1] 小说地址, item[2] 小说名字, item[5]最新章节地址(可用),
-    # item[6]最新章节名字, item[3] 作者, item[0]更新时间, item[4]描述
+    # item[2] 小说地址, item[3] 小说名字, item[6]最新章节地址(可用),
+    # item[7]最新章节名字, item[4] 作者, item[1]更新时间, item[5]描述
+    # item[0]描述
     hrefList = re.findall(page, content.encode('utf8'))
 
     chapterQty = 0
@@ -45,11 +46,11 @@ try:
     retStr = ""
     for item in hrefList:
         chapterQty = chapterQty + 1
-        retStr = retStr + str(chapterQty) + "--" + item[0]
-        retStr = retStr + "--" + item[1] + "--" + item[2]
-        retStr = retStr + "--" + item[3] + "--" + item[4]
-        retStr = retStr + "--" + item[5] + "--" + item[6]
-        retStr = retStr +","
+        retStr = retStr + str(chapterQty) + "--" + item[1]
+        retStr = retStr + "--" + item[2] + "--" + item[3]
+        retStr = retStr + "--" + item[4] + "--" + item[5]
+        retStr = retStr + "--" + item[6] + "--" + item[7]
+        retStr = retStr + "--" + item[0] + ","
         #print item[0], item[1], item[2], item[3], item[4], item[5], item[6]
     print retStr
 

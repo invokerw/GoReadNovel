@@ -31,8 +31,8 @@ func GetTopByTypeNovelList(novelType string, sortType string, page string) (map[
 
 	for _, data := range datas {
 		idUrlName := strings.Split(strings.TrimSpace(data), "--")
-		if len(idUrlName) != 8 {
-			//fmt.Println("这个数据不为8:", idUrlName)
+		if len(idUrlName) != 9 {
+			//fmt.Println("这个数据不为9:", idUrlName)
 			continue
 		}
 		id, err := strconv.Atoi(idUrlName[0])
