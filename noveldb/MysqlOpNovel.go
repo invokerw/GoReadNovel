@@ -13,6 +13,18 @@ var (
 	dbname     = "novel"            //数据库名
 )
 
+type Novel struct {
+	ID            int    `json:"id"`        //ID
+	NovelName     string `json:"novelname"` //章节名称
+	NovelUrl      string `json:"url"`       //地址
+	LatestChpName string `json:"newchp"`    //最新章节名字
+	LatestChpUrl  string `json:"newurl"`    //最新章节地址
+	ImagesAddr    string `json:"imagesaddr"`//封面图片地址
+	Author        string `json:"author"`    //作者
+	Status        string `json:"status"`    //状态连载还是完结
+	Desc          string `json:"desc"`      //描述
+}
+
 var db *sql.DB
 var err error
 
@@ -37,6 +49,26 @@ func GetMysqlDB() *sql.DB {
 	}*/
 	return db
 }
+
+//增
+func InsertDataToNovel() {
+	
+}
+
+//改
+func UpdateDataToNovel() {
+	
+}
+//查
+func FindDataToNovel() {
+	
+}
+//删
+func DeleteDataToNovel() {
+	
+}
+
+
 
 func main() {
 	fmt.Println("vim-go")
