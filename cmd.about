@@ -28,3 +28,5 @@ docker exec -it 88dab2f338c6 bash
 mysql>use mysql;
 mysql>update  user set host = '%' where user= 'root';
 mysql>selecthost, userfromuser;
+
+mysql -uroot -pweifei novel < novel.sql

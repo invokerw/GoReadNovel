@@ -25,10 +25,10 @@ func InsertOneDataToNovel(novel Novel) {
 
 //改
 func UpdateOneDataToNovelByName(novel Novel) {
-	stmt, err := db.Prepare("update novel set noveltype=?,lchaptername=?,lchapteraddr=?,status=? where name=?")
+	stmt, err := db.Prepare("update novel set noveldesc=?,noveltype=?,lchaptername=?,lchapteraddr=?,status=? where name=?")
 	checkErr(err)
 
-	res, err := stmt.Exec(novel.NovelType, novel.LatestChpName, novel.LatestChpUrl, novel.Status, novel.NovelName)
+	res, err := stmt.Exec(novel.Desc, novel.NovelType, novel.LatestChpName, novel.LatestChpUrl, novel.Status, novel.NovelName)
 	checkErr(err)
 
 	affect, err := res.RowsAffected()
