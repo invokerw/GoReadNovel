@@ -1,9 +1,10 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	_ "github.com/go-sql-driver/mysql"
+	"GoReadNovel/logger"
+	"GoReadNovel/noveldb"
+	"os/exec"
+	"strings"
 )
 
 var (
@@ -14,68 +15,45 @@ var (
 )
 
 func main() {
-	db, err := sql.Open("mysql", "root:weifei@tcp(fsnsaber.cn:3306)/novel?charset=utf8")
-	checkErr(err)
+	logger.ALogger().Debug("Try to GetTopTypeNovelList ")
 
-	//插入数据
-	stmt, err := db.Prepare("INSERT novel SET name=?,author=?,addr=?")
-	checkErr(err)
+	cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "allvisit", "1")
 
-	res, err := stmt.Exec("圣墟", "辰东", "http://www.huanyue123.com/0/11/")
-	checkErr(err)
-
-	id, err := res.LastInsertId()
-	checkErr(err)
-
-	fmt.Println(id)
-	//更新数据
-	stmt, err = db.Prepare("update novel set name=? where novelid=?")
-	checkErr(err)
-
-	res, err = stmt.Exec("圣墟2", id)
-	checkErr(err)
-
-	affect, err := res.RowsAffected()
-	checkErr(err)
-
-	fmt.Println(affect)
-
-	//查询数据
-	rows, err := db.Query("SELECT * FROM novel")
-	checkErr(err)
-
-	for rows.Next() {
-		var novelid int
-		var name string
-		var author string
-		var addr string
-		var aaa string
-		err = rows.Scan(&novelid, &name, &author, &aaa, &aaa, &addr, &aaa, &aaa, &aaa, &aaa, &aaa)
-		//checkErr(err)
-		fmt.Println(novelid)
-		fmt.Println(name)
-		fmt.Println(author)
-		fmt.Println(addr)
-	}
-
-	//删除数据
-	stmt, err = db.Prepare("delete from novel where novelid=?")
-	checkErr(err)
-
-	res, err = stmt.Exec(id)
-	checkErr(err)
-
-	affect, err = res.RowsAffected()
-	checkErr(err)
-
-	fmt.Println(affect)
-
-	db.Close()
-
-}
-
-func checkErr(err error) {
+	buf, err := cmd.Output()
 	if err != nil {
-		fmt.Print(err)
+		logger.ALogger().Error("%v", err)
+	}
+	str := string(buf)
+	//fmt.Println("输出:", str)
+
+	datas := strings.Split(strings.TrimSpace(str), ",")
+
+	for _, data := range datas {
+		idUrlName := strings.Split(strings.TrimSpace(data), "--")
+		if len(idUrlName) != 9 {
+			//fmt.Println("这个数据不为9:", idUrlName)
+			continue
+		}
+		/*
+			id, err := strconv.Atoi(idUrlName[0])
+			if err != nil {
+				//fmt.Println("这条数据有问题:", idUrlName[0], idUrlName[1])
+				continue
+			}
+		*/
+		novel := noveldb.Novel{}
+		//novel.Index = id
+		novel.NovelUrl = idUrlName[2] //"/GetBookInfo?go=" + idUrlName[2][len(URL):len(idUrlName[2])]
+		novel.NovelName = idUrlName[3]
+		novel.LatestChpName = idUrlName[7]
+		novel.Author = idUrlName[4]
+		novel.Desc = idUrlName[5]
+		novel.LatestChpUrl = idUrlName[6] //"/GetBookInfo?go=" + idUrlName[6]
+		novel.ImagesAddr = idUrlName[8]
+		novel.NovelType = noveldb.DEFAULT_NOVEL_TYPE
+		novel.Status = noveldb.DEFAULT_STATUS
+
+		noveldb.InsertOneDataToNovel(novel)
+
 	}
 }

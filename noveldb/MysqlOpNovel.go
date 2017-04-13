@@ -1,80 +1,87 @@
-package main
+package noveldb
 
 import (
+	"GoReadNovel/logger"
 	"database/sql"
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var (
-	dbhostsip  = "fsnsaber.cn:3306" //IP地址
-	dbusername = "root"             //用户名
-	dbpassword = "weifei"           //密码
-	dbname     = "novel"            //数据库名
-)
-
-type Novel struct {
-	ID            int    `json:"id"`        //ID
-	NovelName     string `json:"novelname"` //章节名称
-	NovelUrl      string `json:"url"`       //地址
-	LatestChpName string `json:"newchp"`    //最新章节名字
-	LatestChpUrl  string `json:"newurl"`    //最新章节地址
-	ImagesAddr    string `json:"imagesaddr"`//封面图片地址
-	Author        string `json:"author"`    //作者
-	Status        string `json:"status"`    //状态连载还是完结
-	Desc          string `json:"desc"`      //描述
-}
-
-var db *sql.DB
-var err error
-
-func init() {
-	//func mysqlInit() {
-	fmt.Println("Init Mysql DB Connect..")
-	db, err = sql.Open("mysql", "root:weifei@tcp(fsnsaber.cn:3306)/novel?charset=utf8")
-	checkErr(err)
-	db.SetMaxOpenConns(500)
-	db.SetMaxIdleConns(100)
-}
-
-func checkErr(err error) {
-	if err != nil {
-		fmt.Print(err)
-	}
-}
-
-func GetMysqlDB() *sql.DB {
-	/*if db == nil {
-		mysqlInit()
-	}*/
-	return db
-}
-
 //增
-func InsertDataToNovel() {
-	
+func InsertOneDataToNovel(novel Novel) {
+	//插入数据
+	stmt, err := db.Prepare("INSERT novel SET name=?,author=?,noveldesc=?,noveltype=?,addr=?,imageaddr=?,lchaptername=?,lchapteraddr=?,status=?")
+	checkErr(err)
+
+	//res, err := stmt.Exec("圣墟", "辰东", "http://www.huanyue123.com/0/11/")
+	_, err = stmt.Exec(novel.NovelName, novel.Author, novel.Desc, novel.NovelType, novel.NovelUrl, novel.ImagesAddr,
+		novel.LatestChpName, novel.LatestChpUrl, novel.Status)
+	checkErr(err)
+
+	//id, err := res.LastInsertId()
+	//checkErr(err)
+
+	logger.ALogger().Debugf("Novel : %v", novel)
 }
 
 //改
-func UpdateDataToNovel() {
-	
+func UpdateOneDataToNovelByName(novel Novel) {
+	stmt, err := db.Prepare("update novel set noveltype=?,lchaptername=?,lchapteraddr=?,status=? where name=?")
+	checkErr(err)
+
+	res, err := stmt.Exec(novel.NovelType, novel.LatestChpName, novel.LatestChpUrl, novel.Status, novel.NovelName)
+	checkErr(err)
+
+	affect, err := res.RowsAffected()
+	checkErr(err)
+	logger.ALogger().Debug("updata ,", affect)
 }
+
 //查
-func FindDataToNovel() {
-	
+func FindOneDataToNovelByNovelName(novelName string) (Novel, bool) {
+
+	row := db.QueryRow("SELECT * FROM novel WHERE name=?", novelName)
+	checkErr(err)
+	var novel Novel
+
+	err = row.Scan(&novel.ID, &novel.NovelName, &novel.Author, &novel.Desc, &novel.NovelType, &novel.NovelUrl, &novel.ImagesAddr,
+		&novel.LatestChpName, &novel.LatestChpUrl, &novel.Status)
+	//checkErr(err)
+	if err == sql.ErrNoRows {
+		checkErr(err)
+		return novel, false
+	} else if err != nil {
+		checkErr(err)
+		return novel, false
+	}
+	logger.ALogger().Debug("Find One Novel: %v\n", novel)
+	return novel, true
+
 }
+
 //删
-func DeleteDataToNovel() {
-	
+func DeleteOneDataToNovelByName(id int) {
+
+	stmt, err := db.Prepare("delete from novel where novelid=?")
+	checkErr(err)
+
+	res, err := stmt.Exec(id)
+	checkErr(err)
+
+	affect, err := res.RowsAffected()
+	checkErr(err)
+
+	logger.ALogger().Debug(affect)
 }
 
-
-
+/*
 func main() {
+
 	fmt.Println("vim-go")
 	if db == nil {
 		fmt.Print("1\n")
 	} else if db != nil {
 		fmt.Print("2\n")
 	}
+
 }
+*/
