@@ -24,22 +24,22 @@ func InsertOneDataToNovel(novel Novel) {
 }
 
 //改
-func UpdateOneDataToNovelByName(novel Novel) {
-	stmt, err := db.Prepare("update novel set noveldesc=?,noveltype=?,lchaptername=?,lchapteraddr=?,status=? where name=?")
+func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
+	stmt, err := db.Prepare("update novel set noveldesc=?,noveltype=?,lchaptername=?,lchapteraddr=?,status=? where name=? AND author=?")
 	checkErr(err)
 
-	res, err := stmt.Exec(novel.Desc, novel.NovelType, novel.LatestChpName, novel.LatestChpUrl, novel.Status, novel.NovelName)
+	res, err := stmt.Exec(novel.Desc, novel.NovelType, novel.LatestChpName, novel.LatestChpUrl, novel.Status, novel.NovelName, novel.Author)
 	checkErr(err)
 
 	affect, err := res.RowsAffected()
 	checkErr(err)
-	logger.ALogger().Debug("updata ,", affect)
+	//logger.ALogger().Debug("updata ,", affect)
 }
 
 //查
-func FindOneDataToNovelByNovelName(novelName string) (Novel, bool) {
+func FindOneDataToNovelByNovelNameAndAuthor(novel Novel) (Novel, bool) {
 
-	row := db.QueryRow("SELECT * FROM novel WHERE name=?", novelName)
+	row := db.QueryRow("SELECT * FROM novel WHERE name=? AND author=?", novel.NovelName, novel.Author)
 	checkErr(err)
 	var novel Novel
 
