@@ -4,12 +4,12 @@ import (
 	"GoReadNovel/logger"
 	"GoReadNovel/noveldb"
 	"os/exec"
+	"strconv"
 	"strings"
-	"strconv" 
 	"time"
 )
 
-const  (
+const (
 	MAX_PAGE = 336
 )
 
@@ -17,12 +17,13 @@ func main() {
 	logger.ALogger().Debug("Try to Update Data ")
 
 	for page := 1; page <= MAX_PAGE; page++ {
-		strPage, _ := strconv.Itoa(page)
+		strPage := strconv.Itoa(page)
 		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "allvisit", strPage)
 
 		buf, err := cmd.Output()
 		if err != nil {
-			logger.ALogger().Error("%v", err)
+			logger.ALogger().Errorf("Page %d,%v", page, err)
+			continue
 		}
 		str := string(buf)
 		//fmt.Println("输出:", str)
@@ -31,8 +32,12 @@ func main() {
 
 		for _, data := range datas {
 			idUrlName := strings.Split(strings.TrimSpace(data), "--")
+			//logger.ALogger().Debug("--------------", len(idUrlName))
 			if len(idUrlName) != 9 {
-				//fmt.Println("这个数据不为9:", idUrlName)
+				//logger.ALogger().Error("Get Python Error in Page ", strPage)
+				//最后一个就是错的，所以要从这里跳过
+				//if idUrlName != ""{
+				//}
 				continue
 			}
 			/*
@@ -54,10 +59,11 @@ func main() {
 			novel.NovelType = noveldb.DEFAULT_NOVEL_TYPE
 			novel.Status = noveldb.DEFAULT_STATUS
 
+			//logger.ALogger().Info("Novle:", novel)
 			noveldb.InsertOneDataToNovel(novel)
-			
+
 		}
-		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 1s",page,MAX_PAGE)
-		time.Sleep(1*time.Second);
+		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 5s", page, MAX_PAGE)
+		time.Sleep(5 * time.Second)
 	}
 }

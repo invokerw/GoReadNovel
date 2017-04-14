@@ -25,7 +25,7 @@ user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'# 将user_agent写�
 headers = { 'User-Agent' : user_agent }
 try:
     request = urllib2.Request(url,headers=headers)
-    response = urllib2.urlopen(request)
+    response = urllib2.urlopen(request,timeout=5)
     content = response.read().decode('gbk')
     head = response.info()
     # print content
