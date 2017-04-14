@@ -61,7 +61,7 @@ func InsertData() {
 		time.Sleep(4 * time.Second)
 	}
 }
-func UpdateBook() {
+func UpdateData() {
 	logger.ALogger().Debug("Try to Update Data ")
 	for page := 1; page <= MAX_PAGE; page++ {
 		strPage := strconv.Itoa(page)
@@ -101,8 +101,27 @@ func UpdateBook() {
 			novel.Status = noveldb.DEFAULT_STATUS
 
 			//logger.ALogger().Info("Novle:", novel)
+			//存在novel就更新数据 不存在就插入一条新数据
 			if _, exit := noveldb.FindOneDataByNovelNameAndAuthor(novel); exit == false {
 				noveldb.InsertOneDataToNovel(novel)
+			} else {
+				cmd = exec.Command("python", "../python/getNovelInfo.py", novel.NovelUrl)
+				buf, err := cmd.Output()
+				if err != nil {
+					logger.ALogger().Errorf("Novel %s Get Info Error ,Url %s", novel.NovelName, novel.NovelUrl)
+					continue
+				}
+
+				str = string(buf)
+				info := strings.Split(strings.TrimSpace(str), "-")
+				if len(info) != 3 {
+					logger.ALogger().Errorf("Novel %s Get Info Error ,Url %s", novel.NovelName, novel.NovelUrl)
+					continue
+				}
+				novel.NovelType = info[0]
+				novel.Status    = info[1]
+				novel.Desc      = info[2]
+				noveldb.UpdateOneDataToNovelByNameAndAuthor(novel)
 			}
 		}
 		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
@@ -110,11 +129,8 @@ func UpdateBook() {
 	}
 
 }
-func UpdateAllBookInfo() {
 
-}
 func main() {
 	//InsertData()
-	UpdateBook()
-	//UpdateAllBookInfo()
+	UpdateData()
 }
