@@ -28,18 +28,18 @@ func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 	stmt, err := db.Prepare("update novel set noveldesc=?,noveltype=?,lchaptername=?,lchapteraddr=?,status=? where name=? AND author=?")
 	checkErr(err)
 
-	res, err := stmt.Exec(novel.Desc, novel.NovelType, novel.LatestChpName, novel.LatestChpUrl, novel.Status, novel.NovelName, novel.Author)
+	_, err = stmt.Exec(novel.Desc, novel.NovelType, novel.LatestChpName, novel.LatestChpUrl, novel.Status, novel.NovelName, novel.Author)
 	checkErr(err)
 
-	affect, err := res.RowsAffected()
-	checkErr(err)
-	//logger.ALogger().Debug("updata ,", affect)
+	//affect, err := res.RowsAffected()
+	//checkErr(err)
+	logger.ALogger().Debugf("updata novel %v \n", novel)
 }
 
 //查
-func FindOneDataToNovelByNovelNameAndAuthor(novel Novel) (Novel, bool) {
+func FindOneDataByNovelNameAndAuthor(no Novel) (Novel, bool) {
 
-	row := db.QueryRow("SELECT * FROM novel WHERE name=? AND author=?", novel.NovelName, novel.Author)
+	row := db.QueryRow("SELECT * FROM novel WHERE name=? AND author=?", no.NovelName, no.Author)
 	checkErr(err)
 	var novel Novel
 
@@ -47,13 +47,14 @@ func FindOneDataToNovelByNovelNameAndAuthor(novel Novel) (Novel, bool) {
 		&novel.LatestChpName, &novel.LatestChpUrl, &novel.Status)
 	//checkErr(err)
 	if err == sql.ErrNoRows {
-		checkErr(err)
+		//checkErr(err)
+		//查不到就不报Error了
 		return novel, false
 	} else if err != nil {
 		checkErr(err)
 		return novel, false
 	}
-	logger.ALogger().Debug("Find One Novel: %v\n", novel)
+	//logger.ALogger().Debugf("Find One Novel: %v\n", novel)
 	return novel, true
 
 }

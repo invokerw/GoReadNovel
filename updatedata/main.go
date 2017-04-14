@@ -101,17 +101,17 @@ func UpdateBook() {
 			novel.Status = noveldb.DEFAULT_STATUS
 
 			//logger.ALogger().Info("Novle:", novel)
-			if _, exit := novel.FindOneDataToNovelByNovelNameAndAuthor(novel); exit == false {
+			if _, exit := noveldb.FindOneDataByNovelNameAndAuthor(novel); exit == false {
 				noveldb.InsertOneDataToNovel(novel)
 			}
 		}
 		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
 		time.Sleep(4 * time.Second)
 	}
-	
+
 }
 func UpdateAllBookInfo() {
-	
+
 }
 func main() {
 	//InsertData()

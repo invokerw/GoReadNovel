@@ -15,7 +15,7 @@ if len(sys.argv) != 2:
 url = unicode(sys.argv[1], "UTF-8")
 # strs = u'圣墟'  # 一定要有这个 u  没有u的话请求的编码会有错误
 
-# url = 'http://www.huanyue123.com/modules/article/search.php'
+# url = 'http://www.huanyue123.com/book/0/11/'
 
 # values = {'searchkey': strs}
 
@@ -46,11 +46,6 @@ try:
     # 如果 chapterQty = 0 那么说明了并没有你搜的这个小说
     # print chapterQty
     # print "End->"
-    # f = file('hy.html', 'w')
-    # f.write(content)
-    # f.close()
-    # print head
-    # print content
 
 except urllib2.URLError, e:
     if hasattr(e, "code"):
