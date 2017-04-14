@@ -28,13 +28,13 @@ func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 	stmt, err := db.Prepare("update novel set noveldesc=?,noveltype=?,addr=?,imageaddr=?,lchaptername=?,lchapteraddr=?,status=? where name=? AND author=?")
 	checkErr(err)
 
-	_, err = stmt.Exec(novel.Desc, novel.NovelType, novel.NovelUrl,novel.ImagesAddr,novel.LatestChpName, novel.LatestChpUrl,
+	_, err = stmt.Exec(novel.Desc, novel.NovelType, novel.NovelUrl, novel.ImagesAddr, novel.LatestChpName, novel.LatestChpUrl,
 		novel.Status, novel.NovelName, novel.Author)
 	checkErr(err)
 
 	//affect, err := res.RowsAffected()
 	//checkErr(err)
-	logger.ALogger().Debugf("updata novel %v \n", novel)
+	//logger.ALogger().Debugf("updata novel %v \n", novel)
 }
 
 //查
