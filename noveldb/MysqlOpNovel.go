@@ -20,7 +20,7 @@ func InsertOneDataToNovel(novel Novel) {
 	//id, err := res.LastInsertId()
 	//checkErr(err)
 
-	logger.ALogger().Debugf("Novel : %v", novel)
+	//logger.ALogger().Debugf("Novel : %v", novel)
 }
 
 //改
