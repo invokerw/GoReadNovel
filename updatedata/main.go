@@ -11,14 +11,17 @@ import (
 	"time"
 )
 
-const (
-	MAX_PAGE = 336
+var (
+	MAX_PAGE   = 344
+	MAX_NOVEL  = 10310
+	THREAD_NUM = 10
 )
 
-func InsertData() {
-	logger.ALogger().Debug("Try to Insert Data ")
+//从开始到结束  (begin,end]
+func InsertData(begin int, end int, ch chan string) {
+	logger.ALogger().Debugf("Try to Insert Data (%d,%d]", begin, end)
 
-	for page := 1; page <= MAX_PAGE; page++ {
+	for page := begin + 1; page <= end; page++ {
 		strPage := strconv.Itoa(page)
 		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "allvisit", strPage)
 
@@ -62,10 +65,14 @@ func InsertData() {
 		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
 		time.Sleep(4 * time.Second)
 	}
+	ch <- fmt.Sprintf("InsertData From %d To %d Is OK At %s\n", begin, end, time.Now().String())
+	return
 }
-func UpdateData() {
-	logger.ALogger().Debug("Try to Update Data ")
-	for page := 1; page <= MAX_PAGE; page++ {
+
+//从开始到结束  (begin,end]
+func UpdateData(begin int, end int, ch chan string) {
+	logger.ALogger().Debugf("Try to Update Data (%d,%d]", begin, end)
+	for page := begin + 1; page <= end; page++ {
 		strPage := strconv.Itoa(page)
 		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "allvisit", strPage)
 
@@ -129,22 +136,73 @@ func UpdateData() {
 		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
 		time.Sleep(4 * time.Second)
 	}
-
+	ch <- fmt.Sprintf("UpdateData From %d To %d Is OK At %s\n", begin, end, time.Now().String())
+	return
 }
 
 func main() {
 
+	var ch = make(chan string, THREAD_NUM)
+	runUpdateOrInsert := 0
+	funcs := map[int]func(int, int, chan string){
+		0: UpdateData,
+		1: InsertData,
+	}
+
 	args := os.Args
 	if args == nil || len(args) < 2 || args[1] == "update" {
+		logger.ALogger().Infof("You Run Update")
+		runUpdateOrInsert = 0
 		//UpdateData()
-		fmt.Println("Hello ", args[1]) // 第二个参数，第一个参数为命令名
-
 	} else if args[1] == "insert" {
-		fmt.Println("Hello ", args[1]) // 第二个参数，第一个参数为命令名
+		logger.ALogger().Infof("You Run Insert")
+		runUpdateOrInsert = 1
 		//InsertData()
 	} else {
 		logger.ALogger().Error("Wrong Input..eg:go run main.go update/insert")
+		return
 	}
 
-	//UpdateData()
+	cmd := exec.Command("python", "../python/getMaxPageNum.py")
+	buf, err := cmd.Output()
+	if err != nil {
+		logger.ALogger().Errorf("Main Get MaxPageNum Error %v", err)
+		return
+	}
+	str := string(buf)
+	pageAndNovelNum := strings.Split(strings.TrimSpace(str), "-")
+	if len(pageAndNovelNum) != 2 {
+		logger.ALogger().Errorf("Main Get MaxPageNum Error:Output Wrong ->%s\n", pageAndNovelNum)
+		return
+	}
+	pageNum, err := strconv.Atoi(pageAndNovelNum[0])
+	novelNum, err := strconv.Atoi(pageAndNovelNum[1])
+	if err != nil {
+		logger.ALogger().Errorf("Main Get MaxPageNum Error:A to i Wrong \n")
+		return
+	}
+	if novelNum/30 != pageNum-1 {
+		logger.ALogger().Errorf("Main Get MaxPageNum Error:Output Wrong ->%s\n", pageAndNovelNum)
+		return
+	}
+	MAX_PAGE = pageNum
+	MAX_NOVEL = novelNum
+	logger.ALogger().Debugf("PageNum = %d, NovelNum = %d", MAX_PAGE, MAX_NOVEL)
+
+	for num := 0; num <= MAX_PAGE; num = num + MAX_PAGE/(THREAD_NUM-1) {
+		//num -- num + MAX_PAGE/10
+		if num+MAX_PAGE/(THREAD_NUM-1) > MAX_PAGE {
+			//logger.ALogger().Debugf("min-max:%d/%d", num, MAX_PAGE)
+			go funcs[runUpdateOrInsert](num, MAX_PAGE, ch)
+		} else {
+			//logger.ALogger().Debugf("min-max:%d/%d", num, num+MAX_PAGE/(THREAD_NUM-1))
+			go funcs[runUpdateOrInsert](num, num+MAX_PAGE/(THREAD_NUM-1), ch)
+		}
+
+	}
+	for i := 0; i < THREAD_NUM; i++ {
+		time.Sleep(time.Second * 3)
+		logger.ALogger().Debugf(<-ch)
+	}
+
 }
