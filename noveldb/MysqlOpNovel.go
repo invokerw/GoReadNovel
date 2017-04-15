@@ -43,7 +43,6 @@ func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 func FindOneDataByNovelNameAndAuthor(no Novel) (Novel, bool) {
 
 	row := db.QueryRow("SELECT * FROM novel WHERE name=? AND author=?", no.NovelName, no.Author)
-	checkErr(err)
 	var novel Novel
 
 	err = row.Scan(&novel.ID, &novel.NovelName, &novel.Author, &novel.Desc, &novel.NovelType, &novel.NovelUrl, &novel.ImagesAddr,
