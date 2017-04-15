@@ -3,6 +3,8 @@ package main
 import (
 	"GoReadNovel/logger"
 	"GoReadNovel/noveldb"
+	"fmt"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -108,19 +110,19 @@ func UpdateData() {
 				cmd = exec.Command("python", "../python/getNovelInfo.py", novel.NovelUrl)
 				buf, err := cmd.Output()
 				if err != nil {
-					logger.ALogger().Errorf("Novel %s Get Info Error ,Url %s", novel.NovelName, novel.NovelUrl)
+					logger.ALogger().Errorf("Novel %s Get Info Error 1,Url %s", novel.NovelName, novel.NovelUrl)
 					continue
 				}
 
 				str = string(buf)
 				info := strings.Split(strings.TrimSpace(str), "-")
 				if len(info) != 3 {
-					logger.ALogger().Errorf("Novel %s Get Info Error ,Url %s", novel.NovelName, novel.NovelUrl)
+					logger.ALogger().Errorf("Novel %s Get Info Error 2,Url %s", novel.NovelName, novel.NovelUrl)
 					continue
 				}
 				novel.NovelType = info[0]
-				novel.Status    = info[1]
-				novel.Desc      = info[2]
+				novel.Status = info[1]
+				novel.Desc = info[2]
 				noveldb.UpdateOneDataToNovelByNameAndAuthor(novel)
 			}
 		}
@@ -131,6 +133,18 @@ func UpdateData() {
 }
 
 func main() {
-	//InsertData()
-	UpdateData()
+
+	args := os.Args
+	if args == nil || len(args) < 2 || args[1] == "update" {
+		//UpdateData()
+		fmt.Println("Hello ", args[1]) // 第二个参数，第一个参数为命令名
+
+	} else if args[1] == "insert" {
+		fmt.Println("Hello ", args[1]) // 第二个参数，第一个参数为命令名
+		//InsertData()
+	} else {
+		logger.ALogger().Error("Wrong Input..eg:go run main.go update/insert")
+	}
+
+	//UpdateData()
 }
