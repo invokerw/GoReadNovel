@@ -22,16 +22,12 @@ try:
     head = response.info()
     # print content
 
-    page = re.compile('<em.*?id="pagestats.*?1/(.*?)</em>"', re.S)
+    page = re.compile('<em.*?pagestats">1/(.*?)</em>', re.S)
     novel = re.compile('<h1.*?class="title">.*?共有小说(.*?)本.*?</b>.*?</h1>', re.S)
-
     pageNum = re.findall(page, content.encode('utf8'))
     novelNum = re.findall(novel, content.encode('utf8'))
-
-    print pageNum,novelNum
-
-    retStr = ""
-
+	# print pageNum,novelNum
+    retStr = pageNum[0] + "-" + novelNum[0]
     print retStr
 
 
