@@ -30,7 +30,9 @@ func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 
 	_, err = stmt.Exec(novel.Desc, novel.NovelType, novel.NovelUrl, novel.ImagesAddr, novel.LatestChpName, novel.LatestChpUrl,
 		novel.Status, novel.NovelName, novel.Author)
-	checkErr(err)
+	if !checkErr(err) {
+		logger.ALogger().Debugf("updata novel error %v \n", novel)
+	}
 
 	//affect, err := res.RowsAffected()
 	//checkErr(err)
@@ -52,7 +54,7 @@ func FindOneDataByNovelNameAndAuthor(no Novel) (Novel, bool) {
 		//查不到就不报Error了
 		return novel, false
 	} else if err != nil {
-		checkErr(err)
+		//checkErr(err)
 		return novel, false
 	}
 	//logger.ALogger().Debugf("Find One Novel: %v\n", novel)

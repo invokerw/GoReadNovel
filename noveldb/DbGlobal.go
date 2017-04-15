@@ -38,14 +38,16 @@ func init() {
 	logger.ALogger().Debug("Init Mysql DB Connect..")
 	db, err = sql.Open("mysql", "root:weifei@tcp(fsnsaber.cn:3306)/novel?charset=utf8")
 	checkErr(err)
-	db.SetMaxOpenConns(500)
-	db.SetMaxIdleConns(100)
+	db.SetMaxOpenConns(1000)
+	db.SetMaxIdleConns(500)
 }
 
-func checkErr(err error) {
+func checkErr(err error) bool {
 	if err != nil {
 		logger.ALogger().Error(err)
+		return false
 	}
+	return true
 }
 
 func GetMysqlDB() *sql.DB {

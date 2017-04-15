@@ -14,7 +14,7 @@ import (
 var (
 	MAX_PAGE   = 344
 	MAX_NOVEL  = 10310
-	THREAD_NUM = 10
+	THREAD_NUM = 5
 )
 
 //从开始到结束  (begin,end]
@@ -114,6 +114,7 @@ func UpdateData(begin int, end int, ch chan string) {
 			if _, exit := noveldb.FindOneDataByNovelNameAndAuthor(novel); exit == false {
 				noveldb.InsertOneDataToNovel(novel)
 			} else {
+				time.Sleep(1 * time.Second)
 				cmd = exec.Command("python", "../python/getNovelInfo.py", novel.NovelUrl)
 				buf, err := cmd.Output()
 				if err != nil {
