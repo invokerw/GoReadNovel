@@ -33,7 +33,7 @@ const (
 var db *sql.DB
 var err error
 
-func init() {
+func init() { //如果改成int()会自动运行
 	//func mysqlInit() {
 	logger.ALogger().Debug("Init Mysql DB Connect..")
 	db, err = sql.Open("mysql", "root:weifei@tcp(fsnsaber.cn:3306)/novel?charset=utf8")

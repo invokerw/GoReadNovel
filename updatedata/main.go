@@ -14,7 +14,7 @@ import (
 var (
 	MAX_PAGE   = 344
 	MAX_NOVEL  = 10310
-	THREAD_NUM = 5
+	THREAD_NUM = 2 //除了2的时候是一个线程，3的时候就是3个线程，4是4
 )
 
 //从开始到结束  (begin,end]
@@ -190,17 +190,18 @@ func main() {
 	MAX_NOVEL = novelNum
 	logger.ALogger().Debugf("PageNum = %d, NovelNum = %d", MAX_PAGE, MAX_NOVEL)
 
-	for num := 0; num <= MAX_PAGE; num = num + MAX_PAGE/(THREAD_NUM-1) {
+	for num := 0; num < MAX_PAGE; num = num + MAX_PAGE/(THREAD_NUM-1) {
 		//num -- num + MAX_PAGE/10
-		if num+MAX_PAGE/(THREAD_NUM-1) > MAX_PAGE {
-			//logger.ALogger().Debugf("min-max:%d/%d", num, MAX_PAGE)
+		if num+MAX_PAGE/(THREAD_NUM-1) >= MAX_PAGE {
+			logger.ALogger().Debugf("min-max:%d/%d", num, MAX_PAGE)
 			go funcs[runUpdateOrInsert](num, MAX_PAGE, ch)
 		} else {
-			//logger.ALogger().Debugf("min-max:%d/%d", num, num+MAX_PAGE/(THREAD_NUM-1))
+			logger.ALogger().Debugf("min-max:%d/%d", num, num+MAX_PAGE/(THREAD_NUM-1))
 			go funcs[runUpdateOrInsert](num, num+MAX_PAGE/(THREAD_NUM-1), ch)
 		}
 
 	}
+
 	for i := 0; i < THREAD_NUM; i++ {
 		time.Sleep(time.Second * 3)
 		logger.ALogger().Debugf(<-ch)
