@@ -52,7 +52,7 @@ func InsertData(begin int, end int, ch chan string) {
 			novel.NovelName = idUrlName[3]
 			novel.LatestChpName = idUrlName[7]
 			novel.Author = idUrlName[4]
-			novel.Desc = idUrlName[5]
+			novel.Desc = strings.TrimSpace(idUrlName[5])
 			novel.LatestChpUrl = idUrlName[6] //"/GetBookInfo?go=" + idUrlName[6]
 			novel.ImagesAddr = idUrlName[8]
 			novel.NovelType = noveldb.DEFAULT_NOVEL_TYPE
@@ -103,7 +103,7 @@ func UpdateData(begin int, end int, ch chan string) {
 			novel.NovelName = idUrlName[3]
 			novel.LatestChpName = idUrlName[7]
 			novel.Author = idUrlName[4]
-			novel.Desc = idUrlName[5]
+			novel.Desc = strings.TrimSpace(idUrlName[5])
 			novel.LatestChpUrl = idUrlName[6] //"/GetBookInfo?go=" + idUrlName[6]
 			novel.ImagesAddr = idUrlName[8]
 			novel.NovelType = noveldb.DEFAULT_NOVEL_TYPE
@@ -130,7 +130,7 @@ func UpdateData(begin int, end int, ch chan string) {
 				}
 				novel.NovelType = info[0]
 				novel.Status = info[1]
-				novel.Desc = info[2]
+				novel.Desc = strings.TrimSpace(info[2])
 				noveldb.UpdateOneDataToNovelByNameAndAuthor(novel)
 			}
 		}
@@ -202,7 +202,14 @@ func main() {
 
 	}
 
-	for i := 0; i < THREAD_NUM; i++ {
+	wait := 0
+	if THREAD_NUM == 2 {
+		wait = THREAD_NUM-1
+	}else if THREAD_NUM > 2 {
+		wait = THREAD_NUM
+	} 
+
+	for i := 0; i < wait; i++ {
 		time.Sleep(time.Second * 3)
 		logger.ALogger().Debugf(<-ch)
 	}
