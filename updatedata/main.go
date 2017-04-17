@@ -14,7 +14,7 @@ import (
 var (
 	MAX_PAGE   = 344
 	MAX_NOVEL  = 10310
-	THREAD_NUM = 2 //除了2的时候是一个线程，3的时候就是3个线程，4是4
+	THREAD_NUM = 3 //除了2的时候是一个线程，3的时候就是3个线程，4是4
 )
 
 //从开始到结束  (begin,end]
@@ -204,10 +204,10 @@ func main() {
 
 	wait := 0
 	if THREAD_NUM == 2 {
-		wait = THREAD_NUM-1
-	}else if THREAD_NUM > 2 {
+		wait = THREAD_NUM - 1
+	} else if THREAD_NUM > 2 {
 		wait = THREAD_NUM
-	} 
+	}
 
 	for i := 0; i < wait; i++ {
 		time.Sleep(time.Second * 3)
