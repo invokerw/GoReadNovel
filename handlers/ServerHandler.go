@@ -49,3 +49,9 @@ func GetNovelContentHandler(c *gin.Context) {
 	//c.Data(http.StatusOK, "text/plain", []byte(fmt.Sprintf("%s\n\n%s\n", chp.ChapterName, chp.Content)))
 	return
 }
+
+func WeiXinOnLoginHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to WeiXinOnLoginHandler")
+
+	return
+}

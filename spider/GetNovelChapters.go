@@ -2,7 +2,7 @@ package spider
 
 import (
 	"GoReadNovel/logger"
-	"fmt"
+	_ "fmt"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -26,7 +26,8 @@ func GetNovelChapterListByNovelName(novelName string) (map[int]ChapterInfo, bool
 	cmd := exec.Command("python", "./python/getNovelChaptersBySearch.py", novelName)
 	buf, err := cmd.Output()
 	if err != nil {
-		fmt.Println("%v", err)
+		//fmt.Println("%v", err)
+		logger.ALogger().Error(err)
 		return nil, false
 	}
 	str := string(buf)
@@ -60,10 +61,11 @@ func GetNovelChapterListByNovelName(novelName string) (map[int]ChapterInfo, bool
 
 func GetNovelChapterListByUrl(url string) (map[int]ChapterInfo, bool) {
 	logger.ALogger().Debug("Try to GetNovelChapterListByUrl url:", url)
-	cmd := exec.Command("python", "./spider/python/getNovelChaptersByUrl.py", url)
+	cmd := exec.Command("python", "./python/getNovelChaptersByUrl.py", url)
 	buf, err := cmd.Output()
 	if err != nil {
-		fmt.Println("%v", err)
+		//fmt.Println("%v", err)
+		logger.ALogger().Error(err)
 		return nil, false
 	}
 	str := string(buf)

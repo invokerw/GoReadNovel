@@ -25,6 +25,7 @@ func main() {
 	//获取章节内容
 	router.GET("/GetBookContent", handlers.GetNovelContentHandler)
 
+	router.GET("/WxOnLogin", handlers.WeiXinOnLoginHandler)
 	//JSON请求----------------------
 	router.GET("/GetJson", handlers.GetJsonHandler)
 	router.GET("/GetSearchNovelJson", handlers.GetSearchNovelJsonHandler)
