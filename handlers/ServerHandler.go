@@ -4,8 +4,10 @@ import (
 	"GoReadNovel/helpers"
 	"GoReadNovel/logger"
 	"GoReadNovel/spider"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
-	//"net/http"
+	"io/ioutil"
+	"net/http"
 	"strings"
 )
 
@@ -52,6 +54,34 @@ func GetNovelContentHandler(c *gin.Context) {
 
 func WeiXinOnLoginHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to WeiXinOnLoginHandler")
-
+	h := gin.H{}
+	code, exist := c.GetQuery("code")
+	if !exist {
+		c.JSON(500, h)
+		return
+	}
+	logger.ALogger().Debug("code = ", code)
+	url := "https://api.weixin.qq.com/sns/jscode2session?appid=wx9589545c06df6dab&secret=9fd41538a947f987781aebf457a2edc6&js_code="
+	url = url + code + "&grant_type=authorization_code"
+	resp, err := http.Get(url)
+	if err != nil {
+		logger.ALogger().Error("Wx Server Get Error:", err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	logger.ALogger().Debug("body = ", body)
+	var dat map[string]interface{}
+	if err := json.Unmarshal([]byte(body), &dat); err != nil {
+		logger.ALogger().Error("Error = ", err)
+	}
+	logger.ALogger().Debug("Json = ", dat)
+	//json =  map[session_key:H0nrxdNeQj674ze5kO+KAQ== expires_in:7200 openid:oRasZ0TOomboER5UC-KlkC_tGf20]
+	//这里先只写返回正确的openid现象。事后还要加上不正确的时候
+	type JsonHolder struct {
+		OpenId     string `json:"opid"`
+		SessionKey string `json:"sk"`
+	}
+	holder := JsonHolder{OpenId: dat["openid"].(string), SessionKey: dat["session_key"].(string)}
+	c.JSON(200, holder)
 	return
 }
