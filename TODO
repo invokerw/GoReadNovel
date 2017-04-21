@@ -20,12 +20,16 @@ Wait	8.差一个while()循环sleep,先在服务器上测试之后在加上
 
 		9.修改handler->spider 模块，先查数据库再爬虫爬取
 
-		10.加上更新时间,对于最近已经更新过的小说就不必更新
+OK		10.加上更新时间,对于最近已经更新过的小说就不必更新  (12h)
 
-		11.修复updatedata mysql  max connection错误。
+OK		11.修复updatedata mysql  max connection错误。
 
 		12.加上用户登录，书架时候有用。
 
-		13.在updatedata添充总收藏表和总点击表，并增加上更新表
+OK		13.在updatedata添充总收藏表和总点击表、书架表，并增加上更新,写上查询语句
 
-		14.上面都完了，修改客户端
+		14.插入以及更新goodnum、allvote表数据 ，与novel比较类似
+
+		15.使用redis维护用户的登录，然后使用中间件middleware维护session
+
+		.上面都完了，修改客户端

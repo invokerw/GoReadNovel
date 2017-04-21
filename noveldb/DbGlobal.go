@@ -23,7 +23,7 @@ type Novel struct {
 	Author        string `json:"author"`     //作者
 	Status        string `json:"status"`     //状态连载还是完结
 	Desc          string `json:"desc"`       //描述
-	UpdateDTime   string `json:"uptime"`     //更新时间
+	UpdateTime    int64  `json:"uptime"`     //更新时间 时间戳
 }
 
 type User struct {
@@ -32,19 +32,28 @@ type User struct {
 	Gender    string `json:"gender"`    //性别
 	City      string `json:"city"`      //城市
 	Country   string `json:country`     //国家
-	AvatarUrl string `json:"avatarurl"` //投降地址
+	AvatarUrl string `json:"avatarurl"` //头像地址
+	JoinTime  int64  `json:"jointime"`  //进入本小程序的时间 时间戳
+}
+
+type BookShelf struct {
+	ShelfID         int    `json:"bookshelfid"`     //书架ID
+	UserID          int    `json:"userid"`          //用户ID
+	NovelID         int    `json:"novelid"`         //小说ID
+	ReadChapterName string `json:"readchaptername"` //读到的章节名称
+	ReadChapterUrl  string `json:"readchapterurl"`  //读到的章节地址
 }
 
 type AllVote struct {
-	AllVoteID  int    `json:"allvoteid"`  //总推荐ID
-	NovelID    int    `json:"novelid"`    //小说ID
-	UpdateTime string `json:"updatetime"` //更新时间
+	AllVoteID  int   `json:"allvoteid"` //总推荐ID
+	NovelID    int   `json:"novelid"`   //小说ID
+	UpdateTime int64 `json:"uptime"`    //更新时间  时间戳
 }
 
 type GoodNum struct {
-	GoodNumID  int    `json:"allvoteid"`  //总收藏ID
-	NovelID    int    `json:"novelid"`    //小说ID
-	UpdateTime string `json:"updatetime"` //更新时间
+	GoodNumID  int   `json:"allvoteid"` //总收藏ID
+	NovelID    int   `json:"novelid"`   //小说ID
+	UpdateTime int64 `json:"uptime"`    //更新时间  时间戳
 }
 
 const (

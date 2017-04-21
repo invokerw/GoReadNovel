@@ -111,9 +111,13 @@ func UpdateData(begin int, end int, ch chan string) {
 
 			//logger.ALogger().Info("Novle:", novel)
 			//存在novel就更新数据 不存在就插入一条新数据
-			if _, exit := noveldb.FindOneDataByNovelNameAndAuthor(novel); exit == false {
+			if no, exit := noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
 				noveldb.InsertOneDataToNovel(novel)
 			} else {
+				//对比一下时间戳如果是12小时内更新过的话那就不更了
+				if time.Now().Unix()-no.UpdateTime < int64(time.Second*60*60*12) {
+					continue
+				}
 				time.Sleep(1 * time.Second)
 				cmd = exec.Command("python", "../python/getNovelInfo.py", novel.NovelUrl)
 				buf, err := cmd.Output()
