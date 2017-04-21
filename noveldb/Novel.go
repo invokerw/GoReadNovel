@@ -74,7 +74,7 @@ func FindOneDataFromNovelByNameAndAuthor(no Novel) (Novel, bool) {
 //从begin 开始 num条数据  eg:0,1000 1-1000  查询1000条数据
 func FindDatasFromNovel(begin int, num int) (map[int]Novel, bool) {
 
-	rows := db.Query("SELECT * FROM novel LIMIT?,?", begin, num)
+	rows, err := db.Query("SELECT * FROM novel LIMIT?,?", begin, num)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {
@@ -82,15 +82,15 @@ func FindDatasFromNovel(begin int, num int) (map[int]Novel, bool) {
 	}
 
 	var novels map[int]Novel
-	num := 0
+	number := 0
 	novels = make(map[int]Novel)
 
 	for rows.Next() {
 		var novel Novel
 		rows.Scan(&novel.ID, &novel.NovelName, &novel.Author, &novel.Desc, &novel.NovelType, &novel.NovelUrl, &novel.ImagesAddr,
 			&novel.LatestChpName, &novel.LatestChpUrl, &novel.Status, &novel.UpdateTime)
-		novels[num] = novel
-		num = num + 1
+		novels[number] = novel
+		number = number + 1
 	}
 	//logger.ALogger().Debugf("Find %d novels: %v\n", num, novels)
 	return novels, true

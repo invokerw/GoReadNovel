@@ -4,6 +4,7 @@ import (
 	"GoReadNovel/logger"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"time"
 )
 
 //增
@@ -62,7 +63,7 @@ func FindOneDataFromAllVoteByAllVoteID(av AllVote) (AllVote, bool) {
 //从begin 开始 num条数据  eg:0,1000 1-1000  查询1000条数据
 func FindDatasFromAllVote(begin int, num int) (map[int]AllVote, bool) {
 
-	rows := db.Query("SELECT * FROM allvote LIMIT?,?", begin, num)
+	rows, err := db.Query("SELECT * FROM allvote LIMIT ?,?", begin, num)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {
@@ -70,14 +71,14 @@ func FindDatasFromAllVote(begin int, num int) (map[int]AllVote, bool) {
 	}
 
 	var allVotes map[int]AllVote
-	num := 0
+	number := 0
 	allVotes = make(map[int]AllVote)
 
 	for rows.Next() {
 		var allVote AllVote
 		rows.Scan(&allVote.AllVoteID, &allVote.NovelID, &allVote.UpdateTime)
-		allVotes[num] = allVote
-		num = num + 1
+		allVotes[number] = allVote
+		number = number + 1
 	}
 	//logger.ALogger().Debugf("Find %d allVote: %v\n", num, allVotes)
 	return allVotes, true

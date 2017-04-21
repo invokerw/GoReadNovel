@@ -4,6 +4,7 @@ import (
 	"GoReadNovel/logger"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"time"
 )
 
 //增
@@ -62,7 +63,7 @@ func FindOneDataFromGoodNumByGoodNumID(gn GoodNum) (GoodNum, bool) {
 //从begin 开始 num条数据  eg:0,1000 1-1000  查询1000条数据
 func FindDatasFromGoodNum(begin int, num int) (map[int]GoodNum, bool) {
 
-	rows := db.Query("SELECT * FROM goodnum LIMIT?,?", begin, num)
+	rows, err := db.Query("SELECT * FROM goodnum LIMIT?,?", begin, num)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {
@@ -70,14 +71,14 @@ func FindDatasFromGoodNum(begin int, num int) (map[int]GoodNum, bool) {
 	}
 
 	var goodNums map[int]GoodNum
-	num := 0
+	number := 0
 	goodNums = make(map[int]GoodNum)
 
 	for rows.Next() {
 		var goodNum GoodNum
 		rows.Scan(&goodNum.GoodNumID, &goodNum.NovelID, &goodNum.UpdateTime)
-		goodNums[num] = goodNum
-		num = num + 1
+		goodNums[number] = goodNum
+		number = number + 1
 	}
 	//logger.ALogger().Debugf("Find %d goodNums: %v\n", num, goodNums)
 	return goodNums, true
