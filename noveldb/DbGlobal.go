@@ -23,6 +23,28 @@ type Novel struct {
 	Author        string `json:"author"`     //作者
 	Status        string `json:"status"`     //状态连载还是完结
 	Desc          string `json:"desc"`       //描述
+	UpdateDTime   string `json:"uptime"`     //更新时间
+}
+
+type User struct {
+	UserID    string `json:"uid"`       //用户ID
+	NikeName  string `json:"nickname"`  //昵称
+	Gender    string `json:"gender"`    //性别
+	City      string `json:"city"`      //城市
+	Country   string `json:country`     //国家
+	AvatarUrl string `json:"avatarurl"` //投降地址
+}
+
+type AllVote struct {
+	AllVoteID  int    `json:"allvoteid"`  //总推荐ID
+	NovelID    int    `json:"novelid"`    //小说ID
+	UpdateTime string `json:"updatetime"` //更新时间
+}
+
+type GoodNum struct {
+	GoodNumID  int    `json:"allvoteid"`  //总收藏ID
+	NovelID    int    `json:"novelid"`    //小说ID
+	UpdateTime string `json:"updatetime"` //更新时间
 }
 
 const (

@@ -56,11 +56,12 @@ func WeiXinOnLoginHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to WeiXinOnLoginHandler")
 	h := gin.H{}
 	code, exist := c.GetQuery("code")
+	userInfo, exist := c.GetQuery("info")
 	if !exist {
 		c.JSON(500, h)
 		return
 	}
-	logger.ALogger().Debug("code = ", code)
+	logger.ALogger().Debugf("code = %v,userInfo = %v", code, userInfo)
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=wx9589545c06df6dab&secret=9fd41538a947f987781aebf457a2edc6&js_code="
 	url = url + code + "&grant_type=authorization_code"
 	resp, err := http.Get(url)
