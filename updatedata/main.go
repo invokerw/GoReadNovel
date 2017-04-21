@@ -15,11 +15,13 @@ var (
 	MAX_PAGE   = 344
 	MAX_NOVEL  = 10310
 	THREAD_NUM = 3 //除了2的时候是一个线程，3的时候就是3个线程，4是4
+	ALL_VOTE_NUM = 100
+	GOOD_NUM_NUM = 100
 )
 
 //从开始到结束  (begin,end]
 func InsertData(begin int, end int, ch chan string) {
-	logger.ALogger().Debugf("Try to Insert Data (%d,%d]", begin, end)
+	logger.ALogger().Debugf("Try to Insert Novel Data (%d,%d]", begin, end)
 
 	for page := begin + 1; page <= end; page++ {
 		strPage := strconv.Itoa(page)
@@ -31,7 +33,6 @@ func InsertData(begin int, end int, ch chan string) {
 			continue
 		}
 		str := string(buf)
-		//fmt.Println("输出:", str)
 
 		datas := strings.Split(strings.TrimSpace(str), ",")
 
@@ -71,7 +72,7 @@ func InsertData(begin int, end int, ch chan string) {
 
 //从开始到结束  (begin,end]
 func UpdateData(begin int, end int, ch chan string) {
-	logger.ALogger().Debugf("Try to Update Data (%d,%d]", begin, end)
+	logger.ALogger().Debugf("Try to Update Novel Data (%d,%d]", begin, end)
 	for page := begin + 1; page <= end; page++ {
 		strPage := strconv.Itoa(page)
 		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "allvisit", strPage)
@@ -145,6 +146,262 @@ func UpdateData(begin int, end int, ch chan string) {
 	return
 }
 
+//插入AllVote表数据
+//满足(end-begin)*30 > maxNum ，maxNum更新多少条数据
+func InsertAllVoteData(begin int, end int, maxNum int) {
+	
+	logger.ALogger().Debugf("Try to Insert AllVote Data (%d,%d]", begin, end)
+	index := 1
+	for page := begin + 1; page <= end; page++ {
+		strPage := strconv.Itoa(page)
+		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "allvote", strPage)
+
+		buf, err := cmd.Output()
+		if err != nil {
+			logger.ALogger().Errorf("Page %d,%v", page, err)
+			continue
+		}
+		str := string(buf)
+
+		datas := strings.Split(strings.TrimSpace(str), ",")
+
+		for _, data := range datas {
+			idUrlName := strings.Split(strings.TrimSpace(data), "--")
+			//logger.ALogger().Debug("--------------", len(idUrlName))
+			if len(idUrlName) != 9 {
+				continue
+			}
+			novel := noveldb.Novel{}
+			novel.NovelUrl = idUrlName[2] //"/GetBookInfo?go=" + idUrlName[2][len(URL):len(idUrlName[2])]
+			novel.NovelName = idUrlName[3]
+			novel.LatestChpName = idUrlName[7]
+			novel.Author = idUrlName[4]
+			novel.Desc = strings.TrimSpace(idUrlName[5])
+			novel.LatestChpUrl = idUrlName[6] //"/GetBookInfo?go=" + idUrlName[6]
+			novel.ImagesAddr = idUrlName[8]
+			novel.NovelType = noveldb.DEFAULT_NOVEL_TYPE
+			novel.Status = noveldb.DEFAULT_STATUS
+
+			//logger.ALogger().Info("Novle:", novel)
+			//查询有没有，没有的话插入小说，再更新
+			if no, exit := noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
+				noveldb.InsertOneDataToNovel(novel)
+				if no, exit = noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
+					allVote := noveldb.AllVote{}
+					allVote.NovelID = no.ID
+					index = index + 1
+					noveldb.InsertOneDataToAllVote(allVote)
+				}
+			} else {
+				allVote := noveldb.AllVote{}
+				allVote.NovelID = no.ID
+				index = index + 1
+				noveldb.InsertOneDataToAllVote(allVote)
+			}
+			if maxNum == index {
+				logger.ALogger().Debugf("Insert %d Novel By AllVote Over.",maxNum)
+				return 
+			}
+		}
+		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
+		time.Sleep(4 * time.Second)
+		}
+	}
+}
+
+//更新AllVote表数据
+//满足(end-begin)*30 > maxNum ，maxNum更新多少条数据
+func UpdateAllvoteData(begin int, end int, maxNum int) {
+	logger.ALogger().Debugf("Try to Update AllVote Data (%d,%d]", begin, end)
+
+	index := 1
+	for page := begin + 1; page <= end; page++ {
+		strPage := strconv.Itoa(page)
+		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "allvote", strPage)
+
+		buf, err := cmd.Output()
+		if err != nil {
+			logger.ALogger().Errorf("Page %d,%v", page, err)
+			continue
+		}
+		str := string(buf)
+		datas := strings.Split(strings.TrimSpace(str), ",")
+
+		for _, data := range datas {
+			idUrlName := strings.Split(strings.TrimSpace(data), "--")
+			//logger.ALogger().Debug("--------------", len(idUrlName))
+			if len(idUrlName) != 9 {
+				continue
+			}
+
+			novel := noveldb.Novel{}
+			novel.NovelUrl = idUrlName[2] //"/GetBookInfo?go=" + idUrlName[2][len(URL):len(idUrlName[2])]
+			novel.NovelName = idUrlName[3]
+			novel.LatestChpName = idUrlName[7]
+			novel.Author = idUrlName[4]
+			novel.Desc = strings.TrimSpace(idUrlName[5])
+			novel.LatestChpUrl = idUrlName[6] //"/GetBookInfo?go=" + idUrlName[6]
+			novel.ImagesAddr = idUrlName[8]
+			novel.NovelType = noveldb.DEFAULT_NOVEL_TYPE
+			novel.Status = noveldb.DEFAULT_STATUS
+
+			//logger.ALogger().Info("Novle:", novel)
+			//存在novel就更新数据 不存在就插入一条新数据
+			if no, exit := noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
+				noveldb.InsertOneDataToNovel(novel)
+				if no, exit = noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
+					allVote := noveldb.AllVote{}
+					allVote.AllVoteID = index
+					index = index + 1	
+					allVote.NovelID	= no.ID
+					noveldb.InsertOneDataToAllVote(allVote)
+				}
+			} else {
+				allVote := noveldb.AllVote{}
+				allVote.AllVoteID = index
+				index = index + 1	
+				allVote.NovelID	= no.ID
+				noveldb.InsertOneDataToAllVote(allVote)
+			}
+			if maxNum == index {
+				logger.ALogger().Debugf("Update %d Novel By AllVote Over.",maxNum)
+				return 
+			}
+		}
+		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
+		time.Sleep(4 * time.Second)
+	}
+	return
+}
+
+
+//插入GoodNum表数据
+//满足(end-begin)*30 > maxNum ，maxNum更新多少条数据
+func InsertGoodNumData(begin int, end int,maxNum int) {
+
+	logger.ALogger().Debugf("Try to Insert GoodNum Data (%d,%d]", begin, end)
+	index := 1
+	for page := begin + 1; page <= end; page++ {
+		strPage := strconv.Itoa(page)
+		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "goodnum", strPage)
+
+		buf, err := cmd.Output()
+		if err != nil {
+			logger.ALogger().Errorf("Page %d,%v", page, err)
+			continue
+		}
+		str := string(buf)
+
+		datas := strings.Split(strings.TrimSpace(str), ",")
+
+		for _, data := range datas {
+			idUrlName := strings.Split(strings.TrimSpace(data), "--")
+			//logger.ALogger().Debug("--------------", len(idUrlName))
+			if len(idUrlName) != 9 {
+				continue
+			}
+			novel := noveldb.Novel{}
+			novel.NovelUrl = idUrlName[2] //"/GetBookInfo?go=" + idUrlName[2][len(URL):len(idUrlName[2])]
+			novel.NovelName = idUrlName[3]
+			novel.LatestChpName = idUrlName[7]
+			novel.Author = idUrlName[4]
+			novel.Desc = strings.TrimSpace(idUrlName[5])
+			novel.LatestChpUrl = idUrlName[6] //"/GetBookInfo?go=" + idUrlName[6]
+			novel.ImagesAddr = idUrlName[8]
+			novel.NovelType = noveldb.DEFAULT_NOVEL_TYPE
+			novel.Status = noveldb.DEFAULT_STATUS
+
+			//logger.ALogger().Info("Novle:", novel)
+			//查询有没有，没有的话插入小说，再更新
+			if no, exit := noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
+				noveldb.InsertOneDataToNovel(novel)
+				if no, exit = noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
+					goodNum := noveldb.GoodNum{}
+					goodNum.NovelID = no.ID
+					index = index + 1
+					noveldb.InsertOneDataToGoodNum(goodNum)
+				}
+			} else {
+				goodNum := noveldb.GoodNum{}
+				goodNum.NovelID = no.ID
+				index = index + 1
+				noveldb.InsertOneDataToGoodNum(goodNum)
+			}
+			if maxNum == index {
+				logger.ALogger().Debugf("Insert %d Novel By GoodNum Over.",maxNum)
+				return 
+			}
+		}
+		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
+		time.Sleep(4 * time.Second)
+		}
+	}
+}
+
+//更新GoodNum表数据
+//满足(end-begin)*30 > maxNum ，maxNum更新多少条数据
+func UpdateGoodNumData(begin int, end int, maxNum int) {
+	logger.ALogger().Debugf("Try to Update GoodNum Data (%d,%d]", begin, end)
+
+	index := 1
+	for page := begin + 1; page <= end; page++ {
+		strPage := strconv.Itoa(page)
+		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "goodnum", strPage)
+
+		buf, err := cmd.Output()
+		if err != nil {
+			logger.ALogger().Errorf("Page %d,%v", page, err)
+			continue
+		}
+		str := string(buf)
+		datas := strings.Split(strings.TrimSpace(str), ",")
+
+		for _, data := range datas {
+			idUrlName := strings.Split(strings.TrimSpace(data), "--")
+			//logger.ALogger().Debug("--------------", len(idUrlName))
+			if len(idUrlName) != 9 {
+				continue
+			}
+
+			novel := noveldb.Novel{}
+			novel.NovelUrl = idUrlName[2] //"/GetBookInfo?go=" + idUrlName[2][len(URL):len(idUrlName[2])]
+			novel.NovelName = idUrlName[3]
+			novel.LatestChpName = idUrlName[7]
+			novel.Author = idUrlName[4]
+			novel.Desc = strings.TrimSpace(idUrlName[5])
+			novel.LatestChpUrl = idUrlName[6] //"/GetBookInfo?go=" + idUrlName[6]
+			novel.ImagesAddr = idUrlName[8]
+			novel.NovelType = noveldb.DEFAULT_NOVEL_TYPE
+			novel.Status = noveldb.DEFAULT_STATUS
+
+			//logger.ALogger().Info("Novle:", novel)
+			//存在novel就更新数据 不存在就插入一条新数据
+			if no, exit := noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
+				noveldb.InsertOneDataToNovel(novel)
+				if no, exit = noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
+					goodNum := noveldb.GoodNum{}
+					goodNum.GoodNumID = index
+					index := index + 1	
+					goodNum.NovelID	= no.ID
+					noveldb.UpdateOneDataToGoodNumByGoodNumID(goodNum)
+				}
+			} else {
+				goodNum := noveldb.GoodNum{}
+				goodNum.GoodNumID = index
+				index := index + 1	
+				goodNum.NovelID	= no.ID
+				noveldb.UpdateOneDataToGoodNumByGoodNumID(goodNum)
+			}
+			if maxNum == index {
+				logger.ALogger().Debugf("Update %d Novel By GoodNum Over.",maxNum)
+				return 
+			}
+		}
+		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
+		time.Sleep(4 * time.Second)
+	}
+	return
+}
 func main() {
 
 	var ch = make(chan string, THREAD_NUM)
@@ -152,6 +409,14 @@ func main() {
 	funcs := map[int]func(int, int, chan string){
 		0: UpdateData,
 		1: InsertData,
+	}
+	funcsAllVote := map[int]func(int, int, int){
+		0: UpdateAllvoteData,
+		1: InsertAllVoteData,
+	}
+	funcsGoodNum := map[int]func(int, int, int){
+		0: UpdateGoodNumData,
+		1: InsertGoodNumData,
 	}
 
 	args := os.Args
@@ -217,5 +482,8 @@ func main() {
 		time.Sleep(time.Second * 3)
 		logger.ALogger().Debugf(<-ch)
 	}
+	//插入或者更新allVote、GoodNum表  //需要单独跑一次 
+	funcsAllVote[runUpdateOrInsert](0,4,ALL_VOTE_NUM)
+	funcsGoodNum[runUpdateOrInsert](0,4,GOOD_NUM_NUM)
 
 }

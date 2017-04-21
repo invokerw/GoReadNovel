@@ -51,7 +51,7 @@ type AllVote struct {
 }
 
 type GoodNum struct {
-	GoodNumID  int   `json:"allvoteid"` //总收藏ID
+	GoodNumID  int   `json:"goodnumid"` //总收藏ID
 	NovelID    int   `json:"novelid"`   //小说ID
 	UpdateTime int64 `json:"uptime"`    //更新时间  时间戳
 }

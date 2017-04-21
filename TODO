@@ -28,7 +28,7 @@ OK		11.修复updatedata mysql  max connection错误。
 
 OK		13.在updatedata添充总收藏表和总点击表、书架表，并增加上更新,写上查询语句
 
-		14.插入以及更新goodnum、allvote表数据 ，与novel比较类似
+OK		14.插入以及更新goodnum、allvote表数据 ，与novel比较类似   insert要比update多一点~~
 
 		15.使用redis维护用户的登录，然后使用中间件middleware维护session
 
