@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	MAX_PAGE   = 344
-	MAX_NOVEL  = 10310
-	THREAD_NUM = 3 //除了2的时候是一个线程，3的时候就是3个线程，4是4
+	MAX_PAGE     = 344
+	MAX_NOVEL    = 10310
+	THREAD_NUM   = 2 //这只是个除数，具体多少线程还是要看除出来几个咯
 	ALL_VOTE_NUM = 100
 	GOOD_NUM_NUM = 100
 )
@@ -116,7 +116,7 @@ func UpdateData(begin int, end int, ch chan string) {
 				noveldb.InsertOneDataToNovel(novel)
 			} else {
 				//对比一下时间戳如果是12小时内更新过的话那就不更了
-				if time.Now().Unix()-no.UpdateTime < int64(time.Second*60*60*12) {
+				if time.Now().Unix()-no.UpdateTime < int64(60*60*12) {
 					continue
 				}
 				time.Sleep(1 * time.Second)
@@ -149,7 +149,7 @@ func UpdateData(begin int, end int, ch chan string) {
 //插入AllVote表数据
 //满足(end-begin)*30 > maxNum ，maxNum更新多少条数据
 func InsertAllVoteData(begin int, end int, maxNum int) {
-	
+
 	logger.ALogger().Debugf("Try to Insert AllVote Data (%d,%d]", begin, end)
 	index := 1
 	for page := begin + 1; page <= end; page++ {
@@ -199,13 +199,13 @@ func InsertAllVoteData(begin int, end int, maxNum int) {
 				noveldb.InsertOneDataToAllVote(allVote)
 			}
 			if maxNum == index {
-				logger.ALogger().Debugf("Insert %d Novel By AllVote Over.",maxNum)
-				return 
+				logger.ALogger().Debugf("Insert %d Novel By AllVote Over.", maxNum)
+				return
 			}
 		}
 		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
 		time.Sleep(4 * time.Second)
-		}
+
 	}
 }
 
@@ -217,7 +217,7 @@ func UpdateAllvoteData(begin int, end int, maxNum int) {
 	index := 1
 	for page := begin + 1; page <= end; page++ {
 		strPage := strconv.Itoa(page)
-		cmd := exec.Command("python", "../python/getTopByTypeNovelList.py", "quanbu", "allvote", strPage)
+		cmd := exec.Command("python", "../python/getTopByTyGpeNovelList.py", "quanbu", "allvote", strPage)
 
 		buf, err := cmd.Output()
 		if err != nil {
@@ -252,20 +252,20 @@ func UpdateAllvoteData(begin int, end int, maxNum int) {
 				if no, exit = noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
 					allVote := noveldb.AllVote{}
 					allVote.AllVoteID = index
-					index = index + 1	
-					allVote.NovelID	= no.ID
+					index = index + 1
+					allVote.NovelID = no.ID
 					noveldb.InsertOneDataToAllVote(allVote)
 				}
 			} else {
 				allVote := noveldb.AllVote{}
 				allVote.AllVoteID = index
-				index = index + 1	
-				allVote.NovelID	= no.ID
+				index = index + 1
+				allVote.NovelID = no.ID
 				noveldb.InsertOneDataToAllVote(allVote)
 			}
 			if maxNum == index {
-				logger.ALogger().Debugf("Update %d Novel By AllVote Over.",maxNum)
-				return 
+				logger.ALogger().Debugf("Update %d Novel By AllVote Over.", maxNum)
+				return
 			}
 		}
 		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
@@ -274,10 +274,9 @@ func UpdateAllvoteData(begin int, end int, maxNum int) {
 	return
 }
 
-
 //插入GoodNum表数据
 //满足(end-begin)*30 > maxNum ，maxNum更新多少条数据
-func InsertGoodNumData(begin int, end int,maxNum int) {
+func InsertGoodNumData(begin int, end int, maxNum int) {
 
 	logger.ALogger().Debugf("Try to Insert GoodNum Data (%d,%d]", begin, end)
 	index := 1
@@ -328,13 +327,13 @@ func InsertGoodNumData(begin int, end int,maxNum int) {
 				noveldb.InsertOneDataToGoodNum(goodNum)
 			}
 			if maxNum == index {
-				logger.ALogger().Debugf("Insert %d Novel By GoodNum Over.",maxNum)
-				return 
+				logger.ALogger().Debugf("Insert %d Novel By GoodNum Over.", maxNum)
+				return
 			}
 		}
 		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
 		time.Sleep(4 * time.Second)
-		}
+
 	}
 }
 
@@ -381,20 +380,20 @@ func UpdateGoodNumData(begin int, end int, maxNum int) {
 				if no, exit = noveldb.FindOneDataFromNovelByNameAndAuthor(novel); exit == false {
 					goodNum := noveldb.GoodNum{}
 					goodNum.GoodNumID = index
-					index := index + 1	
-					goodNum.NovelID	= no.ID
+					index = index + 1
+					goodNum.NovelID = no.ID
 					noveldb.UpdateOneDataToGoodNumByGoodNumID(goodNum)
 				}
 			} else {
 				goodNum := noveldb.GoodNum{}
 				goodNum.GoodNumID = index
-				index := index + 1	
-				goodNum.NovelID	= no.ID
+				index = index + 1
+				goodNum.NovelID = no.ID
 				noveldb.UpdateOneDataToGoodNumByGoodNumID(goodNum)
 			}
 			if maxNum == index {
-				logger.ALogger().Debugf("Update %d Novel By GoodNum Over.",maxNum)
-				return 
+				logger.ALogger().Debugf("Update %d Novel By GoodNum Over.", maxNum)
+				return
 			}
 		}
 		logger.ALogger().Debugf("Page/All:%d/%d. Sleep 4s", page, MAX_PAGE)
@@ -458,32 +457,28 @@ func main() {
 	MAX_PAGE = pageNum
 	MAX_NOVEL = novelNum
 	logger.ALogger().Debugf("PageNum = %d, NovelNum = %d", MAX_PAGE, MAX_NOVEL)
-
-	for num := 0; num < MAX_PAGE; num = num + MAX_PAGE/(THREAD_NUM-1) {
+	thread_num := 0
+	for num := 0; num < MAX_PAGE; num = num + MAX_PAGE/THREAD_NUM {
 		//num -- num + MAX_PAGE/10
 		if num+MAX_PAGE/(THREAD_NUM-1) >= MAX_PAGE {
 			logger.ALogger().Debugf("min-max:%d/%d", num, MAX_PAGE)
+			thread_num = thread_num + 1
 			go funcs[runUpdateOrInsert](num, MAX_PAGE, ch)
 		} else {
-			logger.ALogger().Debugf("min-max:%d/%d", num, num+MAX_PAGE/(THREAD_NUM-1))
-			go funcs[runUpdateOrInsert](num, num+MAX_PAGE/(THREAD_NUM-1), ch)
+			logger.ALogger().Debugf("min-max:%d/%d", num, num+MAX_PAGE/THREAD_NUM)
+			thread_num = thread_num + 1
+			go funcs[runUpdateOrInsert](num, num+MAX_PAGE/THREAD_NUM, ch)
 		}
 
 	}
 
-	wait := 0
-	if THREAD_NUM == 2 {
-		wait = THREAD_NUM - 1
-	} else if THREAD_NUM > 2 {
-		wait = THREAD_NUM
-	}
-
-	for i := 0; i < wait; i++ {
+	logger.ALogger().Debugf("Thread_Num = %d", thread_num)
+	for i := 0; i < thread_num; i++ {
 		time.Sleep(time.Second * 3)
 		logger.ALogger().Debugf(<-ch)
 	}
-	//插入或者更新allVote、GoodNum表  //需要单独跑一次 
-	funcsAllVote[runUpdateOrInsert](0,4,ALL_VOTE_NUM)
-	funcsGoodNum[runUpdateOrInsert](0,4,GOOD_NUM_NUM)
+	//插入或者更新allVote、GoodNum表  //需要单独跑一次
+	funcsAllVote[1 /*runUpdateOrInsert*/](0, 4, ALL_VOTE_NUM)
+	funcsGoodNum[1 /*runUpdateOrInsert*/](0, 4, GOOD_NUM_NUM)
 
 }

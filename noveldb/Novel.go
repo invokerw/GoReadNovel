@@ -36,8 +36,8 @@ func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 	defer stmt.Close()
 	checkErr(err)
 
-	_, err = stmt.Exec(novel.Desc, novel.NovelType, novel.NovelUrl, novel.ImagesAddr, novel.UpdateTime, novel.LatestChpName, novel.LatestChpUrl,
-		novel.Status, novel.NovelName, novel.Author)
+	_, err = stmt.Exec(novel.Desc, novel.NovelType, novel.NovelUrl, novel.ImagesAddr, novel.LatestChpName, novel.LatestChpUrl,
+		novel.Status, novel.UpdateTime, novel.NovelName, novel.Author)
 	if !checkErr(err) {
 		logger.ALogger().Debugf("updata novel error %v \n", novel)
 	}
