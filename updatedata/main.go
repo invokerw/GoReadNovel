@@ -478,7 +478,7 @@ func main() {
 		logger.ALogger().Debugf(<-ch)
 	}
 	//插入或者更新allVote、GoodNum表  //需要单独跑一次
-	funcsAllVote[1 /*runUpdateOrInsert*/](0, 4, ALL_VOTE_NUM)
-	funcsGoodNum[1 /*runUpdateOrInsert*/](0, 4, GOOD_NUM_NUM)
+	funcsAllVote[runUpdateOrInsert](0, 5, ALL_VOTE_NUM)
+	funcsGoodNum[runUpdateOrInsert](0, 5, GOOD_NUM_NUM)
 
 }
