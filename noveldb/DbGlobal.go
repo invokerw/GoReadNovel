@@ -64,7 +64,7 @@ const (
 var db *sql.DB
 var err error
 
-func init() { //如果改成int()会自动运行
+func init() { //如果改成init()会自动运行
 	//func mysqlInit() {
 	logger.ALogger().Debug("Init Mysql DB Connect..")
 	db, err = sql.Open("mysql", "root:weifei@tcp(fsnsaber.cn:3306)/novel?charset=utf8")
@@ -89,5 +89,7 @@ func GetMysqlDB() *sql.DB {
 }
 
 func CloseMysqlDB() {
-	db.Close()
+	if db != nil {
+		db.Close()
+	}
 }

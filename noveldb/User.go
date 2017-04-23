@@ -11,7 +11,7 @@ import (
 func InsertOneDataToUser(user User) {
 	//插入数据  插入数据时候不需要写入时间，插入时候会帮助你写入
 	user.JoinTime = time.Now().Unix()
-	stmt, err := db.Prepare("INSERT user SET userid=?,nikename=?,gender=?,city=?,addr=?,country=?,avatarurl=?,jointime=?")
+	stmt, err := GetMysqlDB().Prepare("INSERT user SET userid=?,nikename=?,gender=?,city=?,addr=?,country=?,avatarurl=?,jointime=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -28,7 +28,7 @@ func InsertOneDataToUser(user User) {
 //改
 func UpdateOneDataToUserByUserID(user User) {
 	//没有更新 join time
-	stmt, err := db.Prepare("update user set nikename=?,gender=?,city=?,addr=?,country=?,avatarurl=? where userid=?")
+	stmt, err := GetMysqlDB().Prepare("update user set nikename=?,gender=?,city=?,addr=?,country=?,avatarurl=? where userid=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -42,7 +42,7 @@ func UpdateOneDataToUserByUserID(user User) {
 //查
 func FindOneDataFromUserByUserID(us User) (User, bool) {
 
-	row := db.QueryRow("SELECT * FROM user WHERE userid=?", us.UserID)
+	row := GetMysqlDB().QueryRow("SELECT * FROM user WHERE userid=?", us.UserID)
 	//defer rows.Close()如果是读取很多行的话要关闭
 	var user User
 

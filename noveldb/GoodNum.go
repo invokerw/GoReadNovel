@@ -11,7 +11,7 @@ import (
 func InsertOneDataToGoodNum(goodNum GoodNum) {
 	//插入数据  插入数据时候不需要写入时间，插入时候会帮助你写入
 	goodNum.UpdateTime = time.Now().Unix()
-	stmt, err := db.Prepare("INSERT goodnum SET novelid=?,updatetime=?")
+	stmt, err := GetMysqlDB().Prepare("INSERT goodnum SET novelid=?,updatetime=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -27,7 +27,7 @@ func InsertOneDataToGoodNum(goodNum GoodNum) {
 //改
 func UpdateOneDataToGoodNumByGoodNumID(goodNum GoodNum) {
 	//没有更新 join time
-	stmt, err := db.Prepare("update goodnum set novelid=?,updatetime=? where goodnumid=?")
+	stmt, err := GetMysqlDB().Prepare("update goodnum set novelid=?,updatetime=? where goodnumid=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -41,7 +41,7 @@ func UpdateOneDataToGoodNumByGoodNumID(goodNum GoodNum) {
 //查
 func FindOneDataFromGoodNumByGoodNumID(gn GoodNum) (GoodNum, bool) {
 
-	row := db.QueryRow("SELECT * FROM goodnum WHERE goodnumid=?", gn.GoodNumID)
+	row := GetMysqlDB().QueryRow("SELECT * FROM goodnum WHERE goodnumid=?", gn.GoodNumID)
 	//defer rows.Close()如果是读取很多行的话要关闭
 	var goodNum GoodNum
 
@@ -63,7 +63,7 @@ func FindOneDataFromGoodNumByGoodNumID(gn GoodNum) (GoodNum, bool) {
 //从begin 开始 num条数据  eg:0,1000 1-1000  查询1000条数据
 func FindDatasFromGoodNum(begin int, num int) (map[int]GoodNum, bool) {
 
-	rows, err := db.Query("SELECT * FROM goodnum LIMIT?,?", begin, num)
+	rows, err := GetMysqlDB().Query("SELECT * FROM goodnum LIMIT?,?", begin, num)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {

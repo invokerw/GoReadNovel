@@ -11,7 +11,7 @@ import (
 func InsertOneDataToNovel(novel Novel) {
 	//插入数据
 	novel.UpdateTime = time.Now().Unix()
-	stmt, err := db.Prepare("INSERT novel SET name=?,author=?,noveldesc=?,noveltype=?,addr=?,imageaddr=?,lchaptername=?,lchapteraddr=?,status=?,updatetime=?")
+	stmt, err := GetMysqlDB().Prepare("INSERT novel SET name=?,author=?,noveldesc=?,noveltype=?,addr=?,imageaddr=?,lchaptername=?,lchapteraddr=?,status=?,updatetime=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -32,7 +32,7 @@ func InsertOneDataToNovel(novel Novel) {
 func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 
 	novel.UpdateTime = time.Now().Unix()
-	stmt, err := db.Prepare("update novel set noveldesc=?,noveltype=?,addr=?,imageaddr=?,lchaptername=?,lchapteraddr=?,status=?,updatetime=? where name=? AND author=?")
+	stmt, err := GetMysqlDB().Prepare("update novel set noveldesc=?,noveltype=?,addr=?,imageaddr=?,lchaptername=?,lchapteraddr=?,status=?,updatetime=? where name=? AND author=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -50,7 +50,7 @@ func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 //查
 func FindOneDataFromNovelByNameAndAuthor(no Novel) (Novel, bool) {
 
-	row := db.QueryRow("SELECT * FROM novel WHERE name=? AND author=?", no.NovelName, no.Author)
+	row := GetMysqlDB().QueryRow("SELECT * FROM novel WHERE name=? AND author=?", no.NovelName, no.Author)
 	//defer rows.Close()如果是读取很多行的话要关闭
 
 	var novel Novel
@@ -74,7 +74,7 @@ func FindOneDataFromNovelByNameAndAuthor(no Novel) (Novel, bool) {
 //从begin 开始 num条数据  eg:0,1000 1-1000  查询1000条数据
 func FindDatasFromNovel(begin int, num int) (map[int]Novel, bool) {
 
-	rows, err := db.Query("SELECT * FROM novel LIMIT?,?", begin, num)
+	rows, err := GetMysqlDB().Query("SELECT * FROM novel LIMIT?,?", begin, num)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {
@@ -99,7 +99,7 @@ func FindDatasFromNovel(begin int, num int) (map[int]Novel, bool) {
 //删
 func DeleteOneDataToNovelByName(id int) {
 
-	stmt, err := db.Prepare("delete from novel where novelid=?")
+	stmt, err := GetMysqlDB().Prepare("delete from novel where novelid=?")
 	checkErr(err)
 
 	res, err := stmt.Exec(id)
@@ -115,9 +115,9 @@ func DeleteOneDataToNovelByName(id int) {
 func main() {
 
 	fmt.Println("vim-go")
-	if db == nil {
+	if GetMysqlDB() == nil {
 		fmt.Print("1\n")
-	} else if db != nil {
+	} else if GetMysqlDB() != nil {
 		fmt.Print("2\n")
 	}
 

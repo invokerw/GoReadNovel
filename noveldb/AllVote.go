@@ -11,7 +11,7 @@ import (
 func InsertOneDataToAllVote(allVote AllVote) {
 	//插入数据  插入数据时候不需要写入时间，插入时候会帮助你写入
 	allVote.UpdateTime = time.Now().Unix()
-	stmt, err := db.Prepare("INSERT allvote SET novelid=?,updatetime=?")
+	stmt, err := GetMysqlDB().Prepare("INSERT allvote SET novelid=?,updatetime=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -27,7 +27,7 @@ func InsertOneDataToAllVote(allVote AllVote) {
 //改
 func UpdateOneDataToAllVoteByAllVoteID(allVote AllVote) {
 	//没有更新 join time
-	stmt, err := db.Prepare("update allvote set novelid=?,updatetime=? where allvoteid=?")
+	stmt, err := GetMysqlDB().Prepare("update allvote set novelid=?,updatetime=? where allvoteid=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -41,7 +41,7 @@ func UpdateOneDataToAllVoteByAllVoteID(allVote AllVote) {
 //查
 func FindOneDataFromAllVoteByAllVoteID(av AllVote) (AllVote, bool) {
 
-	row := db.QueryRow("SELECT * FROM allvote WHERE allvoteid=?", av.AllVoteID)
+	row := GetMysqlDB().QueryRow("SELECT * FROM allvote WHERE allvoteid=?", av.AllVoteID)
 	//defer rows.Close()如果是读取很多行的话要关闭
 	var allVote AllVote
 
@@ -63,7 +63,7 @@ func FindOneDataFromAllVoteByAllVoteID(av AllVote) (AllVote, bool) {
 //从begin 开始 num条数据  eg:0,1000 1-1000  查询1000条数据
 func FindDatasFromAllVote(begin int, num int) (map[int]AllVote, bool) {
 
-	rows, err := db.Query("SELECT * FROM allvote LIMIT ?,?", begin, num)
+	rows, err := GetMysqlDB().Query("SELECT * FROM allvote LIMIT ?,?", begin, num)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {

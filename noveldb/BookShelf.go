@@ -9,7 +9,7 @@ import (
 //增
 func InsertOneDataToBookShelf(bookShelf BookShelf) {
 	//插入数据  插入数据时候不需要写入时间，插入时候会帮助你写入
-	stmt, err := db.Prepare("INSERT bookshelf SET shelfid=?,userid=?,novelid=?,readchaptername=?,readchapteraddr=?")
+	stmt, err := GetMysqlDB().Prepare("INSERT bookshelf SET shelfid=?,userid=?,novelid=?,readchaptername=?,readchapteraddr=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -25,7 +25,7 @@ func InsertOneDataToBookShelf(bookShelf BookShelf) {
 //改
 func UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf BookShelf) {
 	//没有更新 join time
-	stmt, err := db.Prepare("update bookshelf set readchaptername=?,readchapteraddr=? where userid=? and novelid=?")
+	stmt, err := GetMysqlDB().Prepare("update bookshelf set readchaptername=?,readchapteraddr=? where userid=? and novelid=?")
 	defer stmt.Close()
 	checkErr(err)
 
@@ -39,7 +39,7 @@ func UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf BookShelf) {
 //查
 func FindOneUserBookShlefFromBookShelfByUserID(userid string) (map[int]BookShelf, bool) {
 
-	rows, err := db.Query("SELECT * FROM bookshelf WHERE userid=?", userid)
+	rows, err := GetMysqlDB().Query("SELECT * FROM bookshelf WHERE userid=?", userid)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {
