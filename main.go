@@ -14,7 +14,7 @@ func main() {
 	router := gin.Default()      //获得路由实例
 
 	router.LoadHTMLGlob("templates/*")
-	//网页请求----------------------
+	//网页请求----------------------Begin
 	//添加中间件
 	router.Use(middleware.Middleware)
 	//搜索小说
@@ -25,16 +25,29 @@ func main() {
 	//获取章节内容
 	router.GET("/GetBookContent", handlers.GetNovelContentHandler)
 
+	//网页请求---------------------End
+
+	//微信小程序登录
 	router.GET("/WxOnLogin", handlers.WeiXinOnLoginHandler)
 
-	//JSON请求----------------------
+	//微信小程序JSON请求----------------------Begin
+	//测试
 	router.GET("/GetJson", handlers.GetJsonHandler)
+	//搜索小说 小说名称或者作者  key = string
 	router.GET("/GetSearchNovelJson", handlers.GetSearchNovelByNameOrAuthorJsonHandler)
+	//获取小说内容   go = url
 	router.GET("/GetNovelContentJson", handlers.GetNovelContentJsonHandler)
+	//获取top榜上的小说  默认为总点击  toptype = allvote , goodnum
 	router.GET("/GetTopNovelListJson", handlers.GetTopNovelListJsonHandler)
+	//获取一种类型的小说 noveltype  = 汉语拼音
+	router.GET("/GetATypeNovelJson", handlers.GetATypeNovelJsonHandler)
+	//获取小说详细信息 id  = 数据库小说id
 	router.GET("/GetNovelInfoJson", handlers.GetNovelInfoJsonHandler)
+	//获取小说章节列表 url  = 小说地址
 	router.GET("/GetChpListJson", handlers.GetChapterListJsonHandler)
+	//这个暂时没有用到 与 GetTopNovelListJson  可以获取各种类型的各种小说 可以看 相应handler
 	router.GET("/GetTopByTypeNovelListJson", handlers.GetTopByTypeNovelListJsonHandler)
+	//微信小程序JSON请求----------------------End
 
 	//文件上传
 	router.GET("/UploadFile", handlers.GetUpLoadPageHandler)

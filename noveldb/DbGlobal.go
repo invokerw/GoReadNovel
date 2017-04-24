@@ -63,6 +63,8 @@ const (
 
 var db *sql.DB
 var err error
+var NovelTypeEtoC map[string]string //汉语拼音 转换为 数据库中的类型  xuanhuna -> 玄幻小说
+//var NovelTypeCtoE map[string]string //数据库中的类型 转换为 汉语拼音  玄幻小说 -> xuanhuan  貌似用不上
 
 func init() { //如果改成init()会自动运行
 	//func mysqlInit() {
@@ -71,8 +73,20 @@ func init() { //如果改成init()会自动运行
 	checkErr(err)
 	db.SetMaxOpenConns(1000)
 	db.SetMaxIdleConns(500)
+	initMap()
 }
+func initMap() {
+	NovelTypeEtoC["xuanhuan"] = "玄幻小说"
+	NovelTypeEtoC["doushi"] = "都市小说"
+	NovelTypeEtoC["xianxia"] = "仙侠小说"
+	NovelTypeEtoC["yanqing"] = "言情小说"
+	NovelTypeEtoC["wangyou"] = "网游小说"
+	NovelTypeEtoC["kehuan"] = "科幻小说"
+	NovelTypeEtoC["lishi"] = "历史小说"
+	NovelTypeEtoC["lingyi"] = "灵异小说"
+	NovelTypeEtoC["xuanhuan"] = "其他小说"
 
+}
 func checkErr(err error) bool {
 	if err != nil {
 		logger.ALogger().Error(err)

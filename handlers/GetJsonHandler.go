@@ -289,16 +289,36 @@ func GetNovelInfoJsonHandler(c *gin.Context) {
 
 }
 
-//获取小说的Top50
+//获取小说的Top50 有一个type的
 func GetTopNovelListJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetTopNovelListJsonHandler Re")
-
-	novelListMap, find := noveldb.FindDatasFromNovel(0, 50)
-	if !find {
-		errJson := JsonRet{Code: 0, Ret: "can't find"}
-		c.JSON(500, errJson)
-		return
+	//应该有一个type的 没有值得话默认排序 allvote, goodnum 两种类型
+	topty, exist := c.GetQuery("toptype")
+	var novelListmap map[int]noveldb.Novel
+	if !exist {
+		novelListMap, find := noveldb.FindDatasFromNovel(0, 50)
+		if !find {
+			errJson := JsonRet{Code: 0, Ret: "can't find"}
+			c.JSON(500, errJson)
+			return
+		}
 	}
+	if topty == "allvote" {
+		novelListMap, find := noveldb.FindDatasFromAllVote(0, 50)
+		if !find {
+			errJson := JsonRet{Code: 0, Ret: "can't find"}
+			c.JSON(500, errJson)
+			return
+		}
+	} else if topty == "goodnum" {
+		novelListMap, find := noveldb.FindDatasFromGoodNum(0, 50)
+		if !find {
+			errJson := JsonRet{Code: 0, Ret: "can't find"}
+			c.JSON(500, errJson)
+			return
+		}
+	}
+
 	var novelsInfo []noveldb.Novel
 
 	for i := 1; i <= len(novelListMap); i++ {
@@ -338,7 +358,26 @@ func GetChapterListJsonHandler(c *gin.Context) {
 	return
 }
 
-//获取小说内容  这个貌似稍作修改即可
-//
 //获取对应类型的小说若干数量 新增
+func GetATypeNovelJsonHandler() {
+	logger.ALogger().Debug("Try to GetChapterListJsonHandler Re")
+	novelType, exist := c.GetQuery("noveltype")
+	var novelListmap map[int]noveldb.Novel
+	if !exist {
+		errJson := JsonRet{Code: 0, Ret: "can't find"}
+		c.JSON(500, errJson)
+		return
+
+	}
+	//noveltype转换查询数据库
+	logger.ALogger().Debugf("Find Novel Type In DB :%s", noveldb.NovelTypeEtoC[novelType])
+	novelListMap, find := noveldb.FindDatasFromNovelByNovelType(noveldb.NovelTypeEtoC[novelType])
+	if !find {
+		errJson := JsonRet{Code: 0, Ret: "can't find"}
+		c.JSON(500, errJson)
+		return
+	}
+
+}
+
 //加入书架 新增  在写完用户登录以及维护session之后
