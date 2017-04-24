@@ -1,6 +1,6 @@
 OK 		1.修改getTopByType..的类型  添加获取图片地址 
 
-		2.排行榜、总点击、总收藏先不管
+OK		2.排行榜、总点击、总收藏
 
 OK		3.首先写插入novel数据。 加入是否连载状态什么的
 
@@ -16,9 +16,9 @@ OK		6.添加能够找到总共有多少本书的python脚本，数据更新时�
 
 OK		7.优化的时候记得考虑多线程 go携程，main指令添加。是重新插入数据还是更新数据
 
-Wait	8.差一个while()循环sleep,先在服务器上测试之后在加上
+Wait	8.差一个while()循环sleep,先在服务器上测试之后在加上    (sleep  一个小时)？
 
-		9.修改handler->spider 模块，先查数据库再爬虫爬取
+OK		9.修改handler->spider 模块，先查数据库再爬虫爬取
 
 OK		10.加上更新时间,对于最近已经更新过的小说就不必更新  (12h)
 
@@ -31,5 +31,7 @@ OK		13.在updatedata添充总收藏表和总点击表、书架表，并增加上
 OK		14.插入以及更新goodnum、allvote表数据 ，与novel比较类似   insert要比update多一点~~
 
 		15.使用redis维护用户的登录，然后使用中间件middleware维护session
+
+		16.书架json的处理
 
 		.上面都完了，修改客户端
