@@ -26,12 +26,14 @@ func main() {
 	router.GET("/GetBookContent", handlers.GetNovelContentHandler)
 
 	router.GET("/WxOnLogin", handlers.WeiXinOnLoginHandler)
+
 	//JSON请求----------------------
 	router.GET("/GetJson", handlers.GetJsonHandler)
-	router.GET("/GetSearchNovelJson", handlers.GetSearchNovelJsonHandler)
-	router.GET("/GetBookContentJson", handlers.GetBookContentJsonHandler)
+	router.GET("/GetSearchNovelJson", handlers.GetSearchNovelByNameOrAuthorJsonHandler)
+	router.GET("/GetNovelContentJson", handlers.GetNovelContentJsonHandler)
 	router.GET("/GetTopNovelListJson", handlers.GetTopNovelListJsonHandler)
 	router.GET("/GetNovelInfoJson", handlers.GetNovelInfoJsonHandler)
+	router.GET("/GetChpListJson", handlers.GetChapterListJsonHandler)
 	router.GET("/GetTopByTypeNovelListJson", handlers.GetTopByTypeNovelListJsonHandler)
 
 	//文件上传

@@ -47,10 +47,34 @@ func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 	//logger.ALogger().Debugf("updata novel %v \n", novel)
 }
 
-//查
+//查询特定的一条数据依据小说名称与作者
 func FindOneDataFromNovelByNameAndAuthor(no Novel) (Novel, bool) {
 
 	row := GetMysqlDB().QueryRow("SELECT * FROM novel WHERE name=? AND author=?", no.NovelName, no.Author)
+	//defer rows.Close()如果是读取很多行的话要关闭
+
+	var novel Novel
+
+	err = row.Scan(&novel.ID, &novel.NovelName, &novel.Author, &novel.Desc, &novel.NovelType, &novel.NovelUrl, &novel.ImagesAddr,
+		&novel.LatestChpName, &novel.LatestChpUrl, &novel.Status, &novel.UpdateTime)
+	//checkErr(err)
+	if err == sql.ErrNoRows {
+		//checkErr(err)
+		//查不到就不报Error了
+		return novel, false
+	} else if err != nil {
+		//checkErr(err)
+		return novel, false
+	}
+	//logger.ALogger().Debugf("Find One Novel: %v\n", novel)
+	return novel, true
+
+}
+
+//查询特定的一条数据依据小说NovelID
+func FindOneDataFromNovelByID(novelId int) (Novel, bool) {
+
+	row := GetMysqlDB().QueryRow("SELECT * FROM novel WHERE novelid=?", novelId)
 	//defer rows.Close()如果是读取很多行的话要关闭
 
 	var novel Novel
@@ -75,6 +99,30 @@ func FindOneDataFromNovelByNameAndAuthor(no Novel) (Novel, bool) {
 func FindDatasFromNovel(begin int, num int) (map[int]Novel, bool) {
 
 	rows, err := GetMysqlDB().Query("SELECT * FROM novel LIMIT?,?", begin, num)
+	defer rows.Close() //如果是读取很多行的话要关闭
+
+	if !checkErr(err) {
+		return nil, false
+	}
+
+	var novels map[int]Novel
+	number := 0
+	novels = make(map[int]Novel)
+
+	for rows.Next() {
+		var novel Novel
+		rows.Scan(&novel.ID, &novel.NovelName, &novel.Author, &novel.Desc, &novel.NovelType, &novel.NovelUrl, &novel.ImagesAddr,
+			&novel.LatestChpName, &novel.LatestChpUrl, &novel.Status, &novel.UpdateTime)
+		novels[number] = novel
+		number = number + 1
+	}
+	//logger.ALogger().Debugf("Find %d novels: %v\n", num, novels)
+	return novels, true
+}
+
+//查询若干条数据依据模糊的小说名称或者某个作者
+func FindDatasFromNovelByNameOrAuthor(key string) (map[int]Novel, bool) {
+	rows, err := GetMysqlDB().Query("SELECT * FROM novel WHERE name LIKE '%?% or' author LIKE '%?%'", key, key)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {

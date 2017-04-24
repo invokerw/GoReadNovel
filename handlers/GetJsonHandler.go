@@ -4,6 +4,7 @@ import (
 	"GoReadNovel/logger"
 	"GoReadNovel/spider"
 	"github.com/gin-gonic/gin"
+	"noveldb"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -12,7 +13,7 @@ import (
 //返回Json的一个模板  Code在不同情况下有不同作用
 type JsonRet struct {
 	Code int         `json:"code"`
-	List interface{} `json:"list"`
+	Ret  interface{} `json:"ret"`
 }
 
 //下面是个基本的例子
@@ -30,6 +31,8 @@ func GetJsonHandler(c *gin.Context) {
 	return
 }
 
+//旧，新的是查数据库的方式查novelname或者作者
+/*
 func GetSearchNovelJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSearchNovelJsonHandler")
 
@@ -54,7 +57,7 @@ func GetSearchNovelJsonHandler(c *gin.Context) {
 			cpInfo = append(cpInfo, chptMap[i])
 		}
 		//code = 0 为一个结果  code = 1为小说列表
-		retJson := JsonRet{Code: 0, List: cpInfo}
+		retJson := JsonRet{Code: 0, Ret: cpInfo}
 		c.JSON(200, retJson)
 		return
 	}
@@ -64,25 +67,28 @@ func GetSearchNovelJsonHandler(c *gin.Context) {
 		novelInfo = append(novelInfo, novelListMap[i])
 	}
 	//code = 0 为一个结果  code = 1为小说列表
-	retJson := JsonRet{Code: 1, List: novelInfo}
+	retJson := JsonRet{Code: 1, Ret: novelInfo}
 	c.JSON(200, retJson)
 	return
 }
+*/
 
-func GetBookContentJsonHandler(c *gin.Context) {
+//获取小说的文章内容
+func GetNovelContentJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSearchNovelJsonHandler")
-	h := gin.H{}
 
 	url, exist := c.GetQuery("go")
 	if !exist {
-		c.JSON(500, h)
+		errJson := JsonRet{Code: -1, Ret: "input err"}
+		c.JSON(500, errJson)
 		return
 	}
 	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
 	chp := spider.GetNovelContent(url)
 	if chp == nil {
-		c.JSON(500, h)
+		errJson := JsonRet{Code: 0, Ret: "spider err"}
+		c.JSON(500, errJson)
 		return
 	}
 
@@ -91,12 +97,13 @@ func GetBookContentJsonHandler(c *gin.Context) {
 
 }
 
+/*
 func GetTopNovelListJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetTopNovelListJsonHandler")
 	h := gin.H{}
 	type JsonRet struct {
 		Code int         `json:"code"` //code = 0 为一个结果  code = 1为小说列表
-		List interface{} `json:"list"`
+		Ret interface{} `json:"ret"`
 	}
 	novelListMap, ok := spider.GetTopNovelList()
 	if !ok {
@@ -109,18 +116,20 @@ func GetTopNovelListJsonHandler(c *gin.Context) {
 		novelInfo = append(novelInfo, novelListMap[i])
 	}
 	//code = 0 为一个结果  code = 1为小说列表
-	retJson := JsonRet{Code: 1, List: novelInfo}
+	retJson := JsonRet{Code: 1, Ret: novelInfo}
 	c.JSON(200, retJson)
 	return
 
 }
+*/
 
+//获取小说内容通过类型以及页数 这个先留着
 func GetTopByTypeNovelListJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetTopByTypeNovelListJsonHandler")
 	h := gin.H{}
 	type JsonRet struct {
 		Code int         `json:"code"` //code = 0 为一个结果  code = 1为小说列表
-		List interface{} `json:"list"`
+		Ret  interface{} `json:"ret"`
 	}
 	//获取
 	novelType, exist := c.GetQuery("ntype")
@@ -147,11 +156,12 @@ func GetTopByTypeNovelListJsonHandler(c *gin.Context) {
 		novelInfo = append(novelInfo, novelListMap[i])
 	}
 	//code = 0 为一个结果  code = 1为小说列表
-	retJson := JsonRet{Code: 1, List: novelInfo}
+	retJson := JsonRet{Code: 1, Ret: novelInfo}
 	c.JSON(200, retJson)
 	return
 }
 
+/*
 func GetNovelInfoJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetNovelInfoJsonHandler")
 	h := gin.H{}
@@ -172,12 +182,12 @@ func GetNovelInfoJsonHandler(c *gin.Context) {
 	for i := 1; i <= len(chptMap); i++ {
 		novelInfo = append(novelInfo, chptMap[i])
 	}
-	retJson := JsonRet{Code: 1, List: novelInfo}
+	retJson := JsonRet{Code: 1, Ret: novelInfo}
 	c.JSON(200, retJson)
 	return
 
 }
-
+*/
 type ListFiles struct {
 	Name string `json:"name"`
 	Size string `json:"size"`
@@ -219,3 +229,116 @@ func GetFileListJsonHandler(c *gin.Context) {
 
 	c.JSON(200, lm)
 }
+
+//重写
+//搜索小说通过小说名称或者作者 重写
+func GetSearchNovelByNameOrAuthorJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetSearchNovelByNameOrAuthorJsonHandler Re")
+
+	//get的data变成了key
+	key, exist := c.GetQuery("key")
+	if !exist {
+		errJson := JsonRet{Code: -1, Ret: "input err"}
+		c.JSON(500, errJson)
+		return
+	}
+	novelListmap, find := noveldb.FindDatasFromNovelByNameOrAuthor(key)
+	if !find {
+		//数据库中没有找到，之后可以添加使用爬虫爬取一下
+		errJson := JsonRet{Code: 0, Ret: "can't find"}
+		c.JSON(500, errJson)
+		return
+	}
+
+	var novelInfo []noveldb.Novel
+	for i := 1; i <= len(novelListmap); i++ {
+		novelInfo = append(novelInfo, novelListMap[i])
+	}
+	//code = 0 为一个结果  code = 1为小说列表
+	retJson := JsonRet{Code: 1, Ret: novelInfo}
+	c.JSON(200, retJson)
+	return
+}
+
+//获取小说info  重写 前端应该加入相应页面
+func GetNovelInfoJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetNovelInfoJsonHandler Re")
+	//这个id是小说在数据库中的ID
+	id, exist := c.GetQuery("id")
+	if !exist {
+		errJson := JsonRet{Code: -1, Ret: "input err"}
+		c.JSON(500, errJson)
+		return
+	}
+	novelId, err := strconv.Atoi(id)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "input err"}
+		c.JSON(500, errJson)
+		return
+	}
+	novelInfo, find := noveldb.FindOneDataFromNovelByID(novelId)
+	if !find {
+		errJson := JsonRet{Code: 0, Ret: "can't find"}
+		c.JSON(500, errJson)
+		return
+	}
+
+	retJson := JsonRet{Code: 1, Ret: novelInfo}
+	c.JSON(200, retJson)
+	return
+
+}
+
+//获取小说的Top50
+func GetTopNovelListJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetTopNovelListJsonHandler Re")
+
+	novelListMap, find := noveldb.FindDatasFromNovel(0, 50)
+	if !find {
+		errJson := JsonRet{Code: 0, Ret: "can't find"}
+		c.JSON(500, errJson)
+		return
+	}
+	var novelsInfo []noveldb.Novel
+
+	for i := 1; i <= len(novelListMap); i++ {
+		novelsInfo = append(novelsInfo, novelListMap[i])
+	}
+	// code = 1为小说列表
+	retJson := JsonRet{Code: 1, Ret: novelsInfo}
+	c.JSON(200, retJson)
+	return
+}
+
+//获取小说list  这个貌似稍作修改即可
+func GetChapterListJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetChapterListJsonHandler Re")
+	//这个id是小说在数据库中的ID
+	url, exist := c.GetQuery("url")
+	if !exist {
+		errJson := JsonRet{Code: -1, Ret: "input err"}
+		c.JSON(500, errJson)
+		return
+	}
+
+	//url = spider.URL + url
+	logger.ALogger().Debug("url = ", url)
+	chptMap, ok := spider.GetNovelChapterListByUrl(url)
+	if !ok {
+		c.JSON(500, h)
+		return
+	}
+	var novelInfo []spider.ChapterInfo
+
+	for i := 1; i <= len(chptMap); i++ {
+		novelInfo = append(novelInfo, chptMap[i])
+	}
+	retJson := JsonRet{Code: 1, Ret: novelInfo}
+	c.JSON(200, retJson)
+	return
+}
+
+//获取小说内容  这个貌似稍作修改即可
+//
+//获取对应类型的小说若干数量 新增
+//加入书架 新增  在写完用户登录以及维护session之后

@@ -432,6 +432,12 @@ func main() {
 		return
 	}
 
+	//首先更新这个
+	//插入或者更新allVote、GoodNum表  //需要单独跑一次
+	funcsAllVote[runUpdateOrInsert](0, 5, ALL_VOTE_NUM)
+	funcsGoodNum[runUpdateOrInsert](0, 5, GOOD_NUM_NUM)
+	logger.ALogger().Debugf("Update AllVote and Goodnum Table Over")
+
 	cmd := exec.Command("python", "../python/getMaxPageNum.py")
 	buf, err := cmd.Output()
 	if err != nil {
@@ -477,8 +483,5 @@ func main() {
 		time.Sleep(time.Second * 3)
 		logger.ALogger().Debugf(<-ch)
 	}
-	//插入或者更新allVote、GoodNum表  //需要单独跑一次
-	funcsAllVote[runUpdateOrInsert](0, 5, ALL_VOTE_NUM)
-	funcsGoodNum[runUpdateOrInsert](0, 5, GOOD_NUM_NUM)
 
 }
