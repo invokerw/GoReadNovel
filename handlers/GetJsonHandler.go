@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"GoReadNovel/logger"
+	"GoReadNovel/noveldb"
 	"GoReadNovel/spider"
 	"github.com/gin-gonic/gin"
-	"noveldb"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -252,7 +252,7 @@ func GetSearchNovelByNameOrAuthorJsonHandler(c *gin.Context) {
 
 	var novelInfo []noveldb.Novel
 	for i := 1; i <= len(novelListmap); i++ {
-		novelInfo = append(novelInfo, novelListMap[i])
+		novelInfo = append(novelInfo, novelListmap[i])
 	}
 	//code = 0 为一个结果  code = 1为小说列表
 	retJson := JsonRet{Code: 1, Ret: novelInfo}
@@ -294,9 +294,10 @@ func GetTopNovelListJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetTopNovelListJsonHandler Re")
 	//应该有一个type的 没有值得话默认排序 allvote, goodnum 两种类型
 	topty, exist := c.GetQuery("toptype")
-	var novelListmap map[int]noveldb.Novel
+	var novelListMap map[int]noveldb.Novel
 	if !exist {
-		novelListMap, find := noveldb.FindDatasFromNovel(0, 50)
+		var find bool
+		novelListMap, find = noveldb.FindDatasFromNovel(0, 50)
 		if !find {
 			errJson := JsonRet{Code: 0, Ret: "can't find"}
 			c.JSON(500, errJson)
@@ -304,24 +305,32 @@ func GetTopNovelListJsonHandler(c *gin.Context) {
 		}
 	}
 	if topty == "allvote" {
-		novelListMap, find := noveldb.FindDatasFromAllVote(0, 50)
+		novelList, find := noveldb.FindDatasFromAllVote(0, 50)
 		if !find {
 			errJson := JsonRet{Code: 0, Ret: "can't find"}
 			c.JSON(500, errJson)
 			return
 		}
+		for i := 0; i < len(novelList); i++ {
+			novel, _ := noveldb.FindOneDataFromNovelByID(novelList[i].NovelID)
+			novelListMap[i] = novel
+		}
 	} else if topty == "goodnum" {
-		novelListMap, find := noveldb.FindDatasFromGoodNum(0, 50)
+		novelList, find := noveldb.FindDatasFromGoodNum(0, 50)
 		if !find {
 			errJson := JsonRet{Code: 0, Ret: "can't find"}
 			c.JSON(500, errJson)
 			return
+		}
+		for i := 0; i < len(novelList); i++ {
+			novel, _ := noveldb.FindOneDataFromNovelByID(novelList[i].NovelID)
+			novelListMap[i] = novel
 		}
 	}
 
 	var novelsInfo []noveldb.Novel
 
-	for i := 1; i <= len(novelListMap); i++ {
+	for i := 0; i < len(novelListMap); i++ {
 		novelsInfo = append(novelsInfo, novelListMap[i])
 	}
 	// code = 1为小说列表
@@ -341,11 +350,12 @@ func GetChapterListJsonHandler(c *gin.Context) {
 		return
 	}
 
-	//url = spider.URL + url
+	url = spider.URL + url
 	logger.ALogger().Debug("url = ", url)
 	chptMap, ok := spider.GetNovelChapterListByUrl(url)
 	if !ok {
-		c.JSON(500, h)
+		errJson := JsonRet{Code: 0, Ret: "can't find"}
+		c.JSON(500, errJson)
 		return
 	}
 	var novelInfo []spider.ChapterInfo
@@ -359,10 +369,9 @@ func GetChapterListJsonHandler(c *gin.Context) {
 }
 
 //获取对应类型的小说若干数量 新增
-func GetATypeNovelJsonHandler() {
+func GetATypeNovelJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetChapterListJsonHandler Re")
 	novelType, exist := c.GetQuery("noveltype")
-	var novelListmap map[int]noveldb.Novel
 	if !exist {
 		errJson := JsonRet{Code: 0, Ret: "can't find"}
 		c.JSON(500, errJson)
@@ -377,6 +386,15 @@ func GetATypeNovelJsonHandler() {
 		c.JSON(500, errJson)
 		return
 	}
+
+	var novelsInfo []noveldb.Novel
+	for i := 1; i <= len(novelListMap); i++ {
+		novelsInfo = append(novelsInfo, novelListMap[i])
+	}
+	// code = 1为小说列表
+	retJson := JsonRet{Code: 1, Ret: novelsInfo}
+	c.JSON(200, retJson)
+	return
 
 }
 

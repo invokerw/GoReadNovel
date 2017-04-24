@@ -76,6 +76,8 @@ func init() { //如果改成init()会自动运行
 	initMap()
 }
 func initMap() {
+	NovelTypeEtoC = make(map[string]string)
+
 	NovelTypeEtoC["xuanhuan"] = "玄幻小说"
 	NovelTypeEtoC["doushi"] = "都市小说"
 	NovelTypeEtoC["xianxia"] = "仙侠小说"
