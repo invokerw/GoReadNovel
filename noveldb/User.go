@@ -11,12 +11,12 @@ import (
 func InsertOneDataToUser(user User) {
 	//插入数据  插入数据时候不需要写入时间，插入时候会帮助你写入
 	user.JoinTime = time.Now().Unix()
-	stmt, err := GetMysqlDB().Prepare("INSERT user SET userid=?,nikename=?,gender=?,city=?,addr=?,country=?,avatarurl=?,jointime=?")
+	stmt, err := GetMysqlDB().Prepare("INSERT user SET userid=?,nikename=?,gender=?,city=?,province=?,country=?,avatarurl=?,jointime=?")
 	defer stmt.Close()
 	checkErr(err)
 
 	//res, err := stmt.Exec("圣墟", "辰东", "http://www.huanyue123.com/0/11/")
-	_, err = stmt.Exec(user.UserID, user.NikeName, user.Gender, user.City, user.Country, user.AvatarUrl, user.JoinTime)
+	_, err = stmt.Exec(user.UserID, user.NikeName, user.Gender, user.City, user.Province, user.Country, user.AvatarUrl, user.JoinTime)
 
 	if !checkErr(err) {
 		logger.ALogger().Errorf("insert user error %v \n", user)
@@ -28,11 +28,11 @@ func InsertOneDataToUser(user User) {
 //改
 func UpdateOneDataToUserByUserID(user User) {
 	//没有更新 join time
-	stmt, err := GetMysqlDB().Prepare("update user set nikename=?,gender=?,city=?,addr=?,country=?,avatarurl=? where userid=?")
+	stmt, err := GetMysqlDB().Prepare("update user set nikename=?,gender=?,city=?,province=?,country=?,avatarurl=? where userid=?")
 	defer stmt.Close()
 	checkErr(err)
 
-	_, err = stmt.Exec(user.NikeName, user.Gender, user.City, user.Country, user.AvatarUrl, user.UserID)
+	_, err = stmt.Exec(user.NikeName, user.Gender, user.City, user.Province, user.Country, user.AvatarUrl, user.UserID)
 	if !checkErr(err) {
 		logger.ALogger().Errorf("updata user error %v \n", user)
 	}
@@ -40,13 +40,13 @@ func UpdateOneDataToUserByUserID(user User) {
 }
 
 //查
-func FindOneDataFromUserByUserID(us User) (User, bool) {
+func FindOneDataFromUserByUserID(uid string) (User, bool) {
 
-	row := GetMysqlDB().QueryRow("SELECT * FROM user WHERE userid=?", us.UserID)
+	row := GetMysqlDB().QueryRow("SELECT * FROM user WHERE userid=?", uid)
 	//defer rows.Close()如果是读取很多行的话要关闭
 	var user User
 
-	err = row.Scan(&user.UserID, &user.NikeName, &user.Gender, &user.City, &user.Country, &user.AvatarUrl, &user.JoinTime)
+	err = row.Scan(&user.UserID, &user.NikeName, &user.Gender, &user.City, &user.Province, &user.Country, &user.AvatarUrl, &user.JoinTime)
 	//checkErr(err)
 	if err == sql.ErrNoRows {
 		//checkErr(err)

@@ -3,12 +3,15 @@ package handlers
 import (
 	"GoReadNovel/helpers"
 	"GoReadNovel/logger"
+	"GoReadNovel/noveldb"
+	"GoReadNovel/redis"
 	"GoReadNovel/spider"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func HomeHandler(c *gin.Context) {
@@ -61,7 +64,7 @@ func WeiXinOnLoginHandler(c *gin.Context) {
 		c.JSON(500, h)
 		return
 	}
-	logger.ALogger().Debugf("code = %v,userInfo = %v", code, userInfo)
+	//logger.ALogger().Debugf("code = %v,userInfo = %v", code, userInfo)
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=wx9589545c06df6dab&secret=9fd41538a947f987781aebf457a2edc6&js_code="
 	url = url + code + "&grant_type=authorization_code"
 	resp, err := http.Get(url)
@@ -70,19 +73,53 @@ func WeiXinOnLoginHandler(c *gin.Context) {
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	logger.ALogger().Debug("body = ", body)
-	var dat map[string]interface{}
-	if err := json.Unmarshal([]byte(body), &dat); err != nil {
+	//logger.ALogger().Debug("body = ", body)
+
+	var retMap map[string]interface{}
+	if err := json.Unmarshal([]byte(body), &retMap); err != nil {
 		logger.ALogger().Error("Error = ", err)
 	}
-	logger.ALogger().Debug("Json = ", dat)
+	var userInfoMap map[string]interface{}
+	if err := json.Unmarshal([]byte(userInfo), &userInfoMap); err != nil {
+		logger.ALogger().Error("Error = ", err)
+	}
+	logger.ALogger().Debug("From WX Server :", retMap)
+	logger.ALogger().Debug("User info :", userInfoMap)
+
 	//json =  map[session_key:H0nrxdNeQj674ze5kO+KAQ== expires_in:7200 openid:oRasZ0TOomboER5UC-KlkC_tGf20]
 	//这里先只写返回正确的openid现象。事后还要加上不正确的时候
-	type JsonHolder struct {
-		OpenId     string `json:"opid"`
-		SessionKey string `json:"sk"`
+	/*type JsonHolder struct {
+		OpenId     string `json:"open_id"`
+		SessionKey string `json:"session_key"`
+		ExpiresIn  string `json:"expires_in"`
 	}
-	holder := JsonHolder{OpenId: dat["openid"].(string), SessionKey: dat["session_key"].(string)}
+	holder := JsonHolder{OpenId: retMap["openid"].(string), SessionKey: retMap["session_key"].(string), ExpiresIn: retMap["expires_in"].(string)}
 	c.JSON(200, holder)
+	*/
+
+	//将userinfo写入数据库 并生成对应的key存入redis
+	user := noveldb.User{}
+	user.UserID = retMap["openid"].(string)
+	user.NikeName = userInfoMap["nickName"].(string)
+	user.Gender = userInfoMap["gender"].(string)
+	user.City = userInfoMap["city"].(string)
+	user.Province = userInfoMap["province"].(string)
+	user.Country = userInfoMap["country"].(string)
+	user.AvatarUrl = userInfoMap["avatarUrl"].(string)
+
+	if _, find :=noveldb.FindOneDataFromUserByUserID(retMap["openid"].(string)){
+		noveldb.UpdateOneDataToUserByUserID(user)
+	}else{
+		noveldb.InsertOneDataToUser(user)
+	}
+	sessionKey := redis.GetGuid()
+	err = redis.GetRedisClient().Set(sessionKey, retMap["openid"].(string), time.Minute * 20).Err()
+	if err != nil {
+		logger.ALogger().Error("Set Redis Key Err:", err)
+		panic(err)
+	}
+	retJson := JsonRet{Code: 1, Ret: sessionKey}
+	c.JSON(200, retJson)
+
 	return
 }
