@@ -251,7 +251,7 @@ func GetSearchNovelByNameOrAuthorJsonHandler(c *gin.Context) {
 	}
 
 	var novelInfo []noveldb.Novel
-	for i := 1; i <= len(novelListmap); i++ {
+	for i := 0; i < len(novelListmap); i++ {
 		novelInfo = append(novelInfo, novelListmap[i])
 	}
 	//code = 0 为一个结果  code = 1为小说列表

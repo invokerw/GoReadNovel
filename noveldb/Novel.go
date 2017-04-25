@@ -122,16 +122,16 @@ func FindDatasFromNovel(begin int, num int) (map[int]Novel, bool) {
 
 //查询若干条数据依据模糊的小说名称或者某个作者
 func FindDatasFromNovelByNameOrAuthor(key string) (map[int]Novel, bool) {
-	rows, err := GetMysqlDB().Query("SELECT * FROM novel WHERE name LIKE '%?% or' author LIKE '%?%'", key, key)
+	rows, err := GetMysqlDB().Query("SELECT * FROM novel WHERE name LIKE ? or author LIKE ?", "%"+key+"%", "%"+key+"%")
 	defer rows.Close() //如果是读取很多行的话要关闭
 
+	var novels map[int]Novel
+	novels = make(map[int]Novel)
 	if !checkErr(err) {
-		return nil, false
+		return novels, false
 	}
 
-	var novels map[int]Novel
 	number := 0
-	novels = make(map[int]Novel)
 
 	for rows.Next() {
 		var novel Novel

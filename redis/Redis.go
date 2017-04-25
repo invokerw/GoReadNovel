@@ -12,7 +12,7 @@ var client *redis.Client
 // 创建 redis 客户端
 func createClient() *redis.Client {
 	logger.ALogger().Debug("Create Redis Client..")
-	client := redis.NewClient(&redis.Options{
+	client = redis.NewClient(&redis.Options{
 		Addr:     "fsnsaber.cn:6379",
 		Password: "weifei",
 		DB:       0,
@@ -21,6 +21,7 @@ func createClient() *redis.Client {
 
 	// 通过 cient.Ping() 来检查是否成功连接到了 redis 服务器
 	pong, err := client.Ping().Result()
+	logger.ALogger().Debugf("Pong = %s", pong)
 	checkErr(err)
 	return client
 }

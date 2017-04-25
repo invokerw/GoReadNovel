@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -101,19 +102,19 @@ func WeiXinOnLoginHandler(c *gin.Context) {
 	user := noveldb.User{}
 	user.UserID = retMap["openid"].(string)
 	user.NikeName = userInfoMap["nickName"].(string)
-	user.Gender = userInfoMap["gender"].(string)
+	user.Gender = strconv.Itoa(int(userInfoMap["gender"].(float64)))
 	user.City = userInfoMap["city"].(string)
 	user.Province = userInfoMap["province"].(string)
 	user.Country = userInfoMap["country"].(string)
 	user.AvatarUrl = userInfoMap["avatarUrl"].(string)
 
-	if _, find :=noveldb.FindOneDataFromUserByUserID(retMap["openid"].(string)){
+	if _, find := noveldb.FindOneDataFromUserByUserID(retMap["openid"].(string)); find {
 		noveldb.UpdateOneDataToUserByUserID(user)
-	}else{
+	} else {
 		noveldb.InsertOneDataToUser(user)
 	}
 	sessionKey := redis.GetGuid()
-	err = redis.GetRedisClient().Set(sessionKey, retMap["openid"].(string), time.Minute * 20).Err()
+	err = redis.GetRedisClient().Set(sessionKey, retMap["openid"].(string), time.Minute*20).Err()
 	if err != nil {
 		logger.ALogger().Error("Set Redis Key Err:", err)
 		panic(err)
