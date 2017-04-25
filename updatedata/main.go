@@ -438,6 +438,7 @@ func main() {
 	funcsGoodNum[runUpdateOrInsert](0, 5, GOOD_NUM_NUM)
 	logger.ALogger().Debugf("Update AllVote and Goodnum Table Over")
 
+	time.Sleep(5 * time.Second)
 	cmd := exec.Command("python", "../python/getMaxPageNum.py")
 	buf, err := cmd.Output()
 	if err != nil {
