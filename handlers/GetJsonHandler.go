@@ -485,6 +485,11 @@ func AddAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
+	if _, find := noveldb.FindOneNovelFromBookShelfByUserIDAndNovelID(uid, nid); find {
+		okJson := JsonRet{Code: 1, Ret: "bookshelf have the novel"}
+		c.JSON(200, okJson)
+		return
+	}
 	//FIXME:这里可能会很慢。所以可以考虑使用携程先将数据插入然后再更新第一章数据
 	bookShelf := noveldb.BookShelf{}
 	bookShelf.UserID = uid
@@ -503,6 +508,7 @@ func AddAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	noveldb.InsertOneDataToBookShelf(bookShelf)
 	okJson := JsonRet{Code: 1, Ret: "insert to bookshelf ok"}
 	c.JSON(200, okJson)
+	return
 }
 
 //删除书架中的某个书籍
@@ -599,9 +605,6 @@ func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	bookShelf.NovelID = nid
 	bookShelf.ReadChapterName = chapterName
 	bookShelf.ReadChapterUrl = chapterUrl
-	if _, find := noveldb.FindOneNovelFromBookShelfByUserIDAndNovelID(uid, nid); !find {
-		noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
-	}
 	noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
 	okJson := JsonRet{Code: 1, Ret: "update novel to bookshelf ok"}
 	c.JSON(200, okJson)

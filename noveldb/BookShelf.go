@@ -71,11 +71,7 @@ func FindOneNovelFromBookShelfByUserIDAndNovelID(userid string, novelid int) (Bo
 
 	err = row.Scan(&bookShelf.ShelfID, &bookShelf.UserID, &bookShelf.NovelID, &bookShelf.ReadChapterName, &bookShelf.ReadChapterUrl)
 	//checkErr(err)
-	if err == sql.ErrNoRows {
-		//checkErr(err)
-		//查不到就不报Error了
-		return bookShelf, false
-	} else if err != nil {
+	if err != nil {
 		//checkErr(err)
 		return bookShelf, false
 	}
