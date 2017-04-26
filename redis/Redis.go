@@ -5,9 +5,14 @@ import (
 	"fmt"
 	"gopkg.in/redis.v4"
 	"os"
+	"time"
 )
 
 var client *redis.Client
+
+const (
+	REDIS_SAVE_TIME = 20 * time.Minute
+)
 
 // 创建 redis 客户端
 func createClient() *redis.Client {
@@ -76,5 +81,6 @@ func ExampleClient() {
 	}
 	// Output: key value
 	// key2 does not exists
+	Expire 更新时间
 }
 */

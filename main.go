@@ -47,6 +47,14 @@ func main() {
 	router.GET("/GetChpListJson", handlers.GetChapterListJsonHandler)
 	//这个暂时没有用到 与 GetTopNovelListJson  可以获取各种类型的各种小说 可以看 相应handler
 	router.GET("/GetTopByTypeNovelListJson", handlers.GetTopByTypeNovelListJsonHandler)
+	//增加小说到书架
+	router.GET("/AddAUserNovelInBookShelfJson", handlers.AddAUserNovelInBookShelfJsonHandler)
+	//更新读到的章节
+	router.GET("/UpdateAUserNovelInBookShelfJson", handlers.UpdateAUserNovelInBookShelfJsonHandler)
+	//删除书架中的某个小说 user session  book id
+	router.GET("/DeleteAUserNovelInBookShelfJson", handlers.DeleteAUserNovelInBookShelfJsonHandler)
+	//获取书架上的所有书籍数据 user session
+	router.GET("/GetUserBookShelfNovelsJson", handlers.GetUserBookShelfNovelsJsonHandler)
 	//微信小程序JSON请求----------------------End
 
 	//文件上传

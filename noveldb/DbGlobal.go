@@ -39,7 +39,7 @@ type User struct {
 
 type BookShelf struct {
 	ShelfID         int    `json:"bookshelfid"`     //书架ID
-	UserID          int    `json:"userid"`          //用户ID
+	UserID          string `json:"userid"`          //用户ID
 	NovelID         int    `json:"novelid"`         //小说ID
 	ReadChapterName string `json:"readchaptername"` //读到的章节名称
 	ReadChapterUrl  string `json:"readchapterurl"`  //读到的章节地址

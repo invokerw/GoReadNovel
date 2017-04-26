@@ -30,12 +30,17 @@ OK		13.在updatedata添充总收藏表和总点击表、书架表，并增加上
 
 OK		14.插入以及更新goodnum、allvote表数据 ，与novel比较类似   insert要比update多一点~~
 
-		15.使用redis维护用户的登录，然后使用中间件middleware维护session
+OK		15.使用redis维护用户的登录，然后使用
+?		   中间件middleware维护session  再考虑
 
 		16.书架json的处理
 
-		17.查找章节列表与读取文章内容似乎有些问题。
+OK		17.查找章节列表与读取文章内容似乎有些问题。
 
 		18.有时间改掉h := gin.H{}。c.JSON(500, h)这几句
+
+		19.spider.GetNovelChapterListByUrl中cp.Url = "/GetBookContent?go=" + idUrlName[1][len(URL):len(idUrlName[1])] 有问题 前后端都得改
+
+		20.AddAUserNovelInBookShelfJsonHandler添加携程！！！！！！！！！！！！！！
 
 		.上面都完了，修改客户端

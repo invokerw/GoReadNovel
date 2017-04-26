@@ -41,14 +41,14 @@ func FindOneUserBookShlefFromBookShelfByUserID(userid string) (map[int]BookShelf
 
 	rows, err := GetMysqlDB().Query("SELECT * FROM bookshelf WHERE userid=?", userid)
 	defer rows.Close() //如果是读取很多行的话要关闭
-
-	if !checkErr(err) {
-		return nil, false
-	}
-
 	var bookShelfs map[int]BookShelf
-	num := 0
 	bookShelfs = make(map[int]BookShelf)
+
+	num := 0
+	if !checkErr(err) {
+		//如果出现这个那就是bug了。。
+		return bookShelfs, false
+	}
 
 	for rows.Next() {
 		var bookShelf BookShelf
@@ -57,6 +57,21 @@ func FindOneUserBookShlefFromBookShelfByUserID(userid string) (map[int]BookShelf
 		num = num + 1
 	}
 	//logger.ALogger().Debugf("Find %d bookshlef: %v\n", num,bookShelfs)
+	if len(bookShelfs) == 0 {
+		return bookShelfs, false
+	}
 	return bookShelfs, true
 
+}
+
+//删除某一条书架上书籍数据
+func DeleteOneDataToBookShelfByUseridAndNovelid(userid string, novelid int) {
+
+	stmt, err := GetMysqlDB().Prepare("delete from novel where novelid=? and userid=?", novelid, userid)
+	checkErr(err)
+
+	res, err := stmt.Exec(id)
+	checkErr(err)
+	//理论上不会错呀
+	//logger.ALogger().Debug(affect)
 }

@@ -359,7 +359,7 @@ func GetChapterListJsonHandler(c *gin.Context) {
 		return
 	}
 	var novelInfo []spider.ChapterInfo
-
+	//这个从spider模块走的从1开始
 	for i := 1; i <= len(chptMap); i++ {
 		novelInfo = append(novelInfo, chptMap[i])
 	}
@@ -388,7 +388,7 @@ func GetATypeNovelJsonHandler(c *gin.Context) {
 	}
 
 	var novelsInfo []noveldb.Novel
-	for i := 1; i <= len(novelListMap); i++ {
+	for i := 0; i < len(novelListMap); i++ {
 		novelsInfo = append(novelsInfo, novelListMap[i])
 	}
 	// code = 1为小说列表
@@ -398,4 +398,206 @@ func GetATypeNovelJsonHandler(c *gin.Context) {
 
 }
 
-//加入书架 新增  在写完用户登录以及维护session之后
+//查询书架
+func GetUserBookShelfNovelsJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetUserBookShelfNovelsJsonHandler ")
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	uid, err := redis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+	}
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	redis.GetRedisClient().Expire(session, redis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, redis.GetRedisClient().TTL(session))
+
+	bookShelf, find := noveldb.FindOneUserBookShlefFromBookShelfByUserID(uid)
+	if !find {
+		errJson := JsonRet{Code: 0, Ret: "don't have novels in bookshelf"}
+		c.JSON(200, errJson)
+		return
+	}
+	type AllInfo struct {
+		Novel     noveldb.Novel     `json:"novel"`
+		UserNovel noveldb.BookShelf `json:"usernovel"`
+	}
+	var allInfos []AllInfo
+	for i := 0; i < len(bookShelf); i++ {
+		allinfo := AllInfo{}
+		novel, _ := noveldb.FindOneDataFromNovelByID(bookShelf[i].NovelID)
+		allinfo.Novel = novel
+		allinfo.UserNovel = bookShelf[i]
+		//这里把userid做处理不返回客户端
+		allinfo.UserNovel.UserID = "0.0"
+		allInfos = append(allInfos, allinfo)
+	}
+	okJson := JsonRet{Code: 1, Ret: allInfos}
+	c.JSON(200, okJson)
+	return
+
+}
+
+//添加书籍到书架
+func AddAUserNovelInBookShelfJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to AddAUserNovelInBookShelfJsonHandler ")
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	uid, err := redis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+	}
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	redis.GetRedisClient().Expire(session, redis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, redis.GetRedisClient().TTL(session))
+
+	novelid, exist := c.GetQuery("novelid")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find novelid"}
+		c.JSON(500, errJson)
+		return
+	}
+	nid, err := strconv.Atoi(novelid)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "novelid err"}
+		c.JSON(500, errJson)
+		return
+	}
+	//FIXME:这里可能会很慢。所以可以考虑使用携程先将数据插入然后再更新第一章数据
+	bookShelf := BookShelf{}
+	bookShelf.UserID = uid
+	bookShelf.NovelID = nid
+	//刚阅读肯定是第1章，还是直接插入第一章吧。。
+	novel, _ := noveldb.FindOneDataFromNovelByID(nid)
+	chptMap, ok := spider.GetNovelChapterListByUrl(novel.NovelUrl)
+	if !ok {
+		errJson := JsonRet{Code: 0, Ret: "can't get first chapter"}
+		c.JSON(500, errJson)
+		return
+	}
+	bookShelf.ReadChapterName = chptMap[1].ChapterName
+	bookShelf.ReadChapterUrl = chptMap[1].Url //这里需要记得改一下
+
+	noveldb.InsertOneDataToBookShelf(bookShelf)
+	okJson := JsonRet{Code: 1, Ret: "insert to bookshelf ok"}
+	c.JSON(200, okJson)
+}
+
+//删除书架中的某个书籍
+func DeleteAUserNovelInBookShelfJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to DeleteAUserNovelInBookShelfJsonHandler ")
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	uid, err := redis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+	}
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	redis.GetRedisClient().Expire(session, redis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, redis.GetRedisClient().TTL(session))
+
+	novelid, exist := c.GetQuery("novelid")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find novelid"}
+		c.JSON(500, errJson)
+		return
+	}
+	nid, err := strconv.Atoi(novelid)
+	if err != nil {
+		errJson := JsonRet{Code: 0, Ret: "novelid err"}
+		c.JSON(500, errJson)
+		return
+	}
+
+	noveldb.DeleteOneDataToBookShelfByUseridAndNovelid(uid, novelid)
+	okJson := JsonRet{Code: 1, Ret: "delete to bookshelf ok"}
+	c.JSON(200, okJson)
+}
+
+//更新书架中的某个书籍
+func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to UpdateAUserNovelInBookShelfJsonHandler ")
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	uid, err := redis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+	}
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	redis.GetRedisClient().Expire(session, redis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, redis.GetRedisClient().TTL(session))
+
+	novelid, exist := c.GetQuery("novelid")
+	if !exist {
+		errJson := JsonRet{Code: -1, Ret: "can't find novelid"}
+		c.JSON(500, errJson)
+		return
+	}
+	nid, err := strconv.Atoi(novelid)
+	if err != nil {
+		errJson := JsonRet{Code: 0, Ret: "novelid err"}
+		c.JSON(500, errJson)
+		return
+	}
+	chapterName, exist := c.GetQuery("chaptername")
+	if !exist {
+		errJson := JsonRet{Code: -1, Ret: "can't find chapname"}
+		c.JSON(500, errJson)
+		return
+	}
+	chapterUrl, exist := c.GetQuery("chapterurl")
+	if !exist {
+		errJson := JsonRet{Code: -1, Ret: "can't find chapurl"}
+		c.JSON(500, errJson)
+		return
+	}
+
+	bookShelf := BookShelf{}
+	bookShelf.UserID = uid
+	bookShelf.NovelID = nid
+	bookShelf.ReadChapterName = chapterName
+	bookShelf.ReadChapterUrl = chapterUrl
+	noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
+
+	okJson := JsonRet{Code: 1, Ret: "update novel to bookshelf ok"}
+	c.JSON(200, okJson)
+}

@@ -114,7 +114,7 @@ func WeiXinOnLoginHandler(c *gin.Context) {
 		noveldb.InsertOneDataToUser(user)
 	}
 	sessionKey := redis.GetGuid()
-	err = redis.GetRedisClient().Set(sessionKey, retMap["openid"].(string), time.Minute*20).Err()
+	err = redis.GetRedisClient().Set(sessionKey, retMap["openid"].(string), redis.REDIS_SAVE_TIME /*time.Minute*20*/).Err()
 	if err != nil {
 		logger.ALogger().Error("Set Redis Key Err:", err)
 		panic(err)
