@@ -2,10 +2,11 @@ package handlers
 
 import (
 	"GoReadNovel/logger"
+	"GoReadNovel/myredis"
 	"GoReadNovel/noveldb"
-	"GoReadNovel/redis"
 	"GoReadNovel/spider"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/redis.v4"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -408,7 +409,7 @@ func GetUserBookShelfNovelsJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	uid, err := redis.GetRedisClient().Get(session).Result()
+	uid, err := myredis.GetRedisClient().Get(session).Result()
 	if err == redis.Nil {
 		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
 		c.JSON(500, errJson)
@@ -419,8 +420,8 @@ func GetUserBookShelfNovelsJsonHandler(c *gin.Context) {
 	}
 	//如果redis中有这个key的话那就再给他续一段时间
 	//redis.REDIS_SAVE_TIME
-	redis.GetRedisClient().Expire(session, redis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, redis.GetRedisClient().TTL(session))
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	bookShelf, find := noveldb.FindOneUserBookShlefFromBookShelfByUserID(uid)
 	if !find {
@@ -457,7 +458,7 @@ func AddAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	uid, err := redis.GetRedisClient().Get(session).Result()
+	uid, err := myredis.GetRedisClient().Get(session).Result()
 	if err == redis.Nil {
 		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
 		c.JSON(500, errJson)
@@ -467,9 +468,9 @@ func AddAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		panic(err)
 	}
 	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	redis.GetRedisClient().Expire(session, redis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, redis.GetRedisClient().TTL(session))
+	//myredis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -484,7 +485,7 @@ func AddAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		return
 	}
 	//FIXME:这里可能会很慢。所以可以考虑使用携程先将数据插入然后再更新第一章数据
-	bookShelf := BookShelf{}
+	bookShelf := noveldb.BookShelf{}
 	bookShelf.UserID = uid
 	bookShelf.NovelID = nid
 	//刚阅读肯定是第1章，还是直接插入第一章吧。。
@@ -512,7 +513,7 @@ func DeleteAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	uid, err := redis.GetRedisClient().Get(session).Result()
+	uid, err := myredis.GetRedisClient().Get(session).Result()
 	if err == redis.Nil {
 		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
 		c.JSON(500, errJson)
@@ -523,8 +524,8 @@ func DeleteAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	}
 	//如果redis中有这个key的话那就再给他续一段时间
 	//redis.REDIS_SAVE_TIME
-	redis.GetRedisClient().Expire(session, redis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, redis.GetRedisClient().TTL(session))
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -539,7 +540,7 @@ func DeleteAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		return
 	}
 
-	noveldb.DeleteOneDataToBookShelfByUseridAndNovelid(uid, novelid)
+	noveldb.DeleteOneDataToBookShelfByUseridAndNovelid(uid, nid)
 	okJson := JsonRet{Code: 1, Ret: "delete to bookshelf ok"}
 	c.JSON(200, okJson)
 }
@@ -553,7 +554,7 @@ func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	uid, err := redis.GetRedisClient().Get(session).Result()
+	uid, err := myredis.GetRedisClient().Get(session).Result()
 	if err == redis.Nil {
 		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
 		c.JSON(500, errJson)
@@ -564,8 +565,8 @@ func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	}
 	//如果redis中有这个key的话那就再给他续一段时间
 	//redis.REDIS_SAVE_TIME
-	redis.GetRedisClient().Expire(session, redis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, redis.GetRedisClient().TTL(session))
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -592,7 +593,7 @@ func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		return
 	}
 
-	bookShelf := BookShelf{}
+	bookShelf := noveldb.BookShelf{}
 	bookShelf.UserID = uid
 	bookShelf.NovelID = nid
 	bookShelf.ReadChapterName = chapterName

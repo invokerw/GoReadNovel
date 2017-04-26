@@ -3,16 +3,16 @@ package handlers
 import (
 	"GoReadNovel/helpers"
 	"GoReadNovel/logger"
+	"GoReadNovel/myredis"
 	"GoReadNovel/noveldb"
-	"GoReadNovel/redis"
 	"GoReadNovel/spider"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	_ "gopkg.in/redis.v4"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func HomeHandler(c *gin.Context) {
@@ -113,8 +113,8 @@ func WeiXinOnLoginHandler(c *gin.Context) {
 	} else {
 		noveldb.InsertOneDataToUser(user)
 	}
-	sessionKey := redis.GetGuid()
-	err = redis.GetRedisClient().Set(sessionKey, retMap["openid"].(string), redis.REDIS_SAVE_TIME /*time.Minute*20*/).Err()
+	sessionKey := myredis.GetGuid()
+	err = myredis.GetRedisClient().Set(sessionKey, retMap["openid"].(string), myredis.REDIS_SAVE_TIME /*time.Minute*20*/).Err()
 	if err != nil {
 		logger.ALogger().Error("Set Redis Key Err:", err)
 		panic(err)
