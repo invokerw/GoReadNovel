@@ -599,9 +599,10 @@ func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	bookShelf.NovelID = nid
 	bookShelf.ReadChapterName = chapterName
 	bookShelf.ReadChapterUrl = chapterUrl
-	noveldb.
+	if _, find := noveldb.FindOneNovelFromBookShelfByUserIDAndNovelID(uid, nid); !find {
 		noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
-
+	}
+	noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
 	okJson := JsonRet{Code: 1, Ret: "update novel to bookshelf ok"}
 	c.JSON(200, okJson)
 }

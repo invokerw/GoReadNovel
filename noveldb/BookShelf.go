@@ -63,11 +63,30 @@ func FindOneUserBookShlefFromBookShelfByUserID(userid string) (map[int]BookShelf
 	return bookShelfs, true
 
 }
-func FindOneUserBookShlefFromBookShelfByUserID
+func FindOneNovelFromBookShelfByUserIDAndNovelID(userid string, novelid int) (BookShelf, bool) {
+	row := GetMysqlDB().QueryRow("SELECT * FROM bookshelf WHERE novelid=? AND userid=?", novelid, userid)
+	//defer rows.Close()如果是读取很多行的话要关闭
+
+	var bookShelf BookShelf
+
+	err = row.Scan(&bookShelf.ShelfID, &bookShelf.UserID, &bookShelf.NovelID, &bookShelf.ReadChapterName, &bookShelf.ReadChapterUrl)
+	//checkErr(err)
+	if err == sql.ErrNoRows {
+		//checkErr(err)
+		//查不到就不报Error了
+		return bookShelf, false
+	} else if err != nil {
+		//checkErr(err)
+		return bookShelf, false
+	}
+	//logger.ALogger().Debugf("Find One bookShelf: %v\n", bookShelf)
+	return bookShelf, true
+}
+
 //删除某一条书架上书籍数据
 func DeleteOneDataToBookShelfByUseridAndNovelid(userid string, novelid int) {
 
-	stmt, err := GetMysqlDB().Prepare("delete from novel where novelid=? and userid=?")
+	stmt, err := GetMysqlDB().Prepare("delete from bookshelf where novelid=? and userid=?")
 	checkErr(err)
 
 	_, err = stmt.Exec(novelid, userid)
