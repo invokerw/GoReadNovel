@@ -49,7 +49,7 @@ func GetNovelChapterListByNovelName(novelName string) (map[int]ChapterInfo, bool
 
 		cp := ChapterInfo{}
 		cp.Index = id
-		cp.Url = "/GetBookContent?go=" + idUrlName[1][len(URL):len(idUrlName[1])]
+		cp.Url = idUrlName[1][len(URL):len(idUrlName[1])]
 		cp.ChapterName = idUrlName[2]
 		//fmt.Println(idUrlName[2])
 		chpMap[id] = cp
@@ -88,7 +88,7 @@ func GetNovelChapterListByUrl(url string) (map[int]ChapterInfo, bool) {
 		cp := ChapterInfo{}
 		cp.Index = id
 		//应该把"/GetBookContent?go="删掉
-		cp.Url = "/GetBookContent?go=" + idUrlName[1][len(URL):len(idUrlName[1])]
+		cp.Url = idUrlName[1][len(URL):len(idUrlName[1])]
 		cp.ChapterName = idUrlName[2]
 		//fmt.Println(idUrlName[2])
 		chpMap[id] = cp

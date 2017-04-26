@@ -63,7 +63,7 @@ func FindOneUserBookShlefFromBookShelfByUserID(userid string) (map[int]BookShelf
 	return bookShelfs, true
 
 }
-
+func FindOneUserBookShlefFromBookShelfByUserID
 //删除某一条书架上书籍数据
 func DeleteOneDataToBookShelfByUseridAndNovelid(userid string, novelid int) {
 

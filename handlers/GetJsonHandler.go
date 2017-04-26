@@ -409,6 +409,7 @@ func GetUserBookShelfNovelsJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
+	logger.ALogger().Debug("Get session:", session)
 	uid, err := myredis.GetRedisClient().Get(session).Result()
 	if err == redis.Nil {
 		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
@@ -425,7 +426,7 @@ func GetUserBookShelfNovelsJsonHandler(c *gin.Context) {
 
 	bookShelf, find := noveldb.FindOneUserBookShlefFromBookShelfByUserID(uid)
 	if !find {
-		errJson := JsonRet{Code: 0, Ret: "don't have novels in bookshelf"}
+		errJson := JsonRet{Code: 0, Ret: "not have novels in bookshelf"}
 		c.JSON(200, errJson)
 		return
 	}
@@ -598,7 +599,8 @@ func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	bookShelf.NovelID = nid
 	bookShelf.ReadChapterName = chapterName
 	bookShelf.ReadChapterUrl = chapterUrl
-	noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
+	noveldb.
+		noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
 
 	okJson := JsonRet{Code: 1, Ret: "update novel to bookshelf ok"}
 	c.JSON(200, okJson)
