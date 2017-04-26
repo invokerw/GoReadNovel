@@ -3,6 +3,7 @@ package handlers
 import (
 	"GoReadNovel/logger"
 	"GoReadNovel/noveldb"
+	"GoReadNovel/redis"
 	"GoReadNovel/spider"
 	"github.com/gin-gonic/gin"
 	"os"

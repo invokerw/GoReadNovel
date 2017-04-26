@@ -67,10 +67,10 @@ func FindOneUserBookShlefFromBookShelfByUserID(userid string) (map[int]BookShelf
 //删除某一条书架上书籍数据
 func DeleteOneDataToBookShelfByUseridAndNovelid(userid string, novelid int) {
 
-	stmt, err := GetMysqlDB().Prepare("delete from novel where novelid=? and userid=?", novelid, userid)
+	stmt, err := GetMysqlDB().Prepare("delete from novel where novelid=? and userid=?")
 	checkErr(err)
 
-	res, err := stmt.Exec(id)
+	_, err = stmt.Exec(novelid, userid)
 	checkErr(err)
 	//理论上不会错呀
 	//logger.ALogger().Debug(affect)

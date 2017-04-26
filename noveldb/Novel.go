@@ -174,13 +174,13 @@ func DeleteOneDataToNovelByName(id int) {
 	stmt, err := GetMysqlDB().Prepare("delete from novel where novelid=?")
 	checkErr(err)
 
-	res, err := stmt.Exec(id)
+	_, err = stmt.Exec(id)
 	checkErr(err)
 
-	affect, err := res.RowsAffected()
-	checkErr(err)
+	//affect, err := res.RowsAffected()
+	//checkErr(err)
 
-	logger.ALogger().Debug(affect)
+	//logger.ALogger().Debug(affect)
 }
 
 /*
