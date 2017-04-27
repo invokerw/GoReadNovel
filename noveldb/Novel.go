@@ -95,6 +95,30 @@ func FindOneDataFromNovelByID(novelId int) (Novel, bool) {
 
 }
 
+//查询特定的一条数据依据小说Noveladdr
+func FindOneDataFromNovelByAddr(url string) (Novel, bool) {
+
+	row := GetMysqlDB().QueryRow("SELECT * FROM novel WHERE addr=?", url)
+	//defer rows.Close()如果是读取很多行的话要关闭
+
+	var novel Novel
+
+	err = row.Scan(&novel.ID, &novel.NovelName, &novel.Author, &novel.Desc, &novel.NovelType, &novel.NovelUrl, &novel.ImagesAddr,
+		&novel.LatestChpName, &novel.LatestChpUrl, &novel.Status, &novel.UpdateTime)
+	//checkErr(err)
+	if err == sql.ErrNoRows {
+		//checkErr(err)
+		//查不到就不报Error了
+		return novel, false
+	} else if err != nil {
+		//checkErr(err)
+		return novel, false
+	}
+	//logger.ALogger().Debugf("Find One Novel: %v\n", novel)
+	return novel, true
+
+}
+
 //从begin 开始 num条数据  eg:0,1000 1-1000  查询1000条数据
 func FindDatasFromNovel(begin int, num int) (map[int]Novel, bool) {
 

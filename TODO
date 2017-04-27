@@ -43,6 +43,10 @@ OK		19.spider.GetNovelChapterListByUrl中cp.Url = "/GetBookContent?go=" + idUrlN
 
 		20.AddAUserNovelInBookShelfJsonHandler添加携程！！！！！！！！！！！！！！
 
-		21.书架更新模块，阅读书籍上面后台与前台都要修改一下。还有就是删除。
+		21.书架更新模块，阅读书籍上面后台与前台都要修改一下。  顺便加上取消添加书架这个选项
+
+OK		22.还要有个某一本书是否在这个人的书架上的请求。
+
+		23.书架删除前台 这里要额外加。。想想怎么加。
 
 		.上面都完了，修改客户端
