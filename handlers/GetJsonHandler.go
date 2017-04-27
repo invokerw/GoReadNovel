@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 //返回Json的一个模板  Code在不同情况下有不同作用
@@ -100,12 +101,14 @@ func GetNovelContentJsonHandler(c *gin.Context) {
 	if !exist {
 		//errJson := JsonRet{Code: -2, Ret: "can't find session"}
 		//c.JSON(500, errJson)
+		logger.ALogger().Error("session not find")
 		return
 	}
 	uid, err := myredis.GetRedisClient().Get(session).Result()
 	if err == redis.Nil {
 		//errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
 		//c.JSON(500, errJson)
+		logger.ALogger().Error("redis is nil")
 		return
 	} else if err != nil {
 		logger.ALogger().Errorf("Get Redis key Err :", err)
@@ -119,11 +122,11 @@ func GetNovelContentJsonHandler(c *gin.Context) {
 	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
 	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 	datas := strings.Split(strings.TrimSpace(chp.Url), "/")
-	if len(datas) != 5 {
+	if len(datas) != 7 {
 		logger.ALogger().Debug("The Split Now Url datas = ", datas)
 		return
 	}
-	novelUrl := spider.URL + "/book/" + datas[2] + "/" + datas[3] + "/"
+	novelUrl := spider.URL + "/book/" + datas[4] + "/" + datas[5] + "/"
 	logger.ALogger().Debug("The Novel Url Is = ", novelUrl)
 	if novel, find := noveldb.FindOneDataFromNovelByAddr(novelUrl); !find {
 		logger.ALogger().Error("Not Find A Novel By The Url = ")
@@ -132,7 +135,7 @@ func GetNovelContentJsonHandler(c *gin.Context) {
 		if bookShelf, find := noveldb.FindOneNovelFromBookShelfByUserIDAndNovelID(uid, novel.ID); find {
 			//发现了就更新一下bookShelf
 			bookShelf.ReadChapterName = chp.ChapterName
-			bookShelf.ReadChapterUrl = chp.Url
+			bookShelf.ReadChapterUrl = chp.Url[len(spider.URL):len(chp.Url)]
 			noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
 		}
 	}

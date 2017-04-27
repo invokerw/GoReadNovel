@@ -24,7 +24,7 @@ OK		10.加上更新时间,对于最近已经更新过的小说就不必更新  (
 
 OK		11.修复updatedata mysql  max connection错误。
 
-		12.加上用户登录，书架时候有用。
+OK		12.加上用户登录，书架时候有用。
 
 OK		13.在updatedata添充总收藏表和总点击表、书架表，并增加上更新,写上查询语句
 
@@ -33,7 +33,7 @@ OK		14.插入以及更新goodnum、allvote表数据 ，与novel比较类似   in
 OK		15.使用redis维护用户的登录，然后使用
 ?		   中间件middleware维护session  再考虑
 
-		16.书架json的处理
+OK		16.书架json的处理
 
 OK		17.查找章节列表与读取文章内容似乎有些问题。
 
@@ -43,10 +43,12 @@ OK		19.spider.GetNovelChapterListByUrl中cp.Url = "/GetBookContent?go=" + idUrlN
 
 		20.AddAUserNovelInBookShelfJsonHandler添加携程！！！！！！！！！！！！！！
 
-		21.书架更新模块，阅读书籍上面后台与前台都要修改一下。  顺便加上取消添加书架这个选项
+Ok		21.书架更新模块，阅读书籍上面后台与前台都要修改一下。  顺便加上取消添加书架这个选项
 
 OK		22.还要有个某一本书是否在这个人的书架上的请求。
 
 		23.书架删除前台 这里要额外加。。想想怎么加。
+
+		24.bookshelf数据库更新但是书架本身页面不更新。点进去又重新加载成内个页面了，。需要页面数据的刷新。阅读的章节、是否在书架的显示有这个问题
 
 		.上面都完了，修改客户端
