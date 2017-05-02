@@ -338,7 +338,7 @@ func GetNovelInfoJsonHandler(c *gin.Context) {
 func GetTopNovelListJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetTopNovelListJsonHandler Re")
 	//应该有一个type的 没有值得话默认排序 allvote, goodnum 两种类型
-	topty, exist := c.GetQuery("toptype")
+	topty, exist := c.GetQuery("noveltype")
 	var novelListMap map[int]noveldb.Novel
 	if !exist {
 		var find bool
@@ -425,7 +425,7 @@ func GetChapterListJsonHandler(c *gin.Context) {
 
 //获取对应类型的小说若干数量 新增
 func GetATypeNovelJsonHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to GetChapterListJsonHandler Re")
+	logger.ALogger().Debug("Try to GetATypeNovelJsonHandler Re")
 	novelType, exist := c.GetQuery("noveltype")
 	if !exist {
 		errJson := JsonRet{Code: 0, Ret: "can't find"}
