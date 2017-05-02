@@ -57,6 +57,14 @@ func main() {
 	router.GET("/GetUserBookShelfNovelsJson", handlers.GetUserBookShelfNovelsJsonHandler)
 	//这本书是否在书架上 user session  novel id
 	router.GET("/GetTheNovelInBookShelfJson", handlers.GetTheNovelInBookShelfJsonHandler)
+	//增加书评
+	router.GET("/AddANovelCommentJson", handlers.AddANovelCommentJsonHandler)
+	//更新点赞数
+	router.GET("/UpdateANovelCommentJson", handlers.UpdateANovelCommentJsonHandler)
+	//获取书评
+	router.GET("/GetANovelCommentsJson", handlers.GetANovelCommentsJsonHandler)
+	//删除书评
+	router.GET("/DeleteANovelCommentJson", handlers.DeleteANovelCommentJsonHandler)
 	//微信小程序JSON请求----------------------End
 
 	//文件上传

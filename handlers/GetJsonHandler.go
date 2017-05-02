@@ -717,3 +717,20 @@ func GetTheNovelInBookShelfJsonHandler(c *gin.Context) {
 
 	return
 }
+func AddANovelCommentJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to AddANovelCommentJsonHandler ")
+	return
+}
+
+func UpdateANovelCommentJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to UpdateANovelCommentJsonHandler ")
+	return
+}
+func GetANovelCommentsJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetANovelCommentsJsonHandler ")
+	return
+}
+func DeleteANovelCommentJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to DeleteANovelCommentJsonHandler ")
+	return
+}

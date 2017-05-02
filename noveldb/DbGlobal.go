@@ -56,6 +56,14 @@ type GoodNum struct {
 	NovelID    int   `json:"novelid"`   //小说ID
 	UpdateTime int64 `json:"uptime"`    //更新时间  时间戳
 }
+type Comment struct {
+	CommentID   int    `json:"commentid"`   //评论ID
+	UserID      string `json:"userid"`      //用户ID
+	NovelID     int    `json:"novelid"`     //小说ID
+	Content     string `json:"content"`     //评论内容
+	CommentTime int64  `json:"commenttime"` //评论时间
+	Zan         int    `json:"zan"`         //赞同的数量
+}
 
 const (
 	DEFAULT_NOVEL_TYPE = "其他"
