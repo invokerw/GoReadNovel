@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 //返回Json的一个模板  Code在不同情况下有不同作用
@@ -884,7 +885,7 @@ func GetANovelCommentsJsonHandler(c *gin.Context) {
 		allCommentInfo.Comment = comments[i]
 		allCommentInfo.StrTime = time.Unix(comments[i].CommentTime, 0).Format("2006-01-02 03:04:05 PM")
 		user, _ := noveldb.FindOneDataFromUserByUserID(comments[i].UserID)
-		allCommentInfo = user.NikeName
+		allCommentInfo.UserName = user.NikeName
 		if comments[i].UserID == uid {
 			allCommentInfo.IsMe = true
 		} else {
