@@ -443,7 +443,11 @@ func GetATypeNovelJsonHandler(c *gin.Context) {
 	}
 
 	var novelsInfo []noveldb.Novel
-	for i := 0; i < len(novelListMap); i++ {
+	retNovelNum := 50 //这里限制了返回小说的数量后可以修改
+	if retNovelNum < len(novelListMap) {
+		retNovelNum = len(novelListMap)
+	}
+	for i := 0; i < retNovelNum; i++ {
 		novelsInfo = append(novelsInfo, novelListMap[i])
 	}
 	// code = 1为小说列表
