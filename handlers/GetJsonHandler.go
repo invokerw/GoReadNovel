@@ -350,6 +350,7 @@ func GetTopNovelListJsonHandler(c *gin.Context) {
 		}
 	}
 	if topty == "allvote" {
+		novelListMap = make(map[int]noveldb.Novel)
 		novelList, find := noveldb.FindDatasFromAllVote(0, 50)
 		if !find {
 			errJson := JsonRet{Code: 0, Ret: "can't find"}
@@ -361,6 +362,7 @@ func GetTopNovelListJsonHandler(c *gin.Context) {
 			novelListMap[i] = novel
 		}
 	} else if topty == "goodnum" {
+		novelListMap = make(map[int]noveldb.Novel)
 		novelList, find := noveldb.FindDatasFromGoodNum(0, 50)
 		if !find {
 			errJson := JsonRet{Code: 0, Ret: "can't find"}
