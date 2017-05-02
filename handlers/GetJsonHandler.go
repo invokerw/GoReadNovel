@@ -371,6 +371,14 @@ func GetTopNovelListJsonHandler(c *gin.Context) {
 			novel, _ := noveldb.FindOneDataFromNovelByID(novelList[i].NovelID)
 			novelListMap[i] = novel
 		}
+	} else if topty == "default" {
+		var find bool
+		novelListMap, find = noveldb.FindDatasFromNovel(0, 50)
+		if !find {
+			errJson := JsonRet{Code: 0, Ret: "can't find"}
+			c.JSON(500, errJson)
+			return
+		}
 	}
 
 	var novelsInfo []noveldb.Novel
