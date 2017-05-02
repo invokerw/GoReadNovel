@@ -837,6 +837,7 @@ func GetANovelCommentsJsonHandler(c *gin.Context) {
 		return
 	}
 	_, err := myredis.GetRedisClient().Get(session).Result()
+	//这里获取评论不需要登录也可以。
 	if err == redis.Nil {
 		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
 		c.JSON(500, errJson)
