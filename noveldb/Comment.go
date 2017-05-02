@@ -41,7 +41,7 @@ func UpdateOneDataToCommentByCommentID(commentID int) {
 //查某个书籍的所有评论
 func FindOneNovelCommentFromCommentByNovelID(novelid int) (map[int]Comment, bool) {
 
-	rows, err := GetMysqlDB().Query("SELECT * FROM comment WHERE novelid=?", novelid)
+	rows, err := GetMysqlDB().Query("SELECT * FROM comment WHERE novelid=? limit 20", novelid)
 	defer rows.Close() //如果是读取很多行的话要关闭
 	var comments map[int]Comment
 	comments = make(map[int]Comment)

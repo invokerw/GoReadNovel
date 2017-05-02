@@ -734,18 +734,192 @@ func GetTheNovelInBookShelfJsonHandler(c *gin.Context) {
 }
 func AddANovelCommentJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to AddANovelCommentJsonHandler ")
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	uid, err := myredis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+		errJson := JsonRet{Code: -3, Ret: "panic"}
+		c.JSON(500, errJson)
+		return
+	}
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
+	novelid, exist := c.GetQuery("novelid")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find novelid"}
+		c.JSON(500, errJson)
+		return
+	}
+	nid, err := strconv.Atoi(novelid)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "novelid err"}
+		c.JSON(500, errJson)
+		return
+	}
+	content, exist := c.GetQuery("content")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find content"}
+		c.JSON(500, errJson)
+		return
+	}
+	comment := noveldb.Comment{}
+	comment.UserID = uid
+	comment.NovelID = nid
+	comment.Content = content
+	comment.Zan = 0
+	noveldb.InsertOneDataToComment(comment)
+	okJson := JsonRet{Code: 1, Ret: "insert comment ok"}
+	c.JSON(200, okJson)
 	return
 }
 
 func UpdateANovelCommentJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to UpdateANovelCommentJsonHandler ")
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	_, err := myredis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+		errJson := JsonRet{Code: -3, Ret: "panic"}
+		c.JSON(500, errJson)
+		return
+	}
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
+	commentid, exist := c.GetQuery("commentid")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find novelid"}
+		c.JSON(500, errJson)
+		return
+	}
+	cid, err := strconv.Atoi(commentid)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "novelid err"}
+		c.JSON(500, errJson)
+		return
+	}
+	noveldb.UpdateOneDataToCommentByCommentID(cid)
+	okJson := JsonRet{Code: 1, Ret: "update comment ok"}
+	c.JSON(200, okJson)
 	return
 }
 func GetANovelCommentsJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetANovelCommentsJsonHandler ")
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	_, err := myredis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+		errJson := JsonRet{Code: -3, Ret: "panic"}
+		c.JSON(500, errJson)
+		return
+	}
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
+	novelid, exist := c.GetQuery("novelid")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find novelid"}
+		c.JSON(500, errJson)
+		return
+	}
+	nid, err := strconv.Atoi(novelid)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "novelid err"}
+		c.JSON(500, errJson)
+		return
+	}
+	comments, find := noveldb.FindOneNovelCommentFromCommentByNovelID(nid)
+	if !find {
+		errJson := JsonRet{Code: 0, Ret: "sqldb find err"}
+		c.JSON(500, errJson)
+		return
+	}
+	var cmts []noveldb.Comment
+	for i := 0; i < len(comments); i++ {
+		comment := noveldb.Comment{}
+		comment = comments[i]
+		cmts = append(cmts, comment)
+	}
+	okJson := JsonRet{Code: 1, Ret: cmts}
+	c.JSON(200, okJson)
 	return
 }
 func DeleteANovelCommentJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to DeleteANovelCommentJsonHandler ")
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	_, err := myredis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+		errJson := JsonRet{Code: -3, Ret: "panic"}
+		c.JSON(500, errJson)
+		return
+	}
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
+	commentid, exist := c.GetQuery("commentid")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find novelid"}
+		c.JSON(500, errJson)
+		return
+	}
+	cid, err := strconv.Atoi(commentid)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "novelid err"}
+		c.JSON(500, errJson)
+		return
+	}
+	noveldb.DeleteOneDataToCommentByCommentid(cid)
+	okJson := JsonRet{Code: 1, Ret: "delete a comment ok"}
+	c.JSON(200, okJson)
 	return
 }
