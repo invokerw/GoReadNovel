@@ -836,7 +836,7 @@ func GetANovelCommentsJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	_, err := myredis.GetRedisClient().Get(session).Result()
+	uid, err := myredis.GetRedisClient().Get(session).Result()
 	//这里获取评论不需要登录也可以。
 	if err == redis.Nil {
 		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
@@ -872,13 +872,28 @@ func GetANovelCommentsJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	var cmts []noveldb.Comment
-	for i := 0; i < len(comments); i++ {
-		comment := noveldb.Comment{}
-		comment = comments[i]
-		cmts = append(cmts, comment)
+	type AllCommentInfo struct {
+		Comment  noveldb.Comment `json:"comment"`
+		StrTime  string          `json:"strtime"`
+		IsMe     bool            `json:"isme"`
+		UserName string          `json:"username"`
 	}
-	okJson := JsonRet{Code: 1, Ret: cmts}
+	var allCommentsInfo []AllCommentInfo
+	for i := 0; i < len(comments); i++ {
+		allCommentInfo := AllCommentInfo{}
+		allCommentInfo.Comment = comments[i]
+		allCommentInfo.StrTime = time.Unix(comments[i].CommentTime, 0).Format("2006-01-02 03:04:05 PM")
+		user, _ := noveldb.FindOneDataFromUserByUserID(comments[i].UserID)
+		allCommentInfo = user.NikeName
+		if comments[i].UserID == uid {
+			allCommentInfo.IsMe = true
+		} else {
+			allCommentInfo.IsMe = false
+		}
+		allCommentInfo.Comment.UserID = "=3="
+		allCommentsInfo = append(allCommentsInfo, allCommentInfo)
+	}
+	okJson := JsonRet{Code: 1, Ret: allCommentsInfo}
 	c.JSON(200, okJson)
 	return
 }
