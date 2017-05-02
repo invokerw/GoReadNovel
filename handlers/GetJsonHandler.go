@@ -444,9 +444,10 @@ func GetATypeNovelJsonHandler(c *gin.Context) {
 
 	var novelsInfo []noveldb.Novel
 	retNovelNum := 50 //这里限制了返回小说的数量后可以修改
-	if retNovelNum < len(novelListMap) {
+	if retNovelNum > len(novelListMap) {
 		retNovelNum = len(novelListMap)
 	}
+	logger.ALogger().Debugf("retNovelNum = %d", retNovelNum)
 	for i := 0; i < retNovelNum; i++ {
 		novelsInfo = append(novelsInfo, novelListMap[i])
 	}

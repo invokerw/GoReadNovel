@@ -168,9 +168,9 @@ func FindDatasFromNovelByNameOrAuthor(key string) (map[int]Novel, bool) {
 	return novels, true
 }
 
-//查询若干条数据依据小说类型 没限制数量
+//查询若干条数据依据小说类型 没限制数量 不限制的话太慢了 还是限制100
 func FindDatasFromNovelByNovelType(novelType string) (map[int]Novel, bool) {
-	rows, err := GetMysqlDB().Query("SELECT * FROM novel WHERE noveltype=?", novelType)
+	rows, err := GetMysqlDB().Query("SELECT * FROM novel WHERE noveltype=? limit 100", novelType)
 	defer rows.Close() //如果是读取很多行的话要关闭
 
 	if !checkErr(err) {
