@@ -824,7 +824,18 @@ func UpdateANovelCommentJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	noveldb.UpdateOneDataToCommentByCommentID(cid)
+	ty, exist := c.GetQuery("type") //是+1还是减1
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find ty"}
+		c.JSON(500, errJson)
+		return
+	}
+	if ty == "add" {
+		noveldb.UpdateOneDataAddZanToCommentByCommentID(cid)
+	} else if ty == "min" {
+		noveldb.UpdateOneDataMinZanToCommentByCommentID(cid)
+	}
+
 	okJson := JsonRet{Code: 1, Ret: "update comment ok"}
 	c.JSON(200, okJson)
 	return

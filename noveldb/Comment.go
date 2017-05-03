@@ -25,9 +25,23 @@ func InsertOneDataToComment(comment Comment) {
 }
 
 //改 点赞数+1
-func UpdateOneDataToCommentByCommentID(commentID int) {
+func UpdateOneDataAddZanToCommentByCommentID(commentID int) {
 	//没有更新 join time
 	stmt, err := GetMysqlDB().Prepare("update comment set zan=zan+1 where commentid=?")
+	defer stmt.Close()
+	checkErr(err)
+
+	_, err = stmt.Exec(commentID)
+	if !checkErr(err) {
+		logger.ALogger().Errorf("updata user commentID zan %d \n", commentID)
+	}
+	//logger.ALogger().Debugf("updata bookShelf %v \n", user)
+}
+
+//减一
+func UpdateOneDataMinZanToCommentByCommentID(commentID int) {
+	//没有更新 join time
+	stmt, err := GetMysqlDB().Prepare("update comment set zan=zan-1 where commentid=?")
 	defer stmt.Close()
 	checkErr(err)
 
