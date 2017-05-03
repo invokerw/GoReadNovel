@@ -33,6 +33,8 @@ func main() {
 	//微信小程序JSON请求----------------------Begin
 	//测试
 	router.GET("/GetJson", handlers.GetJsonHandler)
+	//获取首页url图片
+	router.GET("/GetIndexImgsJson", handlers.GetIndexImgsJsonHandler)
 	//搜索小说 小说名称或者作者  key = string
 	router.GET("/GetSearchNovelJson", handlers.GetSearchNovelByNameOrAuthorJsonHandler)
 	//获取小说内容   go = url

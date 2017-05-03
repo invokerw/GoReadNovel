@@ -23,12 +23,52 @@ type JsonRet struct {
 //下面是个基本的例子
 func GetJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetJsonHandler")
+
 	type JsonHolder struct {
 		Id   int    `json:"id"`
 		Name string `json:"name"`
 	}
 
 	holder := JsonHolder{Id: 1, Name: "123"}
+	//若返回json数据，可以直接使用gin封装好的JSON方法
+	c.JSON(200, holder)
+	return
+}
+func GetIndexImgsJsonHandler(c *gin.Context) {
+
+	logger.ALogger().Debug("Try to GetIndexImgsJsonHandler")
+	type ImgInfo struct {
+		Url     string `json:"url"`
+		NovelId int    `json:"id"`
+		Index   int    `json:"index"`
+	}
+	var imgsInfo []ImgInfo
+	imgInfo := ImgInfo{}
+	imgInfo.Index = 1
+	imgInfo.NovelId = 1
+	imgInfo.Url = "https://fsnsaber.cn/Main/index/1.png"
+	imgsInfo = append(imgsInfo, imgInfo)
+	imgInfo.Index = 2
+	imgInfo.NovelId = 1
+	imgInfo.Url = "https://fsnsaber.cn/Main/index/2.png"
+	imgsInfo = append(imgsInfo, imgInfo)
+	imgInfo.Index = 3
+	imgInfo.NovelId = 1
+	imgInfo.Url = "https://fsnsaber.cn/Main/index/3.png"
+	imgsInfo = append(imgsInfo, imgInfo)
+	imgInfo.Index = 4
+	imgInfo.NovelId = 1
+	imgInfo.Url = "https://fsnsaber.cn/Main/index/4.png"
+	imgsInfo = append(imgsInfo, imgInfo)
+	imgInfo.Index = 5
+	imgInfo.NovelId = 1
+	imgInfo.Url = "https://fsnsaber.cn/Main/index/5.png"
+	imgsInfo = append(imgsInfo, imgInfo)
+	imgInfo.Index = 6
+	imgInfo.NovelId = 1
+	imgInfo.Url = "https://fsnsaber.cn/Main/index/6.png"
+	imgsInfo = append(imgsInfo, imgInfo)
+	holder := JsonRet{Code: 1, Ret: imgsInfo}
 	//若返回json数据，可以直接使用gin封装好的JSON方法
 	c.JSON(200, holder)
 
