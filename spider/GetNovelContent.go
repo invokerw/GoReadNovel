@@ -36,7 +36,7 @@ func GetNovelContent(url string) *ChapterContent {
 	cc.Content = datas[1]
 	cc.Url = url
 	cc.NovelName = datas[4]
-	cc.ChapterName = datas[0]
+	cc.ChapterName = datas[0][len("章节目录 ")-1 : len(datas[0])]
 	if datas[2][len(datas[2])-1] == '/' {
 		cc.ChpPre = "/GetBookInfo?go=" + datas[2] + "&name=" + cc.NovelName
 	} else {
