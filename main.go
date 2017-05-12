@@ -14,6 +14,7 @@ func main() {
 	router := gin.Default()      //获得路由实例
 
 	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("webpage/*")
 	//网页请求----------------------Begin
 	//添加中间件
 	router.Use(middleware.Middleware)
@@ -81,6 +82,9 @@ func main() {
 	//测试
 	router.GET("/1", handlers.NewHomeHandler)
 	router.StaticFS("/statics", http.Dir("./statics"))
+
+	//table测试
+	router.GET("/table", handlers.TableHandler)
 
 	logger.ALogger().Notice("Listen start.")
 	logger.ALogger().Notice("Listen 443 https")

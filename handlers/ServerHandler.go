@@ -25,6 +25,12 @@ func NewHomeHandler(c *gin.Context) {
 	c.HTML(200, "index.html", gin.H{})
 	//helpers.Render(c, gin.H{}, "index.html")
 }
+
+func TableHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to TableHandler")
+	c.HTML(200, "table.html", gin.H{})
+	//helpers.Render(c, gin.H{}, "index.html")
+}
 func GetSearchIndexHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSearchIndexHandler")
 	helpers.Render(c, gin.H{"Title": "搜索"}, "index.tmpl")
