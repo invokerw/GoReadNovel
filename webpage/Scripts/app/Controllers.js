@@ -5,7 +5,7 @@
 angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services"])
     .controller("ExampleCtrl", ["$scope", "BootswatchService", function ($scope, BootswatchService) {
         // scope models
-        $scope.page = { Css: "https://bootswatch.com/flatly/bootstrap.min.css" };
+        $scope.page = { Css: "/statics/bootstrap/css/bootstrap.min.css" };
         $scope.contactList = [];
         $scope.progress = { Ready: false };
         // get themes from bootswatch
