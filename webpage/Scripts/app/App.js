@@ -8,5 +8,16 @@ angular.module("BsTableDirective", ["ngRoute", "bsTable", "BsTableDirective.Cont
             templateUrl: "/Content/templates/example.html",
             controller: "ExampleCtrl"
         })
+        .when("/ShowNovelInfo", {
+            templateUrl: "/Content/templates/noveltable.html",
+            controller: "NovelInfoCtrl"
+        })
         .otherwise({ redirectTo: "/" });
-    }]);
+    }])
+    .filter('removal',function(){
+    	return function(text) {
+    	//var str = "http://www.huanyue123.com/book"; 
+    	//str.length = 30;
+        return text.substring(30);
+    	}
+    });

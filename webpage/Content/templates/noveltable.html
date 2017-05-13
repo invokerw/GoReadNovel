@@ -1,8 +1,8 @@
-<!--bs-table.com/Content/templates/example.html-->
+
 <div class="container">
     <link type="text/css" ng-href="{{page.Css}}" rel="stylesheet" />
     <div ng-show="progress.Ready" class="inner-container sample">
-        <h2 id="working-sample">Very Good Eg Table</h2>
+        <h2 id="working-sample">Novel Info</h2>
         <div class="form-group">
             <label class="control-label">Select theme:</label>
             <select class="form-control" ng-model="page.Css">
@@ -12,17 +12,27 @@
         <table class="table table-hover table-bordered" bs-table>
             <thead>
                 <tr>
-                    <th ng-click="predicate='FirstName'; reverse=!reverse">First name</th>
-                    <th ng-click="predicate='LastName'; reverse=!reverse">Last name</th>
-                    <th ng-click="predicate='BornDate'; reverse=!reverse">Born date</th>
+                    <th ng-click="predicate='Index'; reverse=!reverse">Index</th>
+                    <th ng-click="predicate='NovelName'; reverse=!reverse">Novel Name</th>
+                    <th ng-click="predicate='Author'; reverse=!reverse">Author</th>
+                    <th ng-click="predicate='Url'; reverse=!reverse">Url</th>
+                    <th ng-click="predicate='NewChapter'; reverse=!reverse">New Chapter</th>
+                    <!--<th ng-click="predicate='ChapterUrl'; reverse=!reverse">Chapter Url</th>-->
+                    <th ng-click="predicate='NovelType'; reverse=!reverse">Novel Type</th>
+                    <th ng-click="predicate='Status'; reverse=!reverse">Status</th>
                     <th class="action-column">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="contact in contactList | orderBy:predicate:reverse">
-                    <td>{{contact.FirstName}}</td>
-                    <td>{{contact.LastName}}</td>
-                    <td>{{contact.BornDate | date}}</td>
+                    <td>{{$index}}</td>
+                    <td>{{contact.novelname}}</td>
+                    <td>{{contact.author}}</td>
+                    <td>{{contact.url |removal }}</td>
+                    <td>{{contact.newchp}}</td>
+                    <!--<td>{{contact.newurl}}</td>-->
+                    <td>{{contact.noveltype }}</td>
+                    <td>{{contact.status}}</td>
                     <td>
                     	<button type="button" class="btn btn-info btn-sm" ng-click="Show(contact)">Show</button>
                     	<button type="button" class="btn btn-info btn-sm" ng-click="Edit(contact)">Edit</button>

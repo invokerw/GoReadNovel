@@ -13,8 +13,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode) //全局设置环境，此为开发环境，线上环境为 gin.ReleaseMode  gin.DebugMode
 	router := gin.Default()      //获得路由实例
 
-	router.LoadHTMLGlob("templates/*")
-	router.LoadHTMLGlob("webpage/*.html")
+	router.LoadHTMLGlob("templates/*.html")
 	//网页请求----------------------Begin
 	//添加中间件
 	router.Use(middleware.Middleware)
@@ -25,7 +24,6 @@ func main() {
 	router.GET("/GetBookInfo", handlers.GetBookInfoHandler)
 	//获取章节内容
 	router.GET("/GetBookContent", handlers.GetNovelContentHandler)
-
 	//网页请求---------------------End
 
 	//微信小程序登录
@@ -87,6 +85,9 @@ func main() {
 	router.GET("/table", handlers.TableHandler)
 	router.StaticFS("/Content", http.Dir("./webpage/Content"))
 	router.StaticFS("/Scripts", http.Dir("./webpage/Scripts"))
+
+	//获取书籍Table信息
+	router.GET("/GetTNovelTableInfoJson", handlers.GetTNovelTableInfoJsonHandler)
 
 	logger.ALogger().Notice("Listen start.")
 	logger.ALogger().Notice("Listen 443 https")
