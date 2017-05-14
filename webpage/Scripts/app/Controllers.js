@@ -66,7 +66,8 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
 
         // show function for bs-table
         $scope.Show = function (contact) {
-            alert(JSON.stringify(contact));
+            //alert(JSON.stringify(contact));
+            $scope.Open(contact);
         };
         // edit function for bs-table
         $scope.Edit = function (contact) {
@@ -80,7 +81,7 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
         var $ctrl = this;
         $ctrl.items = ['item1', 'item2', 'item3'];
         $scope.selected = ""
-        $scope.Open = function(size, parentSelector){
+        $scope.Open = function(contact,size){
             //console.log("this.........open");
             var parentElem = undefined;
             //parentSelector ? angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
@@ -95,8 +96,9 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
               appendTo: parentElem,
               resolve: {
                 items: function () {
-                  return $ctrl.items;
-                }
+                    return $ctrl.items;
+                },
+                contact:contact
               }
             });
 
@@ -137,9 +139,10 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
     
     // Please note that $uibModalInstance represents a modal window (instance) dependency.
     // It is not the same as the $uibModal service used above.
-    .controller('ModalInstanceCtrl',["$uibModalInstance", "items", function ($uibModalInstance, items) {
+    .controller('ModalInstanceCtrl',["$uibModalInstance","contact", "items", function ($uibModalInstance, contact, items) {
       var $ctrl = this;
       $ctrl.items = items;
+      $ctrl.contact = contact;
       $ctrl.selected = {
         item: $ctrl.items[0]
       };

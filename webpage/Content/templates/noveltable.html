@@ -25,7 +25,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="contact in contactList | orderBy:predicate:reverse">
-                    <td>{{$index}}</td>
+                    <td>{{$index + 1}}</td>
                     <td>{{contact.novelname}}</td>
                     <td>{{contact.author}}</td>
                     <td>{{contact.url |removal }}</td>
@@ -53,9 +53,27 @@
     <div>
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
-            <h3 class="modal-title" id="modal-title">I'm a modal!</h3>
+            <h3 class="modal-title" id="modal-title">Novel Info</h3>
         </div>
         <div class="modal-body" id="modal-body">
+            <div style="width:33%;float:left">
+            <img src="{{$ctrl.contact.imagesaddr}}" height="240" width="180" alt="{{$ctrl.contact.novelname}}" />
+            <br/><br/>
+            </div>
+            <div style="width:67%;float:right">
+                Novel ID:<input type="text" name="" class="form-control" readonly="true" ng-model="$ctrl.contact.id">
+                Novel Name:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.novelname">
+                Author:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.author">
+                Novel Url:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.url">
+                Latest Chapter:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.newchp">
+            </div>
+                Latest Chapter Url:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.newurl">
+                Novel Type:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.noveltype">
+                Novel Status:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.status">
+
+            Novel Image Url:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.imagesaddr">
+            Novel Desc:<textarea name="desc" cols ="50" rows = "5" class="form-control" style="resize: none;">{{$ctrl.contact.desc}}</textarea>
+            Test:
             <ul>
                 <li ng-repeat="item in $ctrl.items">
                     <a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>

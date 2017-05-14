@@ -2547,8 +2547,8 @@ output {
   color: #555;
 }
 .form-control {
-  display: block;
-  width: 100%;
+  display: inline;
+  width: 50%;
   height: 34px;
   padding: 6px 12px;
   font-size: 14px;
@@ -5873,7 +5873,7 @@ button.close {
   bottom: 0;
   left: 0;
   z-index: 1050;
-  display: none;
+  display: inline;
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
   outline: 0;
