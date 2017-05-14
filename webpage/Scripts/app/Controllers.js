@@ -2,7 +2,7 @@
 
 /* controllers module */
 
-angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services"])
+angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.bootstrap"])
     .controller("ExampleCtrl", ["$scope", "BootswatchService", function ($scope, BootswatchService) {
         // scope models
         $scope.page = { Css: "/statics/bootstrap/css/bootstrap.min.css" };
@@ -48,7 +48,8 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services"])
         // init socialite jquery plugin
         Socialite.load();
     }])
-    .controller("NovelInfoCtrl", ["$scope", "BootswatchService", "$http", function ($scope, BootswatchService, $http) {
+    
+    .controller("NovelInfoCtrl", ["$scope", "$uibModal","BootswatchService", "$http", function ($scope,$uibModal, BootswatchService,$http) {
         // scope models
         $scope.page = { Css: "/statics/bootstrap/css/bootstrap.min.css" };
         $scope.contactList = [];
@@ -75,6 +76,37 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services"])
         $scope.Remove = function (contact) {
             alert(JSON.stringify(contact));
         };
+        
+        var $ctrl = this;
+        $ctrl.items = ['item1', 'item2', 'item3'];
+        $scope.selected = ""
+        $scope.Open = function(size, parentSelector){
+            //console.log("this.........open");
+            var parentElem = undefined;
+            //parentSelector ? angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
+            var modalInstance = $uibModal.open({
+              animation: true,
+              ariaLabelledBy: 'modal-title',
+              ariaDescribedBy: 'modal-body',
+              templateUrl: 'myModalContent.html',
+              controller: 'ModalInstanceCtrl',
+              controllerAs: '$ctrl',
+              size: size,
+              appendTo: parentElem,
+              resolve: {
+                items: function () {
+                  return $ctrl.items;
+                }
+              }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+              $scope.selected = selectedItem;
+            }, function () {
+              console.log('Modal dismissed at: ' + new Date());
+            });
+        };
+        
         // generate data
         function GenerateData(begin,count) {
             var dataList = [];
@@ -101,4 +133,22 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services"])
         }
         // init socialite jquery plugin
         Socialite.load();
+    }])
+    
+    // Please note that $uibModalInstance represents a modal window (instance) dependency.
+    // It is not the same as the $uibModal service used above.
+    .controller('ModalInstanceCtrl',["$uibModalInstance", "items", function ($uibModalInstance, items) {
+      var $ctrl = this;
+      $ctrl.items = items;
+      $ctrl.selected = {
+        item: $ctrl.items[0]
+      };
+
+      $ctrl.ok = function () {
+        $uibModalInstance.close($ctrl.selected.item);
+      };
+
+      $ctrl.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+      };
     }]);
