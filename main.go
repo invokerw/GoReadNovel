@@ -90,7 +90,7 @@ func main() {
 	//获取书籍Table信息
 	router.GET("/GetNovelTableInfoJson", handlers.GetNovelTableInfoJsonHandler)
 	//编辑table中的某本书籍
-	router.POST("/GetEditNovelJson", handlers.GetEditNovelJsonHandler)
+	router.GET("/GetEditNovelJson", handlers.GetEditNovelJsonHandler)
 	//删除某本书籍
 	router.GET("/GetDeleteNovleID", handlers.GetDeleteNovleIDHandler)
 	//获取书籍数量

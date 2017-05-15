@@ -61,18 +61,20 @@
             <br/><br/>
             </div>
             <div style="width:67%;float:right">
-                Novel ID:<input type="text" name="" class="form-control" readonly="true" ng-model="$ctrl.contact.id">
-                Novel Name:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.novelname">
-                Author:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.author">
-                Novel Url:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.url">
-                Latest Chapter:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.newchp">
+                Novel ID:<input type="text" id="novel-info" class="form-control" readonly ng-model="$ctrl.contact.id">
+                Novel Name:<input type="text" id="novel-info" class="form-control" readonly ng-model="$ctrl.contact.novelname">
+                Author:<input type="text" id="novel-info" class="form-control" readonly ng-model="$ctrl.contact.author">
+                Novel Url:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.url">
+                Latest Chapter:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.newchp">
+                <br/>
             </div>
-                Latest Chapter Url:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.newurl">
-                Novel Type:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.noveltype">
-                Novel Status:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.status">
+                Latest Chapter Url:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.newurl">
+                Novel Type:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.noveltype">
+                Novel Status:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.status">
 
-            Novel Image Url:<input type="text" name="" class="form-control" ng-model="$ctrl.contact.imagesaddr">
-            Novel Desc:<textarea name="desc" cols ="50" rows = "5" class="form-control" style="resize: none;">{{$ctrl.contact.desc}}</textarea>
+            Novel Image Url:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.imagesaddr">
+            Novel Desc:
+            <textarea id="novel-info" cols ="50" rows = "5" class="form-control" ng-readonly="{{$ctrl.readonly}}" style="resize: none;">{{$ctrl.contact.desc}}</textarea>
             Test:
             <ul>
                 <li ng-repeat="item in $ctrl.items">

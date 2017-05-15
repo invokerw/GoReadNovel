@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	//"strings"
 	"GoReadNovel/noveldb"
-	// "fmt"
+	"encoding/json"
 	"strconv"
 )
 
@@ -47,11 +47,20 @@ func GetNovelTableInfoJsonHandler(c *gin.Context) {
 
 func GetEditNovelJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetEditNovelJsonHandler")
-	buf := make([]byte, 1024)
-	n, _ := c.Request.Body.Read(buf)
-	logger.ALogger().Debug("get from client:", string(buf[0:n]))
+	novelJson, exist := c.GetQuery("novel")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find novel"}
+		c.JSON(500, errJson)
+		return
+	}
 	//将json转换成struct 更新数据库
-
+	var novel noveldb.Novel
+	logger.ALogger().Debugf("novelJson:%v", novelJson)
+	json.Unmarshal([]byte(novelJson), &novel)
+	logger.ALogger().Debug("get from client novel:", novel)
+	noveldb.UpdateOneDataToNovelByID(novel)
+	okJson := JsonRet{Code: 1, Ret: "ok"}
+	c.JSON(200, okJson)
 	return
 }
 
@@ -70,15 +79,16 @@ func GetDeleteNovleIDHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
+	logger.ALogger().Debug("delete novel id : ", nid)
 	//删除的代码先注释其他没有问题之后再投入使用
-	/*
-		if del := noveldb.DeleteOneDataToNovelByID(nid); !del {
-			errJson := JsonRet{Code: 0, Ret: "db delete error"}
-			c.JSON(500, errJson)
-			logger.ALogger().Error("db delete error")
-			return
-		}
-	*/
+
+	if del := noveldb.DeleteOneDataToNovelByID(nid); !del {
+		errJson := JsonRet{Code: 0, Ret: "db delete error"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("db delete error")
+		return
+	}
+
 	okJson := JsonRet{Code: 1, Ret: "delete ok"}
 	c.JSON(200, okJson)
 	return
@@ -116,6 +126,7 @@ func GetUltimateSearchNovelsJsonHandler(c *gin.Context) {
 		return
 	}
 	var novelListMap map[int]noveldb.Novel
+	var find bool
 	if searchType == "0" { //ID
 		id, err := strconv.Atoi(keyStr)
 		if err != nil {
@@ -129,7 +140,7 @@ func GetUltimateSearchNovelsJsonHandler(c *gin.Context) {
 		novelListMap[0] = novel
 
 	} else if searchType == "1" { //name and author
-		novelListmap, find = noveldb.FindDatasFromNovelByNameOrAuthor(key)
+		novelListMap, find = noveldb.FindDatasFromNovelByNameOrAuthor(keyStr)
 		if !find {
 			//数据库中没有找到，之后可以添加使用爬虫爬取一下
 			errJson := JsonRet{Code: 0, Ret: "can't find"}
@@ -137,7 +148,7 @@ func GetUltimateSearchNovelsJsonHandler(c *gin.Context) {
 			return
 		}
 	} else if searchType == "2" { //novel type
-		novelListMap, find = noveldb.FindDatasFromNovelByNovelType(noveldb.NovelTypeEtoC[novelType])
+		novelListMap, find = noveldb.FindDatasFromNovelByNovelType(keyStr)
 		if !find {
 			errJson := JsonRet{Code: 0, Ret: "can't find"}
 			c.JSON(500, errJson)

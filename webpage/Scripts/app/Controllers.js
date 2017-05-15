@@ -67,21 +67,47 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
         // show function for bs-table
         $scope.Show = function (contact) {
             //alert(JSON.stringify(contact));
-            $scope.Open(contact);
+            $scope.Open(contact,true);
         };
         // edit function for bs-table
         $scope.Edit = function (contact) {
-            alert(JSON.stringify(contact));
+            //alert(JSON.stringify(contact));
+            $scope.Open(contact,false);
         };
         // remove function for bs-table
         $scope.Remove = function (contact) {
-            alert(JSON.stringify(contact));
+            //alert(JSON.stringify(contact));
+            if (confirm("你确定删除该项？")) {  
+                //alert("点击了确定");  
+                $http({
+                    method: 'GET',
+                    url: '/GetDeleteNovleID',
+                    params: {
+                        novelid:contact.id
+                    },
+                }).then(function successCallback(response) {
+                    // 请求成功执行代码
+                    if(response.data.code == 1){
+                        //删除成功
+                        console.log('response.data = ',response.data);  
+                        GenerateData(0,100);
+                    } 
+                 }, function errorCallback(response) {
+                    // 请求失败执行代码
+                    alert("Https Get Error:GetDeleteNovleID");
+
+                });
+            }  
+            else {  
+                //alert("闲得慌");  
+                console.log('闲得慌啊你。。');  
+             }  
         };
         
         var $ctrl = this;
         $ctrl.items = ['item1', 'item2', 'item3'];
         $scope.selected = ""
-        $scope.Open = function(contact,size){
+        $scope.Open = function(contact,readonly,size){
             //console.log("this.........open");
             var parentElem = undefined;
             //parentSelector ? angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
@@ -98,7 +124,8 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
                 items: function () {
                     return $ctrl.items;
                 },
-                contact:contact
+                contact:contact,
+                readonly:readonly
               }
             });
 
@@ -139,16 +166,48 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
     
     // Please note that $uibModalInstance represents a modal window (instance) dependency.
     // It is not the same as the $uibModal service used above.
-    .controller('ModalInstanceCtrl',["$uibModalInstance","contact", "items", function ($uibModalInstance, contact, items) {
+    .controller('ModalInstanceCtrl',["$uibModalInstance","contact", "items","readonly","$http", function ($uibModalInstance, contact, items, readonly,$http) {
       var $ctrl = this;
       $ctrl.items = items;
       $ctrl.contact = contact;
+      $ctrl.readonly = readonly
+      //console.log("$ctrl.readonly = ",$ctrl.readonly)
+
       $ctrl.selected = {
         item: $ctrl.items[0]
       };
 
       $ctrl.ok = function () {
-        $uibModalInstance.close($ctrl.selected.item);
+        //readonly = true 是Show
+        if ($ctrl.readonly) {
+            $uibModalInstance.close($ctrl.selected.item);
+        }
+        // false 是保存 Edit
+        else{
+            console.log("$ctrl.readonly false")
+            $http({
+                method: 'GET',
+                url: '/GetEditNovelJson',
+                params: {novel:$ctrl.contact},
+            }).then(function successCallback(response) {
+                // 请求成功执行代码
+
+                if (response.data.code == 1) {
+                    console.log("edit ok",response.data);
+                    $uibModalInstance.close($ctrl.selected.item);
+                }
+                else {
+                     console.log("edit err",response.data);
+                     alert(response.data);
+                }
+
+            }, function errorCallback(response) {
+            // 请求失败执行代码
+                alert("Http Get Error:GetTNovelTableInfo");
+            });
+
+        }
+
       };
 
       $ctrl.cancel = function () {

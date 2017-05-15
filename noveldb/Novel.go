@@ -46,6 +46,23 @@ func UpdateOneDataToNovelByNameAndAuthor(novel Novel) {
 	//checkErr(err)
 	//logger.ALogger().Debugf("updata novel %v \n", novel)
 }
+func UpdateOneDataToNovelByID(novel Novel) {
+
+	novel.UpdateTime = time.Now().Unix()
+	stmt, err := GetMysqlDB().Prepare("update novel set noveldesc=?,noveltype=?,addr=?,imageaddr=?,lchaptername=?,lchapteraddr=?,status=?,updatetime=? ,name=?,author=? WHERE novelid=?")
+	defer stmt.Close()
+	checkErr(err)
+
+	_, err = stmt.Exec(novel.Desc, novel.NovelType, novel.NovelUrl, novel.ImagesAddr, novel.LatestChpName, novel.LatestChpUrl,
+		novel.Status, novel.UpdateTime, novel.NovelName, novel.Author, novel.ID)
+	if !checkErr(err) {
+		logger.ALogger().Debugf("updata novel error %v \n", novel)
+	}
+
+	//affect, err := res.RowsAffected()
+	//checkErr(err)
+	//logger.ALogger().Debugf("updata novel %v \n", novel)
+}
 
 //查询特定的一条数据依据小说名称与作者
 func FindOneDataFromNovelByNameAndAuthor(no Novel) (Novel, bool) {
