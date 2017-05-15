@@ -114,7 +114,7 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
             var dataList = [];
             $http({
                 method: 'GET',
-                url: '/GetTNovelTableInfoJson',
+                url: '/GetNovelTableInfoJson',
                 params: {
                     begin:begin,
                     num:count

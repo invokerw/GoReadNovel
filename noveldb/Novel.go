@@ -193,18 +193,31 @@ func FindDatasFromNovelByNovelType(novelType string) (map[int]Novel, bool) {
 }
 
 //删
-func DeleteOneDataToNovelByName(id int) {
+func DeleteOneDataToNovelByID(id int) bool {
 
 	stmt, err := GetMysqlDB().Prepare("delete from novel where novelid=?")
+	defer stmt.Close()
 	checkErr(err)
 
 	_, err = stmt.Exec(id)
-	checkErr(err)
+	if !checkErr(err) {
+		return false
+	}
+	return true
+}
 
-	//affect, err := res.RowsAffected()
-	//checkErr(err)
+func GetNovelsCountFromNovel() (int, bool) {
+	row := GetMysqlDB().QueryRow("SELECT count(*) FROM novel ")
+	//defer rows.Close()如果是读取很多行的话要关闭
 
-	//logger.ALogger().Debug(affect)
+	count := 0
+
+	err = row.Scan(&count)
+	if !checkErr(err) {
+		return count, false
+	}
+	logger.ALogger().Debugf("Novel count: %d\n", count)
+	return count, true
 }
 
 /*

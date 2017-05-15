@@ -86,8 +86,18 @@ func main() {
 	router.StaticFS("/Content", http.Dir("./webpage/Content"))
 	router.StaticFS("/Scripts", http.Dir("./webpage/Scripts"))
 
+	//----------------------Admin Begin------------------------
 	//获取书籍Table信息
-	router.GET("/GetTNovelTableInfoJson", handlers.GetTNovelTableInfoJsonHandler)
+	router.GET("/GetNovelTableInfoJson", handlers.GetNovelTableInfoJsonHandler)
+	//编辑table中的某本书籍
+	router.POST("/GetEditNovelJson", handlers.GetEditNovelJsonHandler)
+	//删除某本书籍
+	router.GET("/GetDeleteNovleID", handlers.GetDeleteNovleIDHandler)
+	//获取书籍数量
+	router.GET("/GetNovelsCount", handlers.GetNovelsCountHandler)
+	//终极模糊搜索小说可以通过 id、名字、作者 、类型获取书籍
+	router.GET("/GetUltimateSearchNovelsJson", handlers.GetUltimateSearchNovelsJsonHandler)
+	//----------------------Admin End---------------------
 
 	logger.ALogger().Notice("Listen start.")
 	logger.ALogger().Notice("Listen 443 https")
