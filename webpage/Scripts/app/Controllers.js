@@ -66,18 +66,55 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
             novelCount:0,
             nBegin:0,
             nNum:100,
-            nowpage:1,
-            allpage:1
+            nowpage:0,
+            allpage:1,
+            NextClickShow:true,
+            PreClickShow:false
         };
-        function GetData(){
-        }
         //console.log(" $scope.info.novelCount", $scope.info.novelCount)
         // get data for bs-table
         GenerateData($scope.info.nBegin,$scope.info.nNum);
         //获取小说数量
-
+        $scope.NextPageData = function(){
+            if ($scope.info.nowpage >= $scope.info.allpage - 1) return;
+            $scope.progress = { Ready: false };
+            $scope.info.NextClickShow = false;
+            $scope.info.nowpage++;
+            console.log("$scope.info = ",$scope.info);
+            var begin = $scope.info.nBegin + $scope.info.nowpage*$scope.info.nNum;
+            if ($scope.info.allpage - 1 == $scope.info.nowpage) //翻到了最后一页
+            {
+                GenerateData(begin, $scope.info.novelCount - begin);
+                $scope.info.NextClickShow = false;
+            }
+            else  //没有到最后一页
+            {
+                GenerateData(begin, $scope.info.nNum);
+                $scope.info.NextClickShow = true;
+            }
+            $scope.info.PreClickShow = true;
+        }
+        $scope.PrePageData = function(){
+            if ($scope.info.nowpage <= 0) return;
+            $scope.progress = { Ready: false };
+            $scope.info.PreClickShow = false;
+            $scope.info.nowpage--;
+            var begin = $scope.info.nBegin + $scope.info.nowpage*$scope.info.nNum;
+            if (0 == $scope.info.nowpage) //翻到了第一页
+            {
+                $scope.info.PreClickShow = false;
+            }
+            GenerateData(begin, $scope.info.nNum);
+            if ($scope.info.nowpage >= 1) //翻到了第一页
+            {
+                $scope.info.PreClickShow = true;
+            }
+            $scope.info.NextClickShow = true;
+        }
         GetNovelsCountService.GetAll().success(function (result) {
             $scope.info.novelCount  = result.ret;
+            //向上取整
+            $scope.info.allpage = Math.ceil($scope.info.novelCount/$scope.info.nNum);
         });
 
         // show function for bs-table
