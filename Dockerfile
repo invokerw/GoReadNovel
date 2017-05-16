@@ -47,6 +47,8 @@ RUN source /etc/profile
 RUN go get github.com/astaxie/beego && go get github.com/beego/bee
 RUN go get github.com/gin-gonic/gin 
 RUN go get github.com/op/go-logging
+RUN go get github.com/go-sql-driver/mysql
+RUN go get gopkg.in/redis.v4
 
 EXPOSE 443
 

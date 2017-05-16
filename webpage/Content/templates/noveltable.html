@@ -4,6 +4,7 @@
     <div ng-show="progress.Ready" class="inner-container sample">
         <h2 id="working-sample">Novel Info</h2>
         <div class="form-group">
+            <p>数据库中共有小说{{info.novelCount}}本</p>
             <label class="control-label">Select theme:</label>
             <select class="form-control" ng-model="page.Css">
                 <option ng-repeat="theme in page.Themes" ng-selected="theme.cssMin == page.Css" value="{{theme.cssMin}}">{{theme.name}}</option>

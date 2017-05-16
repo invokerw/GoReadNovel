@@ -49,7 +49,8 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
         Socialite.load();
     }])
     
-    .controller("NovelInfoCtrl", ["$scope", "$uibModal","BootswatchService", "$http", function ($scope,$uibModal, BootswatchService,$http) {
+    .controller("NovelInfoCtrl", ["$scope", "$uibModal","BootswatchService", "$http", "GetNovelsCountService",
+        function ($scope,$uibModal, BootswatchService, $http, GetNovelsCountService) {
         // scope models
         $scope.page = { Css: "/statics/bootstrap/css/bootstrap.min.css" };
         $scope.contactList = [];
@@ -61,8 +62,19 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
             // hide progress
             //$scope.progress = { Ready: true };
         });
+        $scope.info = {
+            novelCount:0,
+            nBegin:0,
+            nNum:100
+        };
+        //console.log(" $scope.info.novelCount", $scope.info.novelCount)
         // get data for bs-table
-        GenerateData(0,100);
+        GenerateData($scope.info.nBegin,$scope.info.nNum);
+        //获取小说数量
+
+        GetNovelsCountService.GetAll().success(function (result) {
+            $scope.info.novelCount  = result.ret;
+        });
 
         // show function for bs-table
         $scope.Show = function (contact) {
@@ -103,7 +115,7 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
                 console.log('闲得慌啊你。。');  
              }  
         };
-        
+        //打开小窗口呀
         var $ctrl = this;
         $ctrl.items = ['item1', 'item2', 'item3'];
         $scope.selected = ""
@@ -136,7 +148,7 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
             });
         };
         
-        // generate data
+        // 获取小说table信息
         function GenerateData(begin,count) {
             var dataList = [];
             $http({
