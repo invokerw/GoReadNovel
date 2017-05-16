@@ -10,6 +10,9 @@
                 <option ng-repeat="theme in page.Themes" ng-selected="theme.cssMin == page.Css" value="{{theme.cssMin}}">{{theme.name}}</option>
             </select>
         </div>
+        <div>
+            
+        </div>
         <table class="table table-hover table-bordered" bs-table>
             <thead>
                 <tr>
@@ -54,7 +57,7 @@
     <div>
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
-            <h3 class="modal-title" id="modal-title">Novel Info</h3>
+            <h3 class="modal-title" id="modal-title">{{$ctrl.title}}</h3>
         </div>
         <div class="modal-body" id="modal-body">
             <div style="width:33%;float:left">
@@ -63,8 +66,8 @@
             </div>
             <div style="width:67%;float:right">
                 Novel ID:<input type="text" id="novel-info" class="form-control" readonly ng-model="$ctrl.contact.id">
-                Novel Name:<input type="text" id="novel-info" class="form-control" readonly ng-model="$ctrl.contact.novelname">
-                Author:<input type="text" id="novel-info" class="form-control" readonly ng-model="$ctrl.contact.author">
+                Novel Name:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.novelname">
+                Author:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.author">
                 Novel Url:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.url">
                 Latest Chapter:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.newchp">
                 <br/>
@@ -75,7 +78,7 @@
 
             Novel Image Url:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.imagesaddr">
             Novel Desc:
-            <textarea id="novel-info" cols ="50" rows = "5" class="form-control" ng-readonly="{{$ctrl.readonly}}" style="resize: none;">{{$ctrl.contact.desc}}</textarea>
+            <textarea id="novel-info" cols ="50" rows = "5" class="form-control" ng-model="$ctrl.contact.desc" ng-readonly="{{$ctrl.readonly}}" style="resize: none;"></textarea>
             Test:
             <ul>
                 <li ng-repeat="item in $ctrl.items">
@@ -89,7 +92,7 @@
             <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
         </div>
     </script>
-    <button type="button" class="btn btn-default" ng-click="Open()">Open me!</button>
+    <button type="button" class="btn btn-default" ng-click="Open()">New Novel!</button>
     <div ng-show="selected">Selection from a modal: {{ selected }}</div>
     </div>  
  

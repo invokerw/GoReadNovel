@@ -55,10 +55,27 @@ func GetEditNovelJsonHandler(c *gin.Context) {
 	}
 	//将json转换成struct 更新数据库
 	var novel noveldb.Novel
-	logger.ALogger().Debugf("novelJson:%v", novelJson)
+	//logger.ALogger().Debugf("novelJson:%v", novelJson)
 	json.Unmarshal([]byte(novelJson), &novel)
 	logger.ALogger().Debug("get from client novel:", novel)
 	noveldb.UpdateOneDataToNovelByID(novel)
+	okJson := JsonRet{Code: 1, Ret: "ok"}
+	c.JSON(200, okJson)
+	return
+}
+func GetANewNovelJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetANewNovelJsonHandler")
+	novelJson, exist := c.GetQuery("novel")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find novel"}
+		c.JSON(500, errJson)
+		return
+	}
+	//将json转换成struct 更新数据库
+	var novel noveldb.Novel
+	json.Unmarshal([]byte(novelJson), &novel)
+	logger.ALogger().Debug("get from client novel:", novel)
+	noveldb.InsertOneDataToNovel(novel)
 	okJson := JsonRet{Code: 1, Ret: "ok"}
 	c.JSON(200, okJson)
 	return

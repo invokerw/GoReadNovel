@@ -65,8 +65,12 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
         $scope.info = {
             novelCount:0,
             nBegin:0,
-            nNum:100
+            nNum:100,
+            nowpage:1,
+            allpage:1
         };
+        function GetData(){
+        }
         //console.log(" $scope.info.novelCount", $scope.info.novelCount)
         // get data for bs-table
         GenerateData($scope.info.nBegin,$scope.info.nNum);
@@ -79,12 +83,12 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
         // show function for bs-table
         $scope.Show = function (contact) {
             //alert(JSON.stringify(contact));
-            $scope.Open(contact,true);
+            OpenNewWindow(contact,true,0);
         };
         // edit function for bs-table
         $scope.Edit = function (contact) {
             //alert(JSON.stringify(contact));
-            $scope.Open(contact,false);
+            OpenNewWindow(contact,false,1);
         };
         // remove function for bs-table
         $scope.Remove = function (contact) {
@@ -119,7 +123,11 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
         var $ctrl = this;
         $ctrl.items = ['item1', 'item2', 'item3'];
         $scope.selected = ""
-        $scope.Open = function(contact,readonly,size){
+        $scope.Open = function(){
+            OpenNewWindow(undefined, false, 2);
+        }
+
+        function OpenNewWindow(contact,readonly,ty,size){
             //console.log("this.........open");
             var parentElem = undefined;
             //parentSelector ? angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
@@ -137,7 +145,9 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
                     return $ctrl.items;
                 },
                 contact:contact,
+                opentype:ty,
                 readonly:readonly
+          
               }
             });
 
@@ -178,24 +188,33 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
     
     // Please note that $uibModalInstance represents a modal window (instance) dependency.
     // It is not the same as the $uibModal service used above.
-    .controller('ModalInstanceCtrl',["$uibModalInstance","contact", "items","readonly","$http", function ($uibModalInstance, contact, items, readonly,$http) {
+    .controller('ModalInstanceCtrl',["$uibModalInstance","contact", "items","readonly","$http","opentype",
+     function ($uibModalInstance, contact, items, readonly,$http,opentype) {
       var $ctrl = this;
       $ctrl.items = items;
       $ctrl.contact = contact;
-      $ctrl.readonly = readonly
-      //console.log("$ctrl.readonly = ",$ctrl.readonly)
-
+      $ctrl.readonly = readonly;
+      $ctrl.opentype = opentype;
+      $ctrl.title = "Novel";
+      console.log("$ctrl.opentype = ",$ctrl.opentype)
+      if ($ctrl.opentype == 0) {
+        $ctrl.title = "Show Novel";
+      }else if($ctrl.opentype == 1){
+        $ctrl.title = "Edit Novel";
+      }else if($ctrl.opentype == 2){
+        $ctrl.title = "New Novel";
+      }
       $ctrl.selected = {
         item: $ctrl.items[0]
       };
 
       $ctrl.ok = function () {
         //readonly = true 是Show
-        if ($ctrl.readonly) {
+        if($ctrl.opentype == 0) {
             $uibModalInstance.close($ctrl.selected.item);
         }
         // false 是保存 Edit
-        else{
+        else if($ctrl.opentype == 1) {
             console.log("$ctrl.readonly false")
             $http({
                 method: 'GET',
@@ -219,7 +238,29 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
             });
 
         }
+        else if($ctrl.opentype == 2) {
+            console.log("new novel");
+            $http({
+                method: 'GET',
+                url: '/GetANewNovelJson',
+                params: {novel:$ctrl.contact},
+            }).then(function successCallback(response) {
+                // 请求成功执行代码
 
+                if (response.data.code == 1) {
+                    console.log("new novel ok",response.data);
+                    $uibModalInstance.close($ctrl.selected.item);
+                }
+                else {
+                     console.log("new novel err",response.data);
+                     alert(response.data);
+                }
+
+            }, function errorCallback(response) {
+            // 请求失败执行代码
+                alert("Http Get Error:GetTNovelTableInfo");
+            });
+        }
       };
 
       $ctrl.cancel = function () {
