@@ -11,11 +11,16 @@
             </select>
         </div>
         <div style="text-align:right;">
-            数据库中共有小说{{info.novelCount}}本,每次显示{{info.nNum}}本&nbsp;&nbsp;&nbsp;&nbsp;
+            数据库中共找到小说{{info.novelCount}}本&nbsp;&nbsp;&nbsp;&nbsp;
             <button type="button" ng-disabled="PreClickShow" class="btn btn-default" ng-click="PrePageData()">上一页</button>
             第{{info.nowpage+1}}页/共{{info.allpage}}页
             <button type="button" ng-disabled="NextClickShow" class="btn btn-default" ng-click="NextPageData()">下一页</button>
             
+        </div>
+        <div>
+            <select ng-init="search.selectedSearchType = search.searchType[0]" ng-model="search.selectedSearchType" ng-options="x.name for x in search.searchType"></select>
+            <select ng-show="search.showType" ng-model="search.key" ng-options="x for x in search.novelType"></select>
+            <input ng-hide="search.showType" type="text" class="form-control" ng-model="search.key">
         </div>
         <div ng-show="progress.Ready">
         <table class="table table-hover table-bordered" bs-table>

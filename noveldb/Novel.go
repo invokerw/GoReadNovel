@@ -209,6 +209,30 @@ func FindDatasFromNovelByNovelType(novelType string) (map[int]Novel, bool) {
 	return novels, true
 }
 
+//查询若干条数据依据小说类型 没限制数量 Admin查询修改使用
+func FindDatasFromNovelByNovelTypeNoLimitCount(novelType string) (map[int]Novel, bool) {
+	rows, err := GetMysqlDB().Query("SELECT * FROM novel WHERE noveltype=?", novelType)
+	defer rows.Close() //如果是读取很多行的话要关闭
+
+	if !checkErr(err) {
+		return nil, false
+	}
+
+	var novels map[int]Novel
+	number := 0
+	novels = make(map[int]Novel)
+
+	for rows.Next() {
+		var novel Novel
+		rows.Scan(&novel.ID, &novel.NovelName, &novel.Author, &novel.Desc, &novel.NovelType, &novel.NovelUrl, &novel.ImagesAddr,
+			&novel.LatestChpName, &novel.LatestChpUrl, &novel.Status, &novel.UpdateTime)
+		novels[number] = novel
+		number = number + 1
+	}
+	//logger.ALogger().Debugf("Find %d novels: %v\n", num, novels)
+	return novels, true
+}
+
 //删
 func DeleteOneDataToNovelByID(id int) bool {
 

@@ -62,6 +62,20 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
             // hide progress
             //$scope.progress = { Ready: true };
         });
+        $scope.search = {
+            searchType:[
+                {name : "ID Name or Author", type : 0},
+                {name : "Novel Type", type : 1},
+            ],
+            key:"",
+            novelType:[
+            "玄幻小说","仙侠小说","都市小说",
+            "言情小说","网游小说","科幻小说",
+            "历史小说","灵异小说","其他小说",
+            ],
+            selectedSearchType :"",
+            showType:false
+        };
         $scope.info = {
             novelCount:0,
             nBegin:0,
@@ -71,6 +85,48 @@ angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.
             NextClickShow:true,
             PreClickShow:false
         };
+        $scope.$watch('search.selectedSearchType',  function(newValue, oldValue) {
+            if (newValue === oldValue) return;  
+            console.log("search.selectedSearchType new value:",newValue);
+            if (newValue.type == 1) {
+                $scope.search.showType = true;
+            }else{
+                $scope.search.showType = false;
+            }
+        });
+        $scope.$watch('search.key',  function(newValue, oldValue) {
+            if (newValue === oldValue) return;  
+            if (newValue == "") return;
+            console.log("key new value:",newValue);
+            $http({
+                    method: 'GET',
+                    url: '/GetUltimateSearchNovelsJson',
+                    params: {
+                        type:$scope.search.selectedSearchType.type,
+                        key:$scope.search.key
+                    },
+                }).then(function successCallback(response) {
+                    // 请求成功执行代码
+                    if(response.data.code == 1){
+                        //删除成功
+                        console.log('response.data = ',response.data);
+                        $scope.contactList = response.data.ret;
+                        $scope.info.novelCount = $scope.contactList.length;
+                        $scope.info.nowpage = 0;
+                        $scope.info.allpage = 1;
+                        $scope.info.NextClickShow = false;
+                        $scope.info.PreClickShow = false;
+                    } 
+                    else
+                    {
+                        console.log("没有搜索结果");
+                    }
+                 }, function errorCallback(response) {
+                    // 请求失败执行代码
+                    alert("Https Get Error:GetUltimateSearchNovelsJson");
+
+                });
+        });
         //console.log(" $scope.info.novelCount", $scope.info.novelCount)
         // get data for bs-table
         GenerateData($scope.info.nBegin,$scope.info.nNum);

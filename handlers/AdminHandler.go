@@ -144,27 +144,32 @@ func GetUltimateSearchNovelsJsonHandler(c *gin.Context) {
 	}
 	var novelListMap map[int]noveldb.Novel
 	var find bool
-	if searchType == "0" { //ID
+	if searchType == "0" {
 		id, err := strconv.Atoi(keyStr)
-		if err != nil {
-			errJson := JsonRet{Code: -1, Ret: "key is not a number"}
-			c.JSON(500, errJson)
-			return
+		if err != nil { //name and author
+			novelListMap, find = noveldb.FindDatasFromNovelByNameOrAuthor(keyStr)
+			if !find {
+				errJson := JsonRet{Code: 0, Ret: "can't find"}
+				c.JSON(500, errJson)
+				return
+			}
+		} else { //ID
+			//获取到novel还是放到map中同一接口
+			novelListMap = make(map[int]noveldb.Novel)
+			novel, _ := noveldb.FindOneDataFromNovelByID(id)
+			novelListMap[0] = novel
 		}
-		//获取到novel还是放到map中同一接口
-		novelListMap = make(map[int]noveldb.Novel)
-		novel, _ := noveldb.FindOneDataFromNovelByID(id)
-		novelListMap[0] = novel
 
 	} else if searchType == "1" { //name and author
-		novelListMap, find = noveldb.FindDatasFromNovelByNameOrAuthor(keyStr)
-		if !find {
-			//数据库中没有找到，之后可以添加使用爬虫爬取一下
-			errJson := JsonRet{Code: 0, Ret: "can't find"}
-			c.JSON(500, errJson)
-			return
-		}
-	} else if searchType == "2" { //novel type
+		/*	novelListMap, find = noveldb.FindDatasFromNovelByNameOrAuthor(keyStr)
+			if !find {
+				errJson := JsonRet{Code: 0, Ret: "can't find"}
+				c.JSON(500, errJson)
+				return
+			}
+		} else if searchType == "2" {*/ //novel type
+		//限制数量或者不限制
+		//novelListMap, find = noveldb.FindDatasFromNovelByNovelTypeNoLimitCount(keyStr)
 		novelListMap, find = noveldb.FindDatasFromNovelByNovelType(keyStr)
 		if !find {
 			errJson := JsonRet{Code: 0, Ret: "can't find"}
@@ -173,7 +178,11 @@ func GetUltimateSearchNovelsJsonHandler(c *gin.Context) {
 		}
 	}
 	//listMap的声明与处理
-	okJson := JsonRet{Code: 1, Ret: novelListMap}
+	var novelsInfo []noveldb.Novel
+	for i := 0; i < len(novelListMap); i++ {
+		novelsInfo = append(novelsInfo, novelListMap[i])
+	}
+	okJson := JsonRet{Code: 1, Ret: novelsInfo}
 	c.JSON(200, okJson)
 	return
 
