@@ -102,7 +102,7 @@ func main() {
 	//获取用户信息
 	router.GET("/GetUsersInfoJson", handlers.GetUsersInfoJsonHandler)
 	//获取Cofig信息
-	router.GET("GetSpiderConfigJson", handlers.GetSpiderConfigJsonHandler)
+	router.GET("/GetSpiderConfigJson", handlers.GetSpiderConfigJsonHandler)
 	//----------------------Admin End---------------------
 
 	logger.ALogger().Notice("Listen start.")

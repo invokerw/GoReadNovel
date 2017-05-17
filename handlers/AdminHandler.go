@@ -207,7 +207,9 @@ func GetUsersInfoJsonHandler(c *gin.Context) {
 }
 func GetSpiderConfigJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSpiderConfigJsonHandler")
-	str := config.GetPythonConfig().String("getmaxpagenum::string")
-	logger.ALogger().Debug("getmaxpagenum::string = ", str)
+	str1 := config.GetPythonConfig().String("getmaxpagenum::text1")
+	str2 := config.GetPythonConfig().String("getmaxpagenum::text2")
+	logger.ALogger().Debug("getmaxpagenum::text1 = ", str1)
+	logger.ALogger().Debug("getmaxpagenum::text2 = ", str2)
 	return
 }
