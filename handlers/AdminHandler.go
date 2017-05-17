@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"GoReadNovel/config"
 	_ "GoReadNovel/helpers"
 	"GoReadNovel/logger"
 	//"GoReadNovel/spider"
@@ -186,4 +187,27 @@ func GetUltimateSearchNovelsJsonHandler(c *gin.Context) {
 	c.JSON(200, okJson)
 	return
 
+}
+
+func GetUsersInfoJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetUsersInfoJsonHandler")
+	usersMap, find := noveldb.FindDatasFromUser(0, 100)
+	if !find {
+		errJson := JsonRet{Code: 0, Ret: "can't find"}
+		c.JSON(500, errJson)
+		return
+	}
+	var usersInfo []noveldb.User
+	for i := 0; i < len(usersMap); i++ {
+		usersInfo = append(usersInfo, usersMap[i])
+	}
+	okJson := JsonRet{Code: 1, Ret: usersInfo}
+	c.JSON(200, okJson)
+	return
+}
+func GetSpiderConfigJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetSpiderConfigJsonHandler")
+	str := config.GetPythonConfig().String("getmaxpagenum::string")
+	logger.ALogger().Debug("getmaxpagenum::string = ", str)
+	return
 }

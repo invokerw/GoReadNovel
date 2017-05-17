@@ -141,15 +141,12 @@ func FindDatasFromNovel(begin int, num int) (map[int]Novel, bool) {
 
 	rows, err := GetMysqlDB().Query("SELECT * FROM novel LIMIT?,?", begin, num)
 	defer rows.Close() //如果是读取很多行的话要关闭
-
-	if !checkErr(err) {
-		return nil, false
-	}
-
 	var novels map[int]Novel
 	number := 0
 	novels = make(map[int]Novel)
-
+	if !checkErr(err) {
+		return novels, false
+	}
 	for rows.Next() {
 		var novel Novel
 		rows.Scan(&novel.ID, &novel.NovelName, &novel.Author, &novel.Desc, &novel.NovelType, &novel.NovelUrl, &novel.ImagesAddr,

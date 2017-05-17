@@ -60,3 +60,35 @@ func FindOneDataFromUserByUserID(uid string) (User, bool) {
 	return user, true
 
 }
+
+func FindDatasFromUser(begin int, num int) (map[int]User, bool) {
+
+	rows, err := GetMysqlDB().Query("SELECT * FROM user LIMIT?,?", begin, num)
+	defer rows.Close() //如果是读取很多行的话要关闭
+	var users map[int]User
+	number := 0
+	users = make(map[int]User)
+	if !checkErr(err) {
+		return users, false
+	}
+
+	for rows.Next() {
+		var user User
+		rows.Scan(&user.UserID, &user.NikeName, &user.Gender, &user.City, &user.Province, &user.Country, &user.AvatarUrl, &user.JoinTime)
+		users[number] = user
+		number = number + 1
+	}
+	//logger.ALogger().Debugf("Find %d novels: %v\n", num, novels)
+	return users, true
+}
+
+func GetUsersCountFromUser() (int, bool) {
+	row := GetMysqlDB().QueryRow("SELECT count(*) FROM user ")
+	count := 0
+	err = row.Scan(&count)
+	if !checkErr(err) {
+		return count, false
+	}
+	logger.ALogger().Debugf("User count: %d\n", count)
+	return count, true
+}

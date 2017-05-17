@@ -99,6 +99,10 @@ func main() {
 	router.GET("/GetNovelsCount", handlers.GetNovelsCountHandler)
 	//终极模糊搜索小说可以通过 id、名字、作者 、类型获取书籍
 	router.GET("/GetUltimateSearchNovelsJson", handlers.GetUltimateSearchNovelsJsonHandler)
+	//获取用户信息
+	router.GET("/GetUsersInfoJson", handlers.GetUsersInfoJsonHandler)
+	//获取Cofig信息
+	router.GET("GetSpiderConfigJson", handlers.GetSpiderConfigJsonHandler)
 	//----------------------Admin End---------------------
 
 	logger.ALogger().Notice("Listen start.")

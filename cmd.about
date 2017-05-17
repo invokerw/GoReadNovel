@@ -16,7 +16,7 @@ docker run -it --rm --name notea -p 8080:443 -v /home/saber/goPro/src/GoReadNove
 
 docker windows
 
- docker run -it --rm --name notea -p 443:443 -v /c/Users/Administrator/github/mygo/src/GoReadNovel:/go/src/GoReadNovel  -w /go/src/GoReadNovel mynote
+docker run -it --rm --name notea -p 443:443 -v /c/Users/Administrator/github/mygo/src/GoReadNovel:/go/src/GoReadNovel  -w /go/src/GoReadNovel mynote
 
 
 
