@@ -207,9 +207,27 @@ func GetUsersInfoJsonHandler(c *gin.Context) {
 }
 func GetSpiderConfigJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSpiderConfigJsonHandler")
-	str1 := config.GetPythonConfig().String("getmaxpagenum::text1")
-	str2 := config.GetPythonConfig().String("getmaxpagenum::text2")
-	logger.ALogger().Debug("getmaxpagenum::text1 = ", str1)
-	logger.ALogger().Debug("getmaxpagenum::text2 = ", str2)
+	//str1 := config.GetPythonConfigInterface().String("getmaxpagenum::text1")
+	//logger.ALogger().Debug("getmaxpagenum::text1 = ", str1)
+	pagecount, err := config.GetPythonConfigInterface().Int("pagecount")
+	if err != nil {
+		logger.ALogger().Error("GetSpiderConfigJsonHandler get pagecount config error:", err)
+		errJson := JsonRet{Code: -1, Ret: "get pagecount error"}
+		c.JSON(500, errJson)
+		return
+	}
+	var confs []config.PythonConfig
+	for i := 1; i <= pagecount; i++ {
+		conf := config.PythonConfig{}
+		conf, get := config.GetAPythonPageConfig(i)
+		if !get {
+			errJson := JsonRet{Code: 0, Ret: "get config error"}
+			c.JSON(500, errJson)
+			return
+		}
+		confs = append(confs, conf)
+	}
+	okJson := JsonRet{Code: 1, Ret: confs}
+	c.JSON(200, okJson)
 	return
 }
