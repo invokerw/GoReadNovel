@@ -2,7 +2,7 @@
 
 /* controllers module */
 
-angular.module("BsTableDirective.Controllers", ["BsTableDirective.Services","ui.bootstrap"])
+angular.module("BsTableDirective.NovelControllers", ["BsTableDirective.Services","ui.bootstrap"])
     .controller("ExampleCtrl", ["$scope", "BootswatchService", function ($scope, BootswatchService) {
         // scope models
         $scope.page = { Css: "/statics/bootstrap/css/bootstrap.min.css" };
