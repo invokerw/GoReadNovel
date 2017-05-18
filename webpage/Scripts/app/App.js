@@ -2,8 +2,8 @@
 
 /* app module */
 
-angular.module("BsTableDirective", ["ngRoute", "bsTable", "BsTableDirective.Controllers", 
-	"BsTableDirective.Services"])
+angular.module("BsTableDirective", ["ngRoute", "bsTable", "BsTableDirective.NovelControllers", 
+	"BsTableDirective.UserControllers","BsTableDirective.Services"])
     .config(["$routeProvider", function ($routeProvider) {
         $routeProvider.when("/", {
             templateUrl: "/Content/templates/example.html",
@@ -12,6 +12,10 @@ angular.module("BsTableDirective", ["ngRoute", "bsTable", "BsTableDirective.Cont
         .when("/ShowNovelInfo", {
             templateUrl: "/Content/templates/noveltable.html",
             controller: "NovelInfoCtrl"
+        })
+        .when("/ShowUserInfo", {
+            templateUrl: "/Content/templates/usertable.html",
+            controller: "UserCtrl"
         })
         .otherwise({ redirectTo: "/" });
     }])
