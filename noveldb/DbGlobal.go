@@ -32,7 +32,7 @@ type User struct {
 	Gender    string `json:"gender"`    //性别
 	City      string `json:"city"`      //城市
 	Province  string `json:"province"`  //省份
-	Country   string `json:country`     //国家
+	Country   string `json:"country"`   //国家
 	AvatarUrl string `json:"avatarurl"` //头像地址
 	JoinTime  int64  `json:"jointime"`  //进入本小程序的时间 时间戳
 }

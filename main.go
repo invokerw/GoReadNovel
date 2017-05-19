@@ -101,8 +101,12 @@ func main() {
 	router.GET("/GetUltimateSearchNovelsJson", handlers.GetUltimateSearchNovelsJsonHandler)
 	//获取用户信息
 	router.GET("/GetUsersInfoJson", handlers.GetUsersInfoJsonHandler)
-	//获取Cofig信息
+	//获取服务器端SpiderCofig信息
 	router.GET("/GetSpiderConfigJson", handlers.GetSpiderConfigJsonHandler)
+	//测试修改的正则表达式是否正确
+	router.GET("/TestConfigJson", handlers.TestConfigJsonHandler)
+	//保存修改的正则表达式
+	router.GET("/SaveConfigJson", handlers.SaveConfigJsonHandler)
 	//----------------------Admin End---------------------
 
 	logger.ALogger().Notice("Listen start.")

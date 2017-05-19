@@ -11,7 +11,7 @@ sys.setdefaultencoding('gbk')
 
 
 if len(sys.argv) != 5:
-    print 'Err : GetNovelTxt参数不够'
+    print 'Err : getTopByTypeNovelList参数不够'
     exit()
 
 filename = unicode(sys.argv[1], "UTF-8")
@@ -32,7 +32,7 @@ try:
     head = response.info()
     # print content
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("gettopbytypenovellist", "text1")
+    text1 = mod_config.getConfig("getTopByTypeNovelList.py", "text1")
     page = re.compile(text1, re.S)
     # page = re.compile(
     #    '<dl>.*?<dt>.*?<img.*?src="(.*?)".*?>.*?</dt>.*?<dd>.*?<h3>.*?<span.*?"uptime">(.*?)</span>.*?'

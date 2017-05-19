@@ -253,7 +253,7 @@ angular.module("BsTableDirective.NovelControllers", ["BsTableDirective.Services"
         
         // 获取小说table信息
         function GenerateData(begin,count) {
-            var dataList = [];
+            //var dataList = [];
             $http({
                 method: 'GET',
                 url: '/GetNovelTableInfoJson',
@@ -263,7 +263,7 @@ angular.module("BsTableDirective.NovelControllers", ["BsTableDirective.Services"
                 },
             }).then(function successCallback(response) {
                 // 请求成功执行代码
-                dataList = response.data.ret; //这里需要修改
+                //dataList = response.data.ret; //这里需要修改
                 //console.log('response.data = ',response.data);   
                 // hide progress
                 $scope.progress = { Ready: true };

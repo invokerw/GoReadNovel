@@ -10,7 +10,7 @@ import mod_config
 reload(sys)
 sys.setdefaultencoding('gbk')
 if len(sys.argv) != 2:
-    print 'error : getmaxpagenum 参数不够'
+    print 'error : getMaxPageNum 参数不够'
     exit()
 
 filename = unicode(sys.argv[1], "UTF-8")
@@ -29,8 +29,8 @@ try:
     head = response.info()
     # print content
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("getmaxpagenum", "text1")
-    text2 = mod_config.getConfig("getmaxpagenum", "text2")
+    text1 = mod_config.getConfig("getMaxPageNum.py", "text1")
+    text2 = mod_config.getConfig("getMaxPageNum.py", "text2")
     # print text1
     # print text2
     page = re.compile(text1, re.S)

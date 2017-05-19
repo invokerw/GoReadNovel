@@ -11,7 +11,7 @@ sys.setdefaultencoding('gbk')
 # 输入IP地址转换为文章文件保存至当前目录下  后面可能需要改一下输入保存地址
 
 if len(sys.argv) != 3:
-    print 'error : getnovelcontent 参数不够'
+    print 'error : getNovelContent 参数不够'
     exit()
 filename = unicode(sys.argv[1], "UTF-8")
 url = unicode(sys.argv[2], "UTF-8")
@@ -26,10 +26,10 @@ try:
     print content
     # head = response.info()
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("getnovelcontent", "text1")
-    text2 = mod_config.getConfig("getnovelcontent", "text2")
-    text3 = mod_config.getConfig("getnovelcontent", "text3")
-    text4 = mod_config.getConfig("getnovelcontent", "text4")
+    text1 = mod_config.getConfig("getNovelContent.py", "text1")
+    text2 = mod_config.getConfig("getNovelContent.py", "text2")
+    text3 = mod_config.getConfig("getNovelContent.py", "text3")
+    text4 = mod_config.getConfig("getNovelContent.py", "text4")
 
     title = re.compile(text1, re.S)
     article = re.compile(text2, re.S)

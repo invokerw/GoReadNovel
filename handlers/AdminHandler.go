@@ -9,6 +9,7 @@ import (
 	//"strings"
 	"GoReadNovel/noveldb"
 	"encoding/json"
+	"os/exec"
 	"strconv"
 )
 
@@ -209,7 +210,7 @@ func GetSpiderConfigJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSpiderConfigJsonHandler")
 	//str1 := config.GetPythonConfigInterface().String("getmaxpagenum::text1")
 	//logger.ALogger().Debug("getmaxpagenum::text1 = ", str1)
-	pagecount, err := config.GetPythonConfigInterface().Int("pagecount")
+	pagecount, err := config.GetPythonConfigInterface().Int("count::pagecount")
 	if err != nil {
 		logger.ALogger().Error("GetSpiderConfigJsonHandler get pagecount config error:", err)
 		errJson := JsonRet{Code: -1, Ret: "get pagecount error"}
@@ -217,7 +218,7 @@ func GetSpiderConfigJsonHandler(c *gin.Context) {
 		return
 	}
 	var confs []config.PythonConfig
-	for i := 1; i <= pagecount; i++ {
+	for i := 0; i < pagecount; i++ {
 		conf := config.PythonConfig{}
 		conf, get := config.GetAPythonPageConfig(i)
 		if !get {
@@ -229,5 +230,23 @@ func GetSpiderConfigJsonHandler(c *gin.Context) {
 	}
 	okJson := JsonRet{Code: 1, Ret: confs}
 	c.JSON(200, okJson)
+	return
+}
+func TestConfigJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to TestConfigJsonHandler")
+
+	cmd := exec.Command("python", "./python/test_getMaxPageNum.py", "python.conf")
+	//getTopByTypeNovelList.py quanbu allvisit 1")
+	buf, err := cmd.Output()
+	if err != nil {
+		logger.ALogger().Error("err = ", err)
+	}
+	str := string(buf)
+	logger.ALogger().Debug("str = ", str)
+	return
+}
+func SaveConfigJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to SaveConfigJsonHandler")
+
 	return
 }

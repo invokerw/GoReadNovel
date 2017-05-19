@@ -1,0 +1,35 @@
+<!--bs-table.com/Content/templates/example.html-->
+<div class="container">
+    <link type="text/css" ng-href="{{page.Css}}" rel="stylesheet" />
+    <div ng-show="progress.Ready" class="inner-container sample">
+        <h2 id="working-sample">Spider Controller</h2>
+        <div class="form-group">
+            <label class="control-label">Select theme:</label>
+            <select class="form-control" ng-model="page.Css">
+                <option ng-repeat="theme in page.Themes" ng-selected="theme.cssMin == page.Css" value="{{theme.cssMin}}">{{theme.name}}</option>
+            </select>
+        </div>
+        <h3>名称:{{showspider.name}}&nbsp;&nbsp;&nbsp;&nbsp;介绍:{{showspider.info}}</h3>
+        <h4>正则表达式{{showspider.textcount}}个</h4>
+        <div ng-repeat="textvalue in showspider.textvalues">
+            <textarea id="spide-info" cols ="50" rows = "5" class="form-control" ng-model="textvalue" " style="resize: none;"></textarea>
+        </div>
+        <h4>测试输入{{showspider.testvaluecount}}个</h4>
+        <div ng-repeat="testvalue in showspider.testvalues">
+           <input type="text" id="novel-info" class="form-control" ng-model="testvalue">
+        </div>
+        <button type="button" class="btn btn-default" ng-click="TestSpider()">Test!</button>
+        <button type="button" class="btn btn-default" ng-click="SaveSpider()">Save!</button>
+    </div>
+
+    <div ng-hide="progress.Ready" class="inner-container preloader">
+        <p>Please wait. Sample is loading...</p>
+        <div class="progress progress-striped active">
+            <div class="progress-bar" style="width: 100%"></div>
+        </div>
+    </div>
+
+    <div class="inner-container createdby">
+        <p>Created with &#10084; in <a href="https://fsnsaber.cn">fsnsaber.cn</a> by <a href="">Weifei</a></p>
+    </div>
+</div>

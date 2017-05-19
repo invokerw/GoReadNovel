@@ -11,7 +11,7 @@ sys.setdefaultencoding('gbk')
 
 # 通过更换strs的不同请求搜索不同的书籍 可以找到对应网页的网址
 if len(sys.argv) != 3:
-    print 'error : getnovelchapterbyurl 参数不够'
+    print 'error : getNovelChapterByUrl 参数不够'
     exit()
 filename = unicode(sys.argv[1], "UTF-8")
 url = unicode(sys.argv[2], "UTF-8")
@@ -26,7 +26,7 @@ try:
     head = response.info()
     
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("getnovelchapterbyurl", "text1")
+    text1 = mod_config.getConfig("getNovelChapterByUrl.py", "text1")
     page = re.compile(text1, re.S)
     # page = re.compile('<li>.*?<a.*?href="(.*?)">(.*?)</a>*?</li>', re.S)
 

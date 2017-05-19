@@ -12,17 +12,25 @@
         <table class="table table-hover table-bordered" bs-table>
             <thead>
                 <tr>
-                    <th ng-click="predicate='FirstName'; reverse=!reverse">First name</th>
-                    <th ng-click="predicate='LastName'; reverse=!reverse">Last name</th>
-                    <th ng-click="predicate='BornDate'; reverse=!reverse">Born date</th>
+                    <th ng-click="predicate='UserID'; reverse=!reverse">User ID</th>
+                    <th ng-click="predicate='NickName'; reverse=!reverse">Nick Name</th>
+                    <th ng-click="predicate='Gender'; reverse=!reverse">Gender</th>
+                    <th ng-click="predicate='Country'; reverse=!reverse">Country</th>
+                    <th ng-click="predicate='Province'; reverse=!reverse">Province</th>
+                    <th ng-click="predicate='City'; reverse=!reverse">City</th>
+                    <th ng-click="predicate='JoinTime'; reverse=!reverse">Join Time</th>
                     <th class="action-column">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="contact in contactList | orderBy:predicate:reverse">
-                    <td>{{contact.FirstName}}</td>
-                    <td>{{contact.LastName}}</td>
-                    <td>{{contact.BornDate | date}}</td>
+                    <td>{{contact.uid}}</td>
+                    <td>{{contact.nickname}}</td>
+                    <td>{{contact.gender}}</td>
+                    <td>{{contact.country}}</td>
+                    <td>{{contact.province}}</td>
+                    <td>{{contact.city}}</td>
+                    <td>{{contact.jointime}}</td>
                     <td>
                     	<button type="button" class="btn btn-info btn-sm" ng-click="Show(contact)">Show</button>
                     	<button type="button" class="btn btn-info btn-sm" ng-click="Edit(contact)">Edit</button>

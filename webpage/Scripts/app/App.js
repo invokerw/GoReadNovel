@@ -3,7 +3,7 @@
 /* app module */
 
 angular.module("BsTableDirective", ["ngRoute", "bsTable", "BsTableDirective.NovelControllers", 
-	"BsTableDirective.UserControllers","BsTableDirective.Services"])
+	"BsTableDirective.UserControllers","BsTableDirective.SpiderControllers","BsTableDirective.Services"])
     .config(["$routeProvider", function ($routeProvider) {
         $routeProvider.when("/", {
             templateUrl: "/Content/templates/example.html",
@@ -16,6 +16,10 @@ angular.module("BsTableDirective", ["ngRoute", "bsTable", "BsTableDirective.Nove
         .when("/ShowUserInfo", {
             templateUrl: "/Content/templates/usertable.html",
             controller: "UserCtrl"
+        })
+        .when("/SpiderInfo", {
+            templateUrl: "/Content/templates/spiderinfo.html",
+            controller: "SpiderCtrl"
         })
         .otherwise({ redirectTo: "/" });
     }])
