@@ -29,8 +29,8 @@ try:
     head = response.info()
     # print content
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("getMaxPageNum.py", "text1")
-    text2 = mod_config.getConfig("getMaxPageNum.py", "text2")
+    text1 = mod_config.getConfig("getmaxpagenum.py", "text1")
+    text2 = mod_config.getConfig("getmaxpagenum.py", "text2")
     # print text1
     # print text2
     page = re.compile(text1, re.S)

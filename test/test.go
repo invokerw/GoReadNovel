@@ -1,4 +1,4 @@
-package test
+package main
 
 import (
 	"GoReadNovel/config"
@@ -6,7 +6,6 @@ import (
 	"fmt"
 )
 
-/*
 func main() {
 
 	c, err := config.NewConfig("testini.ini")
@@ -39,4 +38,3 @@ func main() {
 
 	fmt.Println(c.String("weifei"))
 }
-*/

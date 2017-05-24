@@ -32,7 +32,7 @@ try:
     head = response.info()
     # print content.encode('utf8')
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("getNovelInfo.py", "text1")
+    text1 = mod_config.getConfig("getnovelinfo.py", "text1")
 	# 描述 类型 最新章节名称 最新章节url 小说状态
     page = re.compile(text1, re.S)
     #page = re.compile('<div.*?class="title">.*?<b>.*?</a>.*?<a.*?>(.*?)</a>.*?<div.*?"options".*?<span.*?'

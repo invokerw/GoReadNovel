@@ -5,12 +5,12 @@ import (
 	_ "GoReadNovel/helpers"
 	"GoReadNovel/logger"
 	//"GoReadNovel/spider"
-	"github.com/gin-gonic/gin"
-	//"strings"
 	"GoReadNovel/noveldb"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"os/exec"
 	"strconv"
+	"strings"
 )
 
 func GetNovelTableInfoJsonHandler(c *gin.Context) {
@@ -210,12 +210,14 @@ func GetSpiderConfigJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to GetSpiderConfigJsonHandler")
 	//str1 := config.GetPythonConfigInterface().String("getmaxpagenum::text1")
 	//logger.ALogger().Debug("getmaxpagenum::text1 = ", str1)
-	pagecount, err := config.GetPythonConfigInterface().Int("count::pagecount")
+	pagecount, err := config.GetPythonConfigInterface().Int("pagecount", "pagecount")
+	logger.ALogger().Debugf("pagecount = %d", pagecount)
+	//pagecount, err := strconv.Atoi(pagecountStr)
 	if err != nil {
 		logger.ALogger().Error("GetSpiderConfigJsonHandler get pagecount config error:", err)
-		errJson := JsonRet{Code: -1, Ret: "get pagecount error"}
-		c.JSON(500, errJson)
-		return
+		//errJson := JsonRet{Code: -1, Ret: "get pagecount error"}
+		//c.JSON(500, errJson)
+		//return
 	}
 	var confs []config.PythonConfig
 	for i := 0; i < pagecount; i++ {
@@ -234,19 +236,75 @@ func GetSpiderConfigJsonHandler(c *gin.Context) {
 }
 func TestConfigJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to TestConfigJsonHandler")
+	confJson, exist := c.GetQuery("config")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find confJson"}
+		c.JSON(500, errJson)
+		return
+	}
+	//将json转换成struct
+	var conf config.PythonConfig
+	json.Unmarshal([]byte(confJson), &conf)
+	//logger.ALogger().Debug("get from client confJson:", conf)
 
-	cmd := exec.Command("python", "./python/test_getMaxPageNum.py", "python.conf")
+	cmd := exec.Command("rm", "./python/test.conf")
+	_, err := cmd.Output()
+	if err != nil {
+		logger.ALogger().Error("rm err = ", err)
+	}
+	cmd = exec.Command("cp", "./python/python.conf", "./python/test.conf")
+	_, err = cmd.Output()
+	if err != nil {
+		logger.ALogger().Error("cp err = ", err)
+	}
+	config.TestConfigReload()
+	if !config.WriteATestPageConfig(conf) {
+		errJson := JsonRet{Code: -1, Ret: "WriteATestPageConfig err"}
+		c.JSON(500, errJson)
+		return
+	}
+	//这里还需要改
+	cmdStr := "python ./python/test_" + conf.Name + " test.conf"
+	for i := 0; i < conf.TestValueCount; i++ {
+		cmdStr = cmdStr + " " + conf.TestValues[i]
+	}
+	logger.ALogger().Debug("Exec CMD :", cmdStr)
+	list := strings.Split(cmdStr, " ")
+	//cmd = exec.Command("python", "./python/test_getMaxPageNum.py", "test.conf")
+	cmd = exec.Command(list[0], list[1:]...)
 	//getTopByTypeNovelList.py quanbu allvisit 1")
 	buf, err := cmd.Output()
 	if err != nil {
-		logger.ALogger().Error("err = ", err)
+		logger.ALogger().Error("py err = ", err)
 	}
 	str := string(buf)
-	logger.ALogger().Debug("str = ", str)
+	logger.ALogger().Debug("python ret str = ", str)
+	okJson := JsonRet{Code: 1, Ret: str}
+	c.JSON(200, okJson)
 	return
 }
+
+//先经过上面的测试通过之后才能保存。
 func SaveConfigJsonHandler(c *gin.Context) {
 	logger.ALogger().Debug("Try to SaveConfigJsonHandler")
+	cmd := exec.Command("mv", "./python/python.conf", "./python/old_python.conf")
+	_, err := cmd.Output()
+	if err != nil {
+		logger.ALogger().Error("mv err = ", err)
+		errJson := JsonRet{Code: -2, Ret: "mv err"}
+		c.JSON(500, errJson)
+		return
 
+	}
+	cmd = exec.Command("cp", "./python/test.conf", "./python/python.conf")
+	_, err = cmd.Output()
+	if err != nil {
+		logger.ALogger().Error("cp err = ", err)
+		errJson := JsonRet{Code: -1, Ret: "cp err"}
+		c.JSON(500, errJson)
+		return
+	}
+	okJson := JsonRet{Code: 1, Ret: "ok"}
+	c.JSON(200, okJson)
 	return
 }

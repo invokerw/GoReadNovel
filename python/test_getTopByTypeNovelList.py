@@ -32,7 +32,7 @@ try:
     head = response.info()
     # print content
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("getTopByTypeNovelList.py", "text1")
+    text1 = mod_config.getConfig("gettopbytypenovellist.py", "text1")
     page = re.compile(text1, re.S)
     # page = re.compile(
     #    '<dl>.*?<dt>.*?<img.*?src="(.*?)".*?>.*?</dt>.*?<dd>.*?<h3>.*?<span.*?"uptime">(.*?)</span>.*?'

@@ -26,7 +26,7 @@ try:
     head = response.info()
     
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("getNovelChapterByUrl.py", "text1")
+    text1 = mod_config.getConfig("getnovelchapterbyurl.py", "text1")
     page = re.compile(text1, re.S)
     # page = re.compile('<li>.*?<a.*?href="(.*?)">(.*?)</a>*?</li>', re.S)
 

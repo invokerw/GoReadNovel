@@ -26,10 +26,10 @@ try:
     print content
     # head = response.info()
     mod_config.iniConfig(filename)
-    text1 = mod_config.getConfig("getNovelContent.py", "text1")
-    text2 = mod_config.getConfig("getNovelContent.py", "text2")
-    text3 = mod_config.getConfig("getNovelContent.py", "text3")
-    text4 = mod_config.getConfig("getNovelContent.py", "text4")
+    text1 = mod_config.getConfig("getnovelcontent.py", "text1")
+    text2 = mod_config.getConfig("getnovelcontent.py", "text2")
+    text3 = mod_config.getConfig("getnovelcontent.py", "text3")
+    text4 = mod_config.getConfig("getnovelcontent.py", "text4")
 
     title = re.compile(text1, re.S)
     article = re.compile(text2, re.S)

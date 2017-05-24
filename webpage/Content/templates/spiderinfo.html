@@ -12,11 +12,11 @@
         <h3>名称:{{showspider.name}}&nbsp;&nbsp;&nbsp;&nbsp;介绍:{{showspider.info}}</h3>
         <h4>正则表达式{{showspider.textcount}}个</h4>
         <div ng-repeat="textvalue in showspider.textvalues">
-            <textarea id="spide-info" cols ="50" rows = "5" class="form-control" ng-model="textvalue" " style="resize: none;"></textarea>
+            <textarea id="spide-info" cols ="50" rows = "5" class="form-control"  ng-change="textchange(textvalue,$index)" ng-model="textvalue"  style="resize: none;"></textarea>
         </div>
         <h4>测试输入{{showspider.testvaluecount}}个</h4>
         <div ng-repeat="testvalue in showspider.testvalues">
-           <input type="text" id="novel-info" class="form-control" ng-model="testvalue">
+           <input type="text" id="novel-info" class="form-control" ng-change="testchange(testvalue,$index)" ng-model="testvalue">
         </div>
         <button type="button" class="btn btn-default" ng-click="TestSpider()">Test!</button>
         <button type="button" class="btn btn-default" ng-click="SaveSpider()">Save!</button>
