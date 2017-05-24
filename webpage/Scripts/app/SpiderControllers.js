@@ -12,6 +12,7 @@ angular.module("BsTableDirective.SpiderControllers", ["BsTableDirective.Services
         $scope.showspider = "";
         $scope.showid = 0;
         $scope.oksave = false;
+        $scope.constantlength = 0;
         // get themes from bootswatch
         BootswatchService.GetAll().success(function (result) {
             // set themes to scope
@@ -19,6 +20,11 @@ angular.module("BsTableDirective.SpiderControllers", ["BsTableDirective.Services
         });
         // get data for bs-table
         GenerateData();
+        $scope.selectMe = function(index){
+            $scope.showid = index;
+            $scope.oksave = false;
+            $scope.showspider = $scope.contactList[index];
+        }
         $scope.textchange = function(textvalue,index){
             console.log(textvalue,index);
             $scope.contactList[$scope.showid].textvalues[index] = textvalue;
@@ -38,8 +44,8 @@ angular.module("BsTableDirective.SpiderControllers", ["BsTableDirective.Services
             }).then(function successCallback(response) {
                 // 请求成功执行代码
                 console.log('response.data= ', response.data); 
-                alert("return data :",response.data.ret)
-                if (response.data.ret == 1) {
+                alert(JSON.stringify(response.data))
+                if (response.data.code == 1) {
                     $scope.showspider = $scope.contactList[$scope.showid];
                     $scope.oksave = true;
                 }
@@ -59,7 +65,7 @@ angular.module("BsTableDirective.SpiderControllers", ["BsTableDirective.Services
             }).then(function successCallback(response) {
                 // 请求成功执行代码
                 console.log('response.data= ', response.data); 
-                if (response.data.ret == 1) {
+                if (response.data.code == 1) {
                     $scope.oksave = false;
                 }
 
@@ -80,6 +86,7 @@ angular.module("BsTableDirective.SpiderControllers", ["BsTableDirective.Services
                 $scope.contactList = response.data.ret;
                 console.log(' $scope.contactList = ', $scope.contactList); 
                 $scope.showspider = angular.copy($scope.contactList[$scope.showid]);
+                $scope.constantlength = $scope.contactList.length;
                 // hide progress
                 $scope.progress = { Ready: true };
                 //$scope.$apply();

@@ -90,8 +90,10 @@ angular.module("BsTableDirective.NovelControllers", ["BsTableDirective.Services"
             console.log("search.selectedSearchType new value:",newValue);
             if (newValue.type == 1) {
                 $scope.search.showType = true;
+
             }else{
                 $scope.search.showType = false;
+                $scope.search.key = "";
             }
         });
         $scope.$watch('search.key',  function(newValue, oldValue) {
