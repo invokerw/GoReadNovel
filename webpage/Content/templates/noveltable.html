@@ -3,13 +3,7 @@
     <link type="text/css" ng-href="{{page.Css}}" rel="stylesheet" />
     <div class="inner-container sample">
         <h2 id="working-sample">Novel Info</h2>
-        <div class="form-group">
-            
-            <label class="control-label">Select theme:</label>
-            <select class="form-control" ng-model="page.Css">
-                <option ng-repeat="theme in page.Themes" ng-selected="theme.cssMin == page.Css" value="{{theme.cssMin}}">{{theme.name}}</option>
-            </select>
-        </div>
+
         <div style="text-align:right;">
             数据库中共找到小说{{info.novelCount}}本&nbsp;&nbsp;&nbsp;&nbsp;
             <button type="button" ng-disabled="PreClickShow" class="btn btn-default" ng-click="PrePageData()">上一页</button>
@@ -17,10 +11,15 @@
             <button type="button" ng-disabled="NextClickShow" class="btn btn-default" ng-click="NextPageData()">下一页</button>
             
         </div>
-        <div>
-            <select ng-init="search.selectedSearchType = search.searchType[0]" ng-model="search.selectedSearchType" ng-options="x.name for x in search.searchType"></select>
-            <select ng-show="search.showType" ng-model="search.key" ng-options="x for x in search.novelType"></select>
-            <input ng-hide="search.showType" type="text" class="form-control" ng-model="search.key">
+        <div style="margin-top: 10px;">
+            <select class="form-control" style="width: 20%;display: inline-block;" ng-init="search.selectedSearchType = search.searchType[0]" ng-model="search.selectedSearchType" ng-options="x.name for x in search.searchType"></select>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <select class="form-control" style="width: 50%;display: inline-block;" ng-show="search.showType" ng-model="search.key" ng-options="x for x in search.novelType"></select>
+            <input style="width: 60%;display: inline-block;" ng-hide="search.showType" type="text" class="form-control" ng-model="search.key">
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-default" ng-click="Open()">New Novel!</button>
+            <!-- <div ng-show="selected">Selection from a modal: {{ selected }}</div> -->
         </div>
         <div ng-show="progress.Ready">
         <table class="table table-hover table-bordered" bs-table>
@@ -90,24 +89,26 @@
             Novel Image Url:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.imagesaddr">
             Novel Desc:
             <textarea id="novel-info" cols ="50" rows = "5" class="form-control" ng-model="$ctrl.contact.desc" ng-readonly="{{$ctrl.readonly}}" style="resize: none;"></textarea>
-            Test:
-            <ul>
-                <li ng-repeat="item in $ctrl.items">
-                    <a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>
-                </li>
-            </ul>
-            Selected: <b>{{ $ctrl.selected.item }}</b>
+<!--             Test:
+<ul>
+    <li ng-repeat="item in $ctrl.items">
+        <a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>
+    </li>
+</ul>
+Selected: <b>{{ $ctrl.selected.item }}</b> -->
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
             <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
         </div>
     </script>
-    <button type="button" class="btn btn-default" ng-click="Open()">New Novel!</button>
-    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+
     </div>  
  
-    <div class="inner-container createdby">
-        <p>Created with &#10084; in <a href="https://fsnsaber.cn">fsnsaber.cn</a> by <a href="">Weifei</a></p>
+    <div class="form-group">
+            <label class="control-label">Select theme:</label>
+            <select class="form-control" style="width: 15%;display: inline-block;" ng-model="page.Css">
+                <option ng-repeat="theme in page.Themes" ng-selected="theme.cssMin == page.Css" value="{{theme.cssMin}}">{{theme.name}}</option>
+            </select>
     </div>
 </div>

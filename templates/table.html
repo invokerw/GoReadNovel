@@ -15,13 +15,37 @@
 </head>
 <body>
     <div>
-        <a href="#/">EG</a>
-        <a href="#/ShowNovelInfo">NOVEL</a>
-        <a href="#/ShowUserInfo">USER</a>
-        <a href="#/SpiderInfo">SPIDER</a>
+        <nav class="navbar navbar-default container" role="navigation">
+            <div class="navbar-header">
+            <!--<button type="button" class="navbar-toggle" ng-click="isNavCollapsed = !isNavCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>-->
+            <a class="navbar-brand" href="#/">首页</a>
+            </div>
+            <div class="collapse navbar-collapse" ><!--uib-collapse="true">isNavCollapsed">-->
+            <ul class="nav navbar-nav">
+                <li><a href="#/ShowNovelInfo">NOVEL</a></li>
+                <li><a href="#/ShowUserInfo">USER</a></li>
+                <li><a href="#/SpiderInfo">SPIDER</a></li>
+            </ul>
+            </div>
+        </nav>
     </div>
-    <div ng-view></div>
+ 
+<!--     <div>
+    <a href="#/">EG</a>
+    <a href="#/ShowNovelInfo">NOVEL</a>
+    <a href="#/ShowUserInfo">USER</a>
+    <a href="#/SpiderInfo">SPIDER</a>
+</div> -->
 
+    <div ng-view></div>
+    <div class="inner-container createdby" style="text-align: center;">
+        <p>Created with &#10084; in <a href="https://fsnsaber.cn">fsnsaber.cn</a> by <a href="">Weifei</a></p>
+    </div>
 
     <script type="text/javascript" src="./Scripts/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="./Scripts/angular.min.js"></script>
@@ -44,16 +68,16 @@
     <script type="text/javascript" src="./Scripts/app/UserControllers.js"></script>
     <script type="text/javascript" src="./Scripts/app/SpiderControllers.js"></script>
     <script type="text/javascript" src="./Scripts/app/Services.js"></script>
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(["_setAccount", "UA-44967878-2"]);
-        _gaq.push(["_trackPageview"]);
+<!--     <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(["_setAccount", "UA-44967878-2"]);
+    _gaq.push(["_trackPageview"]);
 
-	    (function() {
-	       var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
-	       ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
-	       var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
-	    })();
-    </script>
+        (function() {
+           var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+           ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+           var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+        })();
+</script> -->
 </body>
 </html>

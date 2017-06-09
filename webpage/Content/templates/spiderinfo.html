@@ -3,12 +3,7 @@
     <link type="text/css" ng-href="{{page.Css}}" rel="stylesheet" />
     <div ng-show="progress.Ready" class="inner-container sample">
         <h2 id="working-sample">Spider Controller</h2>
-        <div class="form-group">
-            <label class="control-label">Select theme:</label>
-            <select class="form-control" ng-model="page.Css">
-                <option ng-repeat="theme in page.Themes" ng-selected="theme.cssMin == page.Css" value="{{theme.cssMin}}">{{theme.name}}</option>
-            </select>
-        </div>
+   
         <uib-tabset  active="active"  >
             <uib-tab index="0" heading="{{contactList[0].name}}" select="selectMe(0)"></uib-tab>
             <uib-tab index="1" heading="{{contactList[1].name}}" select="selectMe(1)"></uib-tab>
@@ -36,8 +31,10 @@
             <div class="progress-bar" style="width: 100%"></div>
         </div>
     </div>
-
-    <div class="inner-container createdby">
-        <p>Created with &#10084; in <a href="https://fsnsaber.cn">fsnsaber.cn</a> by <a href="">Weifei</a></p>
+    <div class="form-group">
+            <label class="control-label">Select theme:</label>
+            <select class="form-control" style="width: 15%;display: inline-block;" ng-model="page.Css">
+                <option ng-repeat="theme in page.Themes" ng-selected="theme.cssMin == page.Css" value="{{theme.cssMin}}">{{theme.name}}</option>
+            </select>
     </div>
 </div>
