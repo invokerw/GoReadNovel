@@ -66,6 +66,8 @@ func main() {
 	router.GET("/GetANovelCommentsJson", handlers.GetANovelCommentsJsonHandler)
 	//删除书评
 	router.GET("/DeleteANovelCommentJson", handlers.DeleteANovelCommentJsonHandler)
+	//添加用户反馈
+	router.GET("/AddUserFeedbackJson", handlers.AddUserFeedbackJsonHandler)
 	//微信小程序JSON请求----------------------End
 
 	//文件上传

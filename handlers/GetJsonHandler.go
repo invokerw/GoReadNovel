@@ -521,10 +521,6 @@ func GetUserBookShelfNovelsJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	bookShelf, find := noveldb.FindOneUserBookShlefFromBookShelfByUserID(uid)
 	if !find {
@@ -548,6 +544,11 @@ func GetUserBookShelfNovelsJsonHandler(c *gin.Context) {
 	}
 	okJson := JsonRet{Code: 1, Ret: allInfos}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
 	return
 
 }
@@ -574,10 +575,6 @@ func AddAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		return
 
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//myredis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -616,6 +613,11 @@ func AddAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	}
 	okJson := JsonRet{Code: 1, Ret: "insert to bookshelf ok"}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//myredis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
 	return
 }
 
@@ -640,10 +642,6 @@ func DeleteAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -661,6 +659,11 @@ func DeleteAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	noveldb.DeleteOneDataToBookShelfByUseridAndNovelid(uid, nid)
 	okJson := JsonRet{Code: 1, Ret: "delete to bookshelf ok"}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
 }
 
 //更新书架中的某个书籍
@@ -684,10 +687,6 @@ func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -722,6 +721,11 @@ func UpdateAUserNovelInBookShelfJsonHandler(c *gin.Context) {
 	noveldb.UpdateOneDataToBookShlefByUserIDAndNovelID(bookShelf)
 	okJson := JsonRet{Code: 1, Ret: "update novel to bookshelf ok"}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
 }
 
 func GetTheNovelInBookShelfJsonHandler(c *gin.Context) {
@@ -744,10 +748,6 @@ func GetTheNovelInBookShelfJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -770,6 +770,10 @@ func GetTheNovelInBookShelfJsonHandler(c *gin.Context) {
 
 	okJson := JsonRet{Code: 1, Ret: "the novel in your bookshelf"}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	return
 }
@@ -793,10 +797,6 @@ func AddANovelCommentJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -824,6 +824,11 @@ func AddANovelCommentJsonHandler(c *gin.Context) {
 	noveldb.InsertOneDataToComment(comment)
 	okJson := JsonRet{Code: 1, Ret: "insert comment ok"}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
 	return
 }
 
@@ -847,10 +852,6 @@ func UpdateANovelCommentJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	commentid, exist := c.GetQuery("commentid")
 	if !exist {
@@ -878,6 +879,11 @@ func UpdateANovelCommentJsonHandler(c *gin.Context) {
 
 	okJson := JsonRet{Code: 1, Ret: "update comment ok"}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
 	return
 }
 func GetANovelCommentsJsonHandler(c *gin.Context) {
@@ -901,10 +907,6 @@ func GetANovelCommentsJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
 
 	novelid, exist := c.GetQuery("novelid")
 	if !exist {
@@ -947,6 +949,11 @@ func GetANovelCommentsJsonHandler(c *gin.Context) {
 	}
 	okJson := JsonRet{Code: 1, Ret: allCommentsInfo}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
 	return
 }
 func DeleteANovelCommentJsonHandler(c *gin.Context) {
@@ -969,11 +976,6 @@ func DeleteANovelCommentJsonHandler(c *gin.Context) {
 		c.JSON(500, errJson)
 		return
 	}
-	//如果redis中有这个key的话那就再给他续一段时间
-	//redis.REDIS_SAVE_TIME
-	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
-	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
-
 	commentid, exist := c.GetQuery("commentid")
 	if !exist {
 		errJson := JsonRet{Code: -2, Ret: "can't find novelid"}
@@ -989,5 +991,73 @@ func DeleteANovelCommentJsonHandler(c *gin.Context) {
 	noveldb.DeleteOneDataToCommentByCommentid(cid)
 	okJson := JsonRet{Code: 1, Ret: "delete a comment ok"}
 	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
+	return
+}
+
+func AddUserFeedbackJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to AddUserFeedbackJsonHandler ")
+
+	session, exist := c.GetQuery("session")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find session"}
+		c.JSON(500, errJson)
+		return
+	}
+	uid, err := myredis.GetRedisClient().Get(session).Result()
+	if err == redis.Nil {
+		errJson := JsonRet{Code: -1, Ret: "can't find uid, pls login"}
+		c.JSON(500, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+		errJson := JsonRet{Code: -3, Ret: "panic"}
+		c.JSON(500, errJson)
+		return
+	}
+
+	qtypeStr, exist := c.GetQuery("qtype")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find qtype"}
+		c.JSON(500, errJson)
+		return
+	}
+	qtype, err := strconv.Atoi(qtypeStr)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "qtype err"}
+		c.JSON(500, errJson)
+		return
+	}
+	content, exist := c.GetQuery("content")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find content"}
+		c.JSON(500, errJson)
+		return
+	}
+	mail, exist := c.GetQuery("mail")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find mail"}
+		c.JSON(500, errJson)
+		return
+	}
+	var feedback noveldb.Feedback
+	feedback.UserID = uid
+	feedback.FeedbackType = qtype
+	feedback.Content = content
+	feedback.ContactInfo = mail
+	feedback.Solve = 0 //未解决
+	noveldb.InsertOneDataToFeedback(feedback)
+	okJson := JsonRet{Code: 1, Ret: "add feedabck ok"}
+	c.JSON(200, okJson)
+	//如果redis中有这个key的话那就再给他续一段时间
+	//redis.REDIS_SAVE_TIME
+	myredis.GetRedisClient().Expire(session, myredis.REDIS_SAVE_TIME)
+	logger.ALogger().Debugf("Session : %s Refrash Time :%v", session, myredis.GetRedisClient().TTL(session))
+
 	return
 }

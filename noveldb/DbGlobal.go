@@ -64,6 +64,15 @@ type Comment struct {
 	CommentTime int64  `json:"commenttime"` //评论时间
 	Zan         int    `json:"zan"`         //赞同的数量
 }
+type Feedback struct {
+	FeedbackID   int    `json:"feedbackid"`   //反馈ID
+	UserID       string `json:"userid"`       //用户ID
+	FeedbackType int    `json:"feedbacktype"` //反馈类型 0 书籍问题 1 操作问题 2 其他问题
+	Content      string `json:"content"`      //反馈内容
+	ContactInfo  string `json:"contactinfo"`  //联系邮箱
+	Solve        int    `json:"solve"`        //是否解决 0未解决 1解决
+	AddTime      int64  `json:"addtime"`      //添加时间  时间戳
+}
 
 const (
 	DEFAULT_NOVEL_TYPE = "其他"
