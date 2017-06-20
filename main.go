@@ -109,6 +109,12 @@ func main() {
 	router.GET("/TestConfigJson", handlers.TestConfigJsonHandler)
 	//保存修改的正则表达式
 	router.GET("/SaveConfigJson", handlers.SaveConfigJsonHandler)
+	//获取用户反馈
+	router.GET("/GetUserFeedbackJson", handlers.GetUserFeedbackJsonHandler)
+	//解决了某一条反馈
+	router.GET("/SolvedUserFeedbackJson", handlers.SolvedUserFeedbackJsonHandler)
+	//删除了某一条反馈
+	router.GET("/DelAUserFeedbackJson", handlers.DelAUserFeedbackJsonHandler)
 	//----------------------Admin End---------------------
 
 	logger.ALogger().Notice("Listen start.")

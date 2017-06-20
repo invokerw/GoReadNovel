@@ -66,7 +66,7 @@ func FindDatasFromFeedback(feedbacktype int, solved int) (map[int]Feedback, bool
 	var rows *sql.Rows
 	var err error
 	if feedbacktype == -1 && solved == -1 {
-		rows, err = GetMysqlDB().Query("SELECT * FROM feedback ")
+		rows, err = GetMysqlDB().Query("SELECT * FROM feedback")
 	} else if feedbacktype == -1 && solved != -1 {
 		rows, err = GetMysqlDB().Query("SELECT * FROM feedback where solve=?",
 			solved)
@@ -94,7 +94,7 @@ func FindDatasFromFeedback(feedbacktype int, solved int) (map[int]Feedback, bool
 		feedbacks[number] = feedback
 		number = number + 1
 	}
-	//logger.ALogger().Debugf("Find %d allVote: %v\n", num, allVotes)
+	//logger.ALogger().Debugf("Find %d feedback: %v\n", number, feedbacks)
 	return feedbacks, true
 }
 

@@ -308,3 +308,106 @@ func SaveConfigJsonHandler(c *gin.Context) {
 	c.JSON(200, okJson)
 	return
 }
+
+func GetUserFeedbackJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetUserFeedbackJsonHandler")
+	feedbacktypeStr, exist := c.GetQuery("feedbacktype")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find feedbacktype"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("feedbacktype not find")
+		return
+	}
+	solvedStr, exist := c.GetQuery("solved")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find solved"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("solved not solved")
+		return
+	}
+	feedbacktype, err := strconv.Atoi(feedbacktypeStr)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "feedbacktype atoi fail"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("feedbacktype atoi fail")
+		return
+	}
+	solved, err := strconv.Atoi(solvedStr)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "solved atoi fail"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("solved atoi fail")
+		return
+	}
+	feedbacks, find := noveldb.FindDatasFromFeedback(feedbacktype, solved)
+	if !find {
+		errJson := JsonRet{Code: 0, Ret: "not find feedback"}
+		c.JSON(500, errJson)
+		return
+	}
+	var fbs []noveldb.Feedback
+	for i := 0; i < len(feedbacks); i++ {
+		feedback := noveldb.Feedback{}
+		feedback = feedbacks[i]
+		fbs = append(fbs, feedback)
+	}
+	okJson := JsonRet{Code: 1, Ret: fbs}
+	c.JSON(200, okJson)
+	return
+}
+
+func SolvedUserFeedbackJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to SolvedUserFeedbackJsonHandler")
+	contactidStr, exist := c.GetQuery("contactid")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find contactid"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("contactid not find")
+		return
+	}
+
+	contactid, err := strconv.Atoi(contactidStr)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "contactid atoi fail"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("contactid atoi fail")
+		return
+	}
+	if _, find := noveldb.FindOneDataFromFeedbackByFeedbackID(contactid); !find {
+		errJson := JsonRet{Code: 0, Ret: "contactid not faind in sql"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("contactid not faind in sql")
+		return
+	}
+	noveldb.UpdateOneDataSolvedToFeedbackByFeedbackID(contactid)
+	okJson := JsonRet{Code: 1, Ret: "ok"}
+	c.JSON(200, okJson)
+}
+
+func DelAUserFeedbackJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to DelAUserFeedbackJsonHandler")
+	contactidStr, exist := c.GetQuery("contactid")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find contactid"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("contactid not find")
+		return
+	}
+
+	contactid, err := strconv.Atoi(contactidStr)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "contactid atoi fail"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("contactid atoi fail")
+		return
+	}
+	if _, find := noveldb.FindOneDataFromFeedbackByFeedbackID(contactid); !find {
+		errJson := JsonRet{Code: 0, Ret: "contactid not faind in sql"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("contactid not faind in sql")
+		return
+	}
+	noveldb.DeleteOneDataToFeedbackByID(contactid)
+	okJson := JsonRet{Code: 1, Ret: "ok"}
+	c.JSON(200, okJson)
+}

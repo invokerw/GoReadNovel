@@ -1,0 +1,50 @@
+<!--bs-table.com/Content/templates/example.html-->
+<div class="container">
+    <link type="text/css" ng-href="{{page.Css}}" rel="stylesheet" />
+    <div ng-show="progress.Ready" class="inner-container sample">
+        <h2 id="working-sample">User Feedback</h2>
+
+        <table class="table table-hover table-bordered" bs-table>
+            <thead>
+                <tr>
+                    <th ng-click="predicate='FeedbackID'; reverse=!reverse">Feedback ID</th>
+                    <th ng-click="predicate='FeedbackType'; reverse=!reverse">Feedback Type</th>
+                    <th ng-click="predicate='Content'; reverse=!reverse">Content</th>
+                    <!--<th ng-click="predicate='UserID'; reverse=!reverse">User ID</th>-->
+                    <th ng-click="predicate='Mail'; reverse=!reverse">Mail</th>
+                    <th ng-click="predicate='Solved'; reverse=!reverse">Solved</th>
+                    <th class="action-column">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="contact in contactList | orderBy:predicate:reverse">
+                    <td>{{contact.feedbackid}}</td>
+                    <td>{{contact.feedbacktype|feedbacktype}}</td>
+                    <td>{{contact.content}}</td>
+                    <!--<td>{{contact.userid}}</td>-->
+                    <td>{{contact.contactinfo}}</td>
+                    <td>{{contact.solve | solve}}</td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-sm" ng-click="Show(contact)">Show</button>
+                        <button type="button" class="btn btn-info btn-sm" ng-click="Solved(contact)">Solved</button>
+                        <button type="button" class="btn btn-info btn-sm" ng-click="Remove(contact)">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div ng-hide="progress.Ready" class="inner-container preloader">
+        <p>Please wait. Sample is loading...</p>
+        <div class="progress progress-striped active">
+            <div class="progress-bar" style="width: 100%"></div>
+        </div>
+    </div>
+    <div class="form-group">
+            <label class="control-label">Select theme:</label>
+            <select class="form-control" style="width: 15%;display: inline-block;" ng-model="page.Css">
+                <option ng-repeat="theme in page.Themes" ng-selected="theme.cssMin == page.Css" value="{{theme.cssMin}}">{{theme.name}}</option>
+            </select>
+    </div>
+
+</div>
