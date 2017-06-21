@@ -111,3 +111,29 @@ func DeleteOneDataToFeedbackByID(feedbackid int) bool {
 	}
 	return true
 }
+func DeleteTypeDatasToFeedbackByID(feedbacktype int, solved int) bool {
+	var stmt *sql.Stmt
+	var err error
+	if feedbacktype == -1 && solved == -1 {
+		stmt, err = GetMysqlDB().Prepare("delete from feedback")
+		checkErr(err)
+		_, err = stmt.Exec()
+	} else if feedbacktype == -1 && solved != -1 {
+		stmt, err = GetMysqlDB().Prepare("delete from feedback where solve=?")
+		checkErr(err)
+		_, err = stmt.Exec(solved)
+	} else if feedbacktype != -1 && solved == -1 {
+		stmt, err = GetMysqlDB().Prepare("delete from feedback where feedbacktype=?")
+		checkErr(err)
+		_, err = stmt.Exec(feedbacktype)
+	} else {
+		stmt, err = GetMysqlDB().Prepare("delete from feedback where feedbacktype=? and solve=?")
+		checkErr(err)
+		_, err = stmt.Exec(feedbacktype, solved)
+	}
+	defer stmt.Close()
+	if !checkErr(err) {
+		return false
+	}
+	return true
+}

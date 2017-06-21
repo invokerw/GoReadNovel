@@ -21,8 +21,8 @@
         <div ng-repeat="testvalue in showspider.testvalues">
            <input type="text" id="novel-info" class="form-control" ng-change="testchange(testvalue,$index)" ng-model="testvalue">
         </div>
-        <button ng-hide="oksave" type="button" class="btn btn-default" ng-click="TestSpider()">Test!</button>
-        <button ng-show="oksave" type="button" class="btn btn-default" ng-click="SaveSpider()">Save!</button>
+        <button ng-hide="oksave" type="button" class="btn btn-info" ng-click="TestSpider()">Test</button>
+        <button ng-show="oksave" type="button" class="btn btn-info" ng-click="SaveSpider()">Save</button>
     </div>
 
     <div ng-hide="progress.Ready" class="inner-container preloader">

@@ -38,6 +38,8 @@ angular.module("BsTableDirective", ["ngRoute", "bsTable","BsTableDirective.Feedb
             str = "未解决";
         }else if(text == 1){
             str = "已解决";
+        }else{
+            str = "不应该出现这句话";
         }
         return str;
         }
@@ -51,7 +53,29 @@ angular.module("BsTableDirective", ["ngRoute", "bsTable","BsTableDirective.Feedb
             str = "操作问题";
         }else if(text == 2){
             str = "其他问题";
+        }else{
+            str = "未知问题";
+        }
+        return str;
+        }
+    })
+    .filter('timechange',function(){
+        return function(text) {
+            console.log(text)
+            return new Date(parseInt(text) * 1000).toLocaleString().substr(0,17)
+        }
+    })
+    .filter('gender',function(){
+        return function(text) {
+        var str = "";
+        if (text == 2) {
+            str = "女";
+        }else if(text == 1){
+            str = "男";
+        }else{
+            str = "未知性别";
         }
         return str;
         }
     });
+                

@@ -17,6 +17,7 @@ angular.module("BsTableDirective.SpiderControllers", ["BsTableDirective.Services
         BootswatchService.GetAll().success(function (result) {
             // set themes to scope
             $scope.page.Themes = result.themes;
+            $scope.page.Css = $scope.page.Themes[15].cssMin;
         });
         // get data for bs-table
         GenerateData();

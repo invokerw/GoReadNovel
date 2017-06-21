@@ -151,3 +151,11 @@ h1, h2, h3 {
     float: right;
     margin-right: 8px;
 }
+.templatemo_juice_bg {
+    background: url(/statics/images/templatemo_juice.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow-x: hidden;
+}

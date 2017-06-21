@@ -411,3 +411,43 @@ func DelAUserFeedbackJsonHandler(c *gin.Context) {
 	okJson := JsonRet{Code: 1, Ret: "ok"}
 	c.JSON(200, okJson)
 }
+
+func DelALotUserFeedbackJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to DelAUserFeedbackJsonHandler")
+	feedbacktypeStr, exist := c.GetQuery("feedbacktype")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find feedbacktype"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("feedbacktype not find")
+		return
+	}
+	solvedStr, exist := c.GetQuery("solved")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find solved"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("solved not solved")
+		return
+	}
+	feedbacktype, err := strconv.Atoi(feedbacktypeStr)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "feedbacktype atoi fail"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("feedbacktype atoi fail")
+		return
+	}
+	solved, err := strconv.Atoi(solvedStr)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "solved atoi fail"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("solved atoi fail")
+		return
+	}
+	if del := noveldb.DeleteTypeDatasToFeedbackByID(feedbacktype, solved); !del {
+		errJson := JsonRet{Code: 0, Ret: "delect err"}
+		c.JSON(500, errJson)
+		return
+	}
+	okJson := JsonRet{Code: 1, Ret: "ok"}
+	c.JSON(200, okJson)
+	return
+}

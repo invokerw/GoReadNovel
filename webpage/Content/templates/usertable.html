@@ -14,30 +14,45 @@
                     <th ng-click="predicate='Province'; reverse=!reverse">Province</th>
                     <th ng-click="predicate='City'; reverse=!reverse">City</th>
                     <th ng-click="predicate='JoinTime'; reverse=!reverse">Join Time</th>
-                    <th class="action-column">Actions</th>
+                    <th >Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="contact in contactList | orderBy:predicate:reverse">
                     <td>{{contact.uid}}</td>
                     <td>{{contact.nickname}}</td>
-                    <td>{{contact.gender}}</td>
+                    <td>{{contact.gender|gender}}</td>
                     <td>{{contact.country}}</td>
                     <td>{{contact.province}}</td>
                     <td>{{contact.city}}</td>
-                    <td>{{contact.jointime}}</td>
+                    <td>{{contact.jointime|timechange}}</td>
                     <td>
-                    	<button type="button" class="btn btn-info btn-sm" ng-click="Show(contact)">Show</button>
-                    	<button type="button" class="btn btn-info btn-sm" ng-click="Edit(contact)">Edit</button>
-                    	<button type="button" class="btn btn-info btn-sm" ng-click="Remove(contact)">Remove</button>
+                    	<button type="button" class="btn btn-info btn-sm" ng-click="Show(contact)">Show Detail</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-
+    <script type="text/ng-template" id="userWindow.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">{{$ctrl.title}}</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+            User ID:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.uid">
+            Nick Name:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.nickname">
+            Gender:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-value="$ctrl.contact.gender|gender">
+            Country:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.country">
+            Province:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.province">
+            Avatar url:<textarea id="novel-info" cols ="50" rows = "5" class="form-control" ng-model="$ctrl.contact.avatarurl" ng-readonly="{{$ctrl.readonly}}" style="resize: none;"></textarea>
+            Join Time:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-value="$ctrl.contact.jointime|timechange">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+           
+        </div>
+    </script>
     <div ng-hide="progress.Ready" class="inner-container preloader">
-        <p>Please wait. Sample is loading...</p>
+        <p>Please wait. User table is loading...</p>
         <div class="progress progress-striped active">
             <div class="progress-bar" style="width: 100%"></div>
         </div>

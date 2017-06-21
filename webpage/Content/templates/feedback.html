@@ -3,7 +3,15 @@
     <link type="text/css" ng-href="{{page.Css}}" rel="stylesheet" />
     <div ng-show="progress.Ready" class="inner-container sample">
         <h2 id="working-sample">User Feedback</h2>
-
+        <div style="margin-top: 10px;">
+            按反馈类型分类：
+            <select class="form-control" style="width: 20%;display: inline-block;" ng-init="select.feedbackselect = feedbacktype[3]" ng-model="select.feedbackselect" ng-options="x.name for x in feedbacktype"></select>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            按问题是否解决分类：
+            <select class="form-control" style="width: 20%;display: inline-block;"  ng-init="select.solvetypeselect = solvetype[2]" ng-model="select.solvetypeselect" ng-options="x.name for x in solvetype"></select>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-danger" ng-show="showAllDelBtn" class="btn btn-default" ng-click="DelAllSolved()">清空当前已解决</button>
+        </div>
         <table class="table table-hover table-bordered" bs-table>
             <thead>
                 <tr>
@@ -27,7 +35,7 @@
                     <td>
                         <button type="button" class="btn btn-info btn-sm" ng-click="Show(contact)">Show</button>
                         <button type="button" class="btn btn-info btn-sm" ng-click="Solved(contact)">Solved</button>
-                        <button type="button" class="btn btn-info btn-sm" ng-click="Remove(contact)">Remove</button>
+                        <button type="button" class="btn btn-danger btn-sm" ng-click="Remove(contact)">Remove</button>
                     </td>
                 </tr>
             </tbody>
@@ -35,11 +43,30 @@
     </div>
 
     <div ng-hide="progress.Ready" class="inner-container preloader">
-        <p>Please wait. Sample is loading...</p>
+        <p>Please wait. Feedback table is loading...</p>
         <div class="progress progress-striped active">
             <div class="progress-bar" style="width: 100%"></div>
         </div>
     </div>
+       <script type="text/ng-template" id="feedbackWindow.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">{{$ctrl.title}}</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+            Feedback ID:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.feedbackid">
+            Feedback Type:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-value="$ctrl.contact.feedbacktype|feedbacktype">
+            Content:
+            <textarea id="novel-info" cols ="50" rows = "5" class="form-control" ng-model="$ctrl.contact.content" ng-readonly="{{$ctrl.readonly}}" style="resize: none;"></textarea>
+            User ID:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.userid">
+            Email:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-model="$ctrl.contact.contactinfo">
+            Solved:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-value="$ctrl.contact.solve|solve">
+            Add Time:<input type="text" id="novel-info" class="form-control" ng-readonly="{{$ctrl.readonly}}" ng-value="$ctrl.contact.addtime|timechange">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+           
+        </div>
+    </script>
     <div class="form-group">
             <label class="control-label">Select theme:</label>
             <select class="form-control" style="width: 15%;display: inline-block;" ng-model="page.Css">

@@ -26,9 +26,9 @@ func NewHomeHandler(c *gin.Context) {
 	//helpers.Render(c, gin.H{}, "index.html")
 }
 
-func TableHandler(c *gin.Context) {
-	logger.ALogger().Debug("Try to TableHandler")
-	c.HTML(200, "table.html", gin.H{})
+func AdminHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to AdminHandler")
+	c.HTML(200, "admin.html", gin.H{})
 	//helpers.Render(c, gin.H{}, "index.html")
 }
 func GetSearchIndexHandler(c *gin.Context) {

@@ -84,7 +84,7 @@ func main() {
 	router.StaticFS("/statics", http.Dir("./statics"))
 
 	//table测试
-	router.GET("/table", handlers.TableHandler)
+	router.GET("/admin", handlers.AdminHandler)
 	router.StaticFS("/Content", http.Dir("./webpage/Content"))
 	router.StaticFS("/Scripts", http.Dir("./webpage/Scripts"))
 
@@ -115,6 +115,8 @@ func main() {
 	router.GET("/SolvedUserFeedbackJson", handlers.SolvedUserFeedbackJsonHandler)
 	//删除了某一条反馈
 	router.GET("/DelAUserFeedbackJson", handlers.DelAUserFeedbackJsonHandler)
+	//删除了某一类型的已解决反馈
+	router.GET("/DelALotUserFeedbackJson", handlers.DelALotUserFeedbackJsonHandler)
 	//----------------------Admin End---------------------
 
 	logger.ALogger().Notice("Listen start.")
