@@ -66,7 +66,7 @@ angular.module("BsTableDirective.FeedbackControllers", ["BsTableDirective.Servic
                 // 请求成功执行代码
                 console.log('response.data = ',response.data); 
                 if (response.data.code == 1) {
-                    GenerateData()
+                    GenerateData($scope.select.feedbackselect.type,$scope.select.solvetypeselect.type)
                 }   
                 // hide progress
             }, function errorCallback(response) {
@@ -91,6 +91,7 @@ angular.module("BsTableDirective.FeedbackControllers", ["BsTableDirective.Servic
                     if (response.data.code == 1) {
                         GenerateData($scope.select.feedbackselect.type,$scope.select.solvetypeselect.type)
                     }  
+                    return
                     // hide progress
                 }, function errorCallback(response) {
                 // 请求失败执行代码
