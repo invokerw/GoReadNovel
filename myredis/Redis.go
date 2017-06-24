@@ -12,6 +12,7 @@ var client *redis.Client
 
 const (
 	REDIS_SAVE_TIME = 20 * time.Minute
+	REDIS_ONE_DAY   = 24 * time.Hour
 )
 
 // 创建 redis 客户端

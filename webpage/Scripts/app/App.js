@@ -4,7 +4,8 @@
 
 angular.module("BsTableDirective", ["ngRoute", "bsTable","BsTableDirective.FeedbackControllers",
     "BsTableDirective.NovelControllers", "BsTableDirective.UserControllers",
-    "BsTableDirective.SpiderControllers","BsTableDirective.Services"])
+    "BsTableDirective.SpiderControllers","BsTableDirective.SysNoticeControllers",
+    "BsTableDirective.Services"])
     .config(["$routeProvider", function ($routeProvider) {
         $routeProvider.when("/", {
             templateUrl: "/Content/templates/feedback.html",
@@ -21,6 +22,10 @@ angular.module("BsTableDirective", ["ngRoute", "bsTable","BsTableDirective.Feedb
         .when("/SpiderInfo", {
             templateUrl: "/Content/templates/spiderinfo.html",
             controller: "SpiderCtrl"
+        })
+        .when("/SysNoticeInfo", {
+            templateUrl: "/Content/templates/sysnotice.html",
+            controller: "SysNoticeCtrl"
         })
         .otherwise({ redirectTo: "/" });
     }])

@@ -12,7 +12,8 @@
             <uib-tab index="4" heading="{{contactList[4].name}}" select="selectMe(4)"></uib-tab>
         </uib-tabset>
 
-        <h3>名称:{{showspider.name}}&nbsp;&nbsp;&nbsp;&nbsp;介绍:{{showspider.info}}</h3>
+        <h3>名称:{{showspider.name}}</h3>
+        <h3>介绍:{{showspider.info}}</h3>
         <h4>正则表达式{{showspider.textcount}}个</h4>
         <div ng-repeat="textvalue in showspider.textvalues">
             <textarea id="spide-info" cols ="50" rows = "5" class="form-control"  ng-change="textchange(textvalue,$index)" ng-model="textvalue"  style="resize: none;"></textarea>

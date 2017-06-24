@@ -117,6 +117,10 @@ func main() {
 	router.GET("/DelAUserFeedbackJson", handlers.DelAUserFeedbackJsonHandler)
 	//删除了某一类型的已解决反馈
 	router.GET("/DelALotUserFeedbackJson", handlers.DelALotUserFeedbackJsonHandler)
+	//增加系统通告
+	router.GET("/ChangeSystemNoticeJson", handlers.ChangeSystemNoticeJsonHandler)
+	//获取当前系统通告
+	router.GET("/GetSystemNoticeJson", handlers.GetSystemNoticeJsonHandler)
 	//----------------------Admin End---------------------
 
 	logger.ALogger().Notice("Listen start.")

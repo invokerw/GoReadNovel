@@ -5,12 +5,15 @@ import (
 	_ "GoReadNovel/helpers"
 	"GoReadNovel/logger"
 	//"GoReadNovel/spider"
+	"GoReadNovel/myredis"
 	"GoReadNovel/noveldb"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/redis.v4"
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func GetNovelTableInfoJsonHandler(c *gin.Context) {
@@ -448,6 +451,83 @@ func DelALotUserFeedbackJsonHandler(c *gin.Context) {
 		return
 	}
 	okJson := JsonRet{Code: 1, Ret: "ok"}
+	c.JSON(200, okJson)
+	return
+}
+
+func ChangeSystemNoticeJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to ChangeSystemNoticeJsonHandler")
+	notice, exist := c.GetQuery("notice")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find notice"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("notice not find")
+		return
+	}
+	dayStr, exist := c.GetQuery("time")
+	if !exist {
+		errJson := JsonRet{Code: -2, Ret: "can't find time"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("time not find")
+		return
+	}
+	day, err := strconv.Atoi(dayStr)
+	if err != nil {
+		errJson := JsonRet{Code: -1, Ret: "day atoi fail"}
+		c.JSON(500, errJson)
+		logger.ALogger().Error("day atoi fail")
+		return
+	}
+	sessionKey := "sysnotice"
+	err = myredis.GetRedisClient().Set(sessionKey, notice, time.Duration(day)*myredis.REDIS_ONE_DAY).Err()
+	if err != nil {
+		logger.ALogger().Error("Set Redis Key Err:", err)
+		errJson := JsonRet{Code: 0, Ret: "Set Redis Key Err"}
+		c.JSON(500, errJson)
+		panic(err)
+	}
+	okJson := JsonRet{Code: 1, Ret: "ok"}
+	c.JSON(200, okJson)
+	/*
+		sysnotice, err = myredis.GetRedisClient().Get(sessionKey).Result()
+		if err == redis.Nil {
+			logger.ALogger().Error("redis is nil")
+			err = myredis.GetRedisClient().Set(sessionKey, notice, day*myredis.REDIS_ONE_DAY).Err()
+			if err != nil {
+				logger.ALogger().Error("Set Redis Key Err:", err)
+				errJson := JsonRet{Code: 0, Ret: "Set Redis Key Err"}
+				c.JSON(500, errJson)
+				panic(err)
+			}
+		} else if err != nil {
+			logger.ALogger().Errorf("Get Redis key Err :", err)
+			panic(err)
+			errJson := JsonRet{Code: -3, Ret: "panic"}
+			c.JSON(500, errJson)
+			return
+		} else {
+
+		}*/
+
+	return
+}
+func GetSystemNoticeJsonHandler(c *gin.Context) {
+	logger.ALogger().Debug("Try to GetSystemNoticeJsonHandler")
+	sessionKey := "sysnotice"
+	sysnotice, err := myredis.GetRedisClient().Get(sessionKey).Result()
+	if err == redis.Nil {
+		logger.ALogger().Error("redis is nil")
+		errJson := JsonRet{Code: 0, Ret: "redis is nil"}
+		c.JSON(200, errJson)
+		return
+	} else if err != nil {
+		logger.ALogger().Errorf("Get Redis key Err :", err)
+		panic(err)
+		errJson := JsonRet{Code: -1, Ret: "panic"}
+		c.JSON(500, errJson)
+		return
+	}
+	okJson := JsonRet{Code: 1, Ret: sysnotice}
 	c.JSON(200, okJson)
 	return
 }
