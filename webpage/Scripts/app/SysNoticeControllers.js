@@ -40,12 +40,14 @@ angular.module("BsTableDirective.SysNoticeControllers", ["BsTableDirective.Servi
                 // 请求成功执行代码
                 console.log('response.data= ', response.data); 
                 if (response.data.code == 1) {
-                    $scope.oksave = false;
+                    alert("保存成功");
+                }else{
+                    alert("保存失败:" + response.data.ret);
                 }
 
             }, function errorCallback(response) {
             // 请求失败执行代码
-                alert("Http Error:TestConfigJson");
+                alert("Https Error:ChangeSystemNoticeJson");
 
             });
         }
@@ -72,7 +74,7 @@ angular.module("BsTableDirective.SysNoticeControllers", ["BsTableDirective.Servi
                 //$scope.$apply();
             }, function errorCallback(response) {
             // 请求失败执行代码
-                alert("Http Get Error:GetSystemNotice");
+                alert("Https Get Error:GetSystemNoticeJson");
 
             });
         }
