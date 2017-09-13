@@ -87,7 +87,7 @@ var NovelTypeEtoC map[string]string //汉语拼音 转换为 数据库中的类�
 func init() { //如果改成init()会自动运行
 	//func mysqlInit() {
 	logger.ALogger().Debug("Init Mysql DB Connect..")
-	db, err = sql.Open("mysql", "root:weifei@tcp(fsnsaber.cn:3306)/novel?charset=utf8")
+	db, err = sql.Open("mysql", "root:weifei@tcp(ergou.vip:3306)/novel?charset=utf8")
 	checkErr(err)
 	db.SetMaxOpenConns(1000)
 	db.SetMaxIdleConns(500)

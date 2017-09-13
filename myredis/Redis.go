@@ -19,7 +19,7 @@ const (
 func createClient() *redis.Client {
 	logger.ALogger().Debug("Create Redis Client..")
 	client = redis.NewClient(&redis.Options{
-		Addr:     "fsnsaber.cn:6379",
+		Addr:     "ergou.vip:6379",
 		Password: "weifei",
 		DB:       0,
 		PoolSize: 20, //连接池大小，默认为10
